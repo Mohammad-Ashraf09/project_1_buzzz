@@ -9,6 +9,8 @@ body{
     --grey-light : rgb(154, 147, 147);
     --grey-xl-light : rgba(206, 200, 200, 0.5);
     --link-color : #417af5;
+    --theme-color : rgb(156, 56, 233);
+    --theme-shadow : rgba(156, 56, 233, 0.5);
 }
 
 .topbar-container{
@@ -38,6 +40,7 @@ body{
     margin-left: 5px;
     font-weight: bold;
     cursor: pointer;
+    color: black;
 }
 .topbar-right{
     flex: 3;
@@ -146,6 +149,7 @@ body{
 .small-profile-username{
     margin-top: 0;
     margin-bottom: 5px;
+    color: black;
 }
 .small-profile-desc{
     margin: 0;
@@ -637,13 +641,16 @@ hr{
 
 /* --------------------------------- login page CSS ------------------------------- */
 
+.login-container{
+    height: 100vh;
+    background-color: var(--bg-color);
+}
 .login-container-wrapper{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 80vh;
+    height: 500px;
     margin: 10vh 8%;
-    background-color: var(--bg-color);
     border-radius: 8px;
 }
 .signup-section{
@@ -752,7 +759,7 @@ hr{
     color: rgba(156, 56, 233, 0.5);
 }
 .forgot-pass a:hover{
-    color: rgb(156, 56, 233);
+    color: var(--theme-color);
 }
 .signin-btn{
     margin-top: 68px;
@@ -760,95 +767,163 @@ hr{
     padding: 14px 42px;
     border-radius: 25px;
     color: white;
-    background-color: rgb(156, 56, 233);
+    background-color: var(--theme-color);
     border: none;
-    box-shadow: 5px 5px 20px rgba(156, 56, 233, 0.5);
+    box-shadow: 5px 5px 20px var(--theme-shadow);
     cursor: pointer;
 }
 .signin-btn:hover{
     transform: scale(1.02);
 }
-/* ------------------------- Admin CSS -------------------------------- */
-/* body{
-    font-family: Montserrat, sans-serif;
-    background: rgb(223, 223, 223);
-} */
-.admin-container{
-    user-select: none;
-    margin: 50px auto;
+
+
+/* ----------------------------- UserProfile CSS -------------------------- */
+
+@import url('https://fonts.googleapis.com/css?family=Lato:400,700');
+
+.user-suggestion-conatiner{
+    background-color: var(--bg-color);
+    height: calc(100vh - 50px);
+    display: flex;
+}
+.user-container{
+    margin: 50px 40px 50px 80px;
     background: white;
-    color: #b3b8cd;
-    border-radius: 5px;
-    width: 70%;
-    height: 100%;
-    /* text-align: center; */
+    border-radius: 8px;
     box-shadow: 0 10px 20px -10px rgba(0,0,0,.75);
-    margin-left: 80px;
+    flex: 9;
+    height: 67%;
 }
-.admin-cover-photo{
-    background: url(https://images.unsplash.com/photo-1540228232483-1b64a7024923?ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80);
-    height: 160px;
+.suggestion-div{
+    flex: 3;
+}
+.user-profile-cover{
+    height: 200px;
+    position: relative;
+}
+.user-cover-img{
+    height: 150px;
     width: 100%;
-    border-radius: 5px 5px 0 0;
-    float: left;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    object-fit: cover;
 }
-.admin-profile{
+.user-profile-img{
     height: 120px;
     width: 120px;
-    border-radius: 5%;
-    /* margin: 93px 0 0 -175px; */
-    margin: 93px 1200px 0 50px;
-    /* border: 1px solid #1f1a32; */
-    padding: 2px;
-    background: #292343;
+    border-radius: 5px;
+    object-fit: cover;
+    position: absolute;
+    left: 50px;
+    top: 90px;
+    border: none;
 }
-#file-input{
-  visibility: hidden;
+.user-discription{
+    margin: 10px 0 50px 50px;
 }
-.admin-profile-name{
-    line-height: 180px;
+.user-profile-name{
+    margin-top: 30px;
+    margin-bottom: 5px;
     font-size: 25px;
     font-weight: bold;
-    /* margin: 27px 0 0 120px; */
-    margin: 0px 0px 0px 50px;
+    color: black;
+}
+.user-about{
+    margin-top: 0px;
+    color: var(--grey-dark);
+    font-weight: 500;
+}
+.user-location{
+  color: gray;
+  font-size: small;
+}
+.user-btns{
+  border-radius: 5px;
+  font-family: Montserrat, sans-serif;
+  line-height: 5px;
+  padding: 15px;
+  display: inline-block;
+  cursor: pointer;
+  margin-bottom: 40px;
+}
+.user-btns:hover{
+  transform: scale(1.02);
+}
+#user-add-frnd{
+    background: var(--link-color);
+    margin-left: 50px;
+    border: none;
+    color: white;
+    padding: 16px;
+}
+#user-visit-website{
+  background: transparent;
+  margin-left: 20px;
+  color: var(--link-color);
+  border: 1px solid var(--link-color);
+}
+.user-btns i{
+    margin-right: 6px;
+}
+
+
+
+/*----------------------------- Admin Profile CSS ---------------------------------*/
+
+.admin-suggestion-conatiner{
+    background-color: var(--bg-color);
+    display: flex;
+    color: var(--grey-dark);
+}
+.admin-container{
+    margin: 50px 40px 50px 80px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 10px 20px -10px rgba(0,0,0,.75);
+    flex: 9;
+    height: 100%;
+}
+.admin-profile-cover{
+    height: 200px;
+    position: relative;
+}
+.admin-cover-img{
+    height: 150px;
+    width: 100%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    object-fit: cover;
+}
+.admin-profile-img{
+    height: 120px;
+    width: 120px;
+    position: absolute;
+    left: 50px;
+    top: 90px;
+    border: none;
+}
+#upload-img{
+    width: 120px;
+    height: 120px;
+    border-radius: 5px;
+    object-fit: cover;
+}
+.form-details{
+    margin-top: 30px;
+}
+.admin-profile-name{
+    margin: 10px 0 20px 50px;
+    font-size: 25px;
+    font-weight: bold;
     color: black;
 }
 .about{
-    /* position: absolute;
-    align-content: flex-start; */
-    /* margin right by default 990 */
     margin-top: -100px;
     margin-right: 500px;
     margin-left: 50px;
     color: gray;
-    /* line-height: 21px;  */
 }
-.admin-container button{
-    margin: 10px 0 40px 0px;
-}
-.btns{
-    background: rgb(47, 47, 255);
-    border: 1px solid #03bfbc;
-    padding: 10px 25px;
-    color: white;
-    border-radius: 3px;
-    font-family: Montserrat, sans-serif;
-    cursor: pointer;
-    /* margin-left: -1080px; */
-  }
-#add-frnd{
-      color: white;
-      background-color: rgb(42, 42, 203);
-      margin-left: 50px;
-}
-.btns{
-    margin-left: 10px;
-    background: transparent;
-    color: #02899c;
-}
-.btns:hover{
-    transition: .5s;
-}
+
 .admin-container i{
     padding-left: 20px;
     font-size: 20px;
@@ -859,95 +934,257 @@ hr{
 .admin-container i:hover{
     color: #03bfbc;
 } 
+.admin-container input{
+  height: 35px;
+  border:1px solid #d1d1d1;
+  outline-color: #5a92bb;
+  border-radius: 5px;
+  margin-top: 10px;
+}
+.admin-profile-conatiner::placeholder {
+  color: rgb(194, 194, 194);
+  padding: 5px;
+}
 
-
-
-/* ----------------------------- UserProfile CSS -------------------------- */
-/* body{
-    font-family: Montserrat, sans-serif;
-    background: rgb(223, 223, 223);
-  } */
-.user-container{
-    user-select: none;
-    margin: 50px auto;
-    background: white;
-    color: #b3b8cd;
-    border-radius: 5px;
-    width: 70%;
-    height: 100%;
-    /* text-align: center; */
-    box-shadow: 0 10px 20px -10px rgba(0,0,0,.75);
-    margin-left: 80px;
-    padding: 0px;
+.details-input select{
+  height: 40px;
+  color: rgb(194, 194, 194);
+  border:1px solid #d1d1d1;
+  outline-color: #5a92bb;
 }
-.user-cover-photo{
-    background: url(https://images.unsplash.com/photo-1540228232483-1b64a7024923?ixlib=rb-1.2.1&auto=format&fit=crop&w=967&q=80);
-    height: 160px;
-    width: 100%;
-    border-radius: 5px 5px 0 0;
-    float: left;
+#designation{
+  width: 170px;
+  border-radius: 5px;
+  margin-right: 70px;
 }
-.user-profile{
-    height: 120px;
-    width: 120px;
-    border-radius: 5%;
-    /* margin: 93px 0 0 -175px; */
-    margin: 93px 1200px 0 50px;
-    /* border: 1px solid #1f1a32; */
-    /* padding: 12px;
-    background: #292343; */    
+#state{
+  width: 7%; 
+  border-radius: 5px;
+  margin-right:15px ;
 }
-.user-profile-name{
-    line-height: 180px;
-    font-size: 25px;
-    font-weight: bold;
-    /* margin: 27px 0 0 120px; */
-    margin: 0px 0px 0px 50px;
-    color: black;
-}
-.user-about{
-    /* position: absolute;
-    align-content: flex-start; */
-    /* margin right by default 990 */
-    margin-top: -100px;
-    margin-right: 500px;
-    margin-left: 50px;
-    color: gray;
-    /* line-height: 21px;  */
-}
-.user-container button{
-    margin: 10px 0 40px 0px;
-}
-.user-btns{
-    background: rgb(47, 47, 255);
-    border: 1px solid #03bfbc;
-    padding: 10px 25px;
-    color: white;
-    border-radius: 3px;
-    font-family: Montserrat, sans-serif;
-    cursor: pointer;
-    /* margin-left: -1080px; */
-}
-#add-frnd{
-    color: white;
-    background-color: rgb(42, 42, 203);
+.details{
     margin-left: 50px;
 }
-.user-btns{
-    margin-left: 10px;
-    background: transparent;
-    color: #02899c;
-}
-.user-btns:hover{
-    transition: .5s;
-}
-.user-container i{
-    padding-left: 20px;
-    font-size: 20px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: .5s;
-}
-.user-container i:hover{
-    color: #03bfbc;
+.details-name{
+    margin-right: 160px; 
 } 
+
+.details-name2{
+    margin-right: 200px;
+}
+.details-name2-lname{
+    margin-left: 5px;
+}
+.details-input{
+    margin-left: 50px;
+} 
+.details-value{
+    margin-right: 70px;
+}
+#details-value2-bday{
+    margin-left: 108px;
+}
+#details-name-brth{
+    margin-left: 30px;
+}
+#details-name-state{
+    margin-left: 52px;
+}
+#details-name-ZIP{
+    margin-left: 50px;
+
+}
+.btn_upload {
+  color: #fff;
+  text-align: center;
+  position: relative;
+  display: inline-block;
+  overflow: hidden;
+  z-index: 3;
+  white-space: nowrap;
+  position: absolute;
+  top: 81%;
+  left: 82%;
+}
+.btn_upload input {
+  position: absolute;
+  width: 100%;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 105%;
+  cursor: pointer;
+  opacity: 0;
+}
+.file_uploading {
+  width: 100%;
+  height: 10px;
+  margin-top: 20px;
+  background: #ccc;
+}
+.file_uploading .btn_upload {
+  display: none;
+}
+.radio-toolbar {
+  margin: 0px;
+}
+.radio-toolbar input[type="radio"] {
+  opacity: 0;
+  position: fixed;
+  width: 0;
+}
+.radio-toolbar label {
+    display: inline-block;
+    background-color: white;
+    padding: 10px 10px;
+    font-family: sans-serif, Arial;
+    font-size: 15px;
+    border: 1px solid black;
+    border-radius: 4px;
+    margin-left: 5px;
+    border: none;
+}
+.radio-toolbar input[type="radio"]:checked + label {
+    background-color: #4dd2ff;
+    border: none;
+    color: white;
+}
+.btns{
+    border-radius: 5px;
+    font-family: Montserrat, sans-serif;
+    cursor: pointer;
+    font-weight: 600;
+}
+#save-btn{
+      color: white;
+      background-color: var(--link-color);
+      margin-left: 50px;
+      height: 42px;
+      width: 70px;
+      padding-left:20px;
+      padding-right: 20px;
+}
+#reset-btn{
+    height: 40px;
+    width: 90px;
+    padding-left: 18px;
+    padding-right: 18px;
+    color: var(--link-color);
+    border-color:  var(--link-color);
+    background: transparent;
+    margin-left: 30px;
+}
+.btns:hover{
+    transform: scale(1.02);
+}
+
+
+
+/*--------------------- SignUp page CSS ----------------------------*/
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500);
+
+.signup-container{
+    height: 100vh;
+    background-color: var(--bg-color);
+}
+.signup-box {
+  position: relative;
+  margin: 3% auto;
+  width: 800px;
+  height: 580px;
+  background: #FFF;
+  border-radius: 8px;
+  box-shadow: 4px 4px 10px var(--shadow-color);
+}
+.left {
+  position: absolute;
+  top: 0;
+  left: 0;
+  box-sizing: border-box;
+  padding: 40px;
+  width: 400px;
+  height: 400px;
+}
+.left h1 {
+    font-family: 'Roboto', sans-serif;
+  margin: 0 0 20px 0;
+  font-size: 30px;
+  color: var(--theme-color);
+  font-weight: normal;
+}
+.left input[type="text"], .left input[type="email"], .left input[type="password"] {
+  display: block;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 4px;
+  width: 340px;
+  height: 32px;
+  border: none;
+  border-bottom: 1px solid #AAA;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+.left input[type="text"]:focus, .left input[type="password"]:focus {
+  border-bottom: 2px solid #9933ff;
+  transition: 0.2s ease;
+}
+.agreement-div{
+    display: flex;
+    align-items: center;
+}
+#agreement{
+    height: 14px;
+    width: 14px;
+}
+.left label{
+    font-size: 13px;
+}
+.agreement-div a{
+    color: var(--theme-color);
+}
+.register-btn {
+  margin-top: 28px;
+  padding: 15px 35px;
+  background-color: var(--theme-color);
+  border: none;
+  border-radius: 25px;
+  color: #FFF;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 4px 4px 10px var(--theme-shadow);
+}
+.register-btn:hover {
+  opacity: 0.8;
+  transition: 0.2s ease;
+}
+.right {
+    position: absolute;
+    top: 0;
+    right: 0;
+    box-sizing: border-box;
+    padding: 40px;
+    width: 400px;
+    height: 500px;
+    background: url('https://cdn.dribbble.com/users/537878/screenshots/14511603/poem-1---c_4x.gif?compress=1&resize=400x300');
+    background-size: cover;
+    background-position: center;
+    border-radius: 8px;
+}
+.right .loginwith {
+    display: block;
+    margin-bottom: 40px;
+    font-size: 28px;
+    color: #FFF;
+    text-align: center;
+}
+#existing-member{
+    position: absolute;
+    bottom: -35px;
+    left: 220px;
+    color: var(--theme-color);
+    font-size: 15px;
+}

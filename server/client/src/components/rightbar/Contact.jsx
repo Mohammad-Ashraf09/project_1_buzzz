@@ -1,12 +1,14 @@
 import axios from 'axios';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useContext } from 'react';
 import Cont from './Cont';
 import ContactPerson from './ContactPerson';
+import {AuthContext} from "../../context/AuthContext"
 
 const Contact = () => {
     
     const [clr, setClr] = useState("#000");
     const [following, setFollowing] = useState([]);
+    const {user} = useContext(AuthContext);
 
     
     function changeColorWhite(){
@@ -18,13 +20,13 @@ const Contact = () => {
 
     useEffect(()=>{
         const fetchFollowings = async() =>{
-          const res = await axios.get("users/625400bc00575a0301756870");
+          const res = await axios.get("users/"+user._id);
           const arr = res.data.followings
           setFollowing(arr);
           //console.log(arr)
         }
         fetchFollowings();
-    },[]);
+    },[user._id]);
       
   return (
     <div className='contact'>

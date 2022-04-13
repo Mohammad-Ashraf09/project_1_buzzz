@@ -1,21 +1,29 @@
 
 import Input from "../components/Input";
 import Button from "../components/Button";
-import { useState} from 'react'
+import { useContext, useRef, useState} from 'react'
+import TopbarForLogin from "../components/TopbarForLogin";
+import { Link } from "react-router-dom";
+import {loginCall} from "../apiCalls"
+import { AuthContext } from "../context/AuthContext";
 
 
 const Login = ()=> {
-  const [loginData, setLoginData] = useState({
-    username:'',
-    password:''
-  })
-  const userhandler = (name,value)=>{
-    setLoginData({...loginData,[name]:value})
+
+  const email = useRef();
+  const password = useRef();
+  const {user, isFetching, error, dispatch} = useContext(AuthContext);
+  
+  const clickHandler = (e)=>{
+    e.preventDefault();
+    loginCall({email: email.current.value, password: password.current.value}, dispatch)
   }
-  console.log(loginData);
+
+  //console.log(user);
 
   return (
     <div className="login-container">
+      <TopbarForLogin/>
       <div className="login-container-wrapper">
         <div className="signup-section">
           <form>
@@ -24,17 +32,19 @@ const Login = ()=> {
             <h4>Don't Stop until you're proud.</h4>
             <button className="google-btn"> Sign In with Google </button>
             <span className="or">or</span>
-            <button className="google-btn"> Sign Up </button>
+            <Link to="/register">
+              <button className="google-btn"> Sign Up </button>
+            </Link>
           </form>
         </div>
 
         <div className="signin-section">
-          <form>
+          <form onSubmit={clickHandler}>
             <h3 className="signin-text"> Login To Your Account </h3>
             <div className="input-section">
-              <Input type="text" onChange={e =>userhandler(e.target.name,e.target.value)} className="username" name='username' placeholder='TTN Username'/>
+              <input type="email" className="username" name='username' placeholder='TTN Username' ref={email} required />
               <br />
-              <Input type="password" onChange={e =>userhandler(e.target.name,e.target.value)} className="password" name='password' placeholder='Password'/>
+              <input type="password" className="password" name='password' placeholder='Password' ref={password} required minLength='6' />
             </div>
 
             <div className="form-group">
@@ -47,7 +57,7 @@ const Login = ()=> {
               </div>
             </div>
       
-            <Button className='signin-btn' type='button'>Sign In</Button>
+            <button className='signin-btn'>Sign In</button>
           </form>
         </div>
       </div>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Topbar from "../components/Topbar";
 import SmallProfile from '../components/leftbar/SmallProfile';
 import Utility from '../components/leftbar/Utility';
@@ -7,20 +7,22 @@ import Suggestion from '../components/rightbar/Suggestion';
 import SearchBox from '../components/timeline/SearchBox';
 import Timeline from '../components/timeline/Timeline';
 import axios from 'axios';
+import { AuthContext } from '../context/AuthContext';
 
 
 const Feed = () => {
 
   const [posts, setPosts] = useState([]);
+  const {user} = useContext(AuthContext)
 
   useEffect(()=>{
     const fetchPosts = async() =>{
-      const res = await axios.get("posts/timeline/625400bc00575a0301756870");
+      const res = await axios.get("posts/timeline/"+user._id);
       setPosts(res.data);
       //console.log(res.data)
     }
     fetchPosts();
-  },[]);
+  },[user._id]);
 
   return (
     <>

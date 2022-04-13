@@ -1,10 +1,14 @@
 import React from 'react'
+import { Link } from 'react-router-dom';
 
 const ContactPerson = ({friend}) => {
 
-    const {username, profilePicture} = friend;
+    const {fname, lname, username, profilePicture, _id} = friend;
     
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
+    const dp = profilePicture ? PF+profilePicture : PF+'default-dp.png';
+    const name = fname +' '+ lname
     
     // console.log(username);
     // console.log(PF+profilePicture);
@@ -12,9 +16,13 @@ const ContactPerson = ({friend}) => {
   return (
     <>
         <li className="contact-list-item">
-            <img src={PF+profilePicture} alt="" className="contact-img" />
-            <span className="contact-badge"></span>
-            <span className="contact-name">{username}</span>
+            <Link to={`/user/${_id}`}>
+              <img src={dp} alt="" className="contact-img" />
+              <span className="contact-badge"></span>
+            </Link>
+            <Link to={`/user/${_id}`} style={{textDecoration: 'none'}}>
+              <span className="contact-name">{name}</span>
+            </Link>
         </li>
     </>
   )

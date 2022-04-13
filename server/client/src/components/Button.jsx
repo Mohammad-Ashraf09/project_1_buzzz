@@ -4,7 +4,7 @@ const Button = ({type,className,children}) => {
   console.log(type,className); 
   return (
     <div> 
-      <button type={type} className={`btn btn-primary ${className}`}> {children} </button>
+      <button type={type} className={`${className}`}> {children} </button>
     </div>
   )
 }

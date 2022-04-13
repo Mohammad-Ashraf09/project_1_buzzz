@@ -1,13 +1,13 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
-import {Users} from '../../DummyData';
+import React, { useContext, useEffect, useState } from 'react';
+import { AuthContext } from '../../context/AuthContext';
 import Sugg from './Sugg';
-import SuggestionPerson from './SuggestionPerson';
 
 const Suggestion = () => {
 
     const [clr, setClr] = useState("#000");
     const [following, setFollowing] = useState([]);
+    const {user} = useContext(AuthContext);
     
     function changeColorWhite(){
         setClr("#fff");
@@ -18,13 +18,13 @@ const Suggestion = () => {
 
     useEffect(()=>{
         const fetchFollowings = async() =>{
-          const res = await axios.get("users/625400bc00575a0301756870");
+          const res = await axios.get("users/"+user._id);
           const arr = res.data.followings
           setFollowing(arr);
           //console.log(arr)
         }
         fetchFollowings();
-    },[]);
+    },[user._id]);
 
   return (
     <div className='suggestion'>
