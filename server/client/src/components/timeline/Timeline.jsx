@@ -5,9 +5,8 @@ import { format } from 'timeago.js';
 import {AuthContext} from "../../context/AuthContext"
 
 const Timeline = ({post}) => {
-  const {desc, img, userId, likes, dislikes, comments, createdAt, _id} = post;
 
-  //console.log(img)
+  const {desc, img, userId, likes, dislikes, comments, createdAt, _id} = post;
 
   const [comment, setComment] = useState(comments.length);
   const [lik, setLik] = useState(likes.length);
@@ -16,8 +15,8 @@ const Timeline = ({post}) => {
   const [dislik, setDisLik] = useState(dislikes.length);
   const [isDisLiked, setIsDisLiked] = useState(false);
   const [clr2, setClr2] = useState("rgb(108, 104, 104)");
-  const [user, setUser] = useState({});
-  const {user:currentUser} = useContext(AuthContext);
+  const [user, setUser] = useState({});                 // jis user ne post dali hai wo hai ye
+  const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
 
 
   useEffect(()=>{
@@ -25,11 +24,11 @@ const Timeline = ({post}) => {
     setIsDisLiked(dislikes.includes(currentUser._id));
   }, [currentUser._id, likes]);
 
-  useEffect(()=>{          // i put this no dependency useEffect only to show initial colors of like and dislike. 
+  useEffect(()=>{          // i made this no dependency useEffect only to show initial colors of like and dislike. 
     setClr(isLiked ? "#417af5" : "rgb(108, 104, 104)");
     setClr2(isDisLiked ? "rgba(252, 5, 5,0.8)" : "rgb(108, 104, 104)");
     console.log("rendered...")
-  });     // no dependecy, i know it is not good, due to this page for unnecessary 
+  });     // no dependecy, i know it is not good, due to this page re-render for unnecessary 
 
   useEffect(()=>{
     const fetchUser = async() =>{
@@ -58,11 +57,9 @@ const Timeline = ({post}) => {
         setClr2("rgb(108, 104, 104)");
         setIsDisLiked(false);
         axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id});
+      }
     }
-    }
-    catch{
-      
-    }
+    catch(err){}
   }
   
   const dislikeHandler = () =>{
@@ -82,11 +79,9 @@ const Timeline = ({post}) => {
         setClr("rgb(108, 104, 104)");
         setIsLiked(false);
         axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
+      }
     }
-    }
-    catch{
-      
-    }
+    catch(err){}
   }
   
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -98,8 +93,8 @@ const Timeline = ({post}) => {
       <div className="timeline-post-wrapper">
         <div className="post-top-section">
           <div className="post-top-left">
-            {/* if user is admin then show him admin profile page else simple user profile page */}
-            {user.isAdmin?
+            {/* if user that is logged in is same as on which we are clicking for view his profile then show him admin profile page else simple user profile page */}
+            {user._id===currentUser._id?
               <Link to={`/admin/${user._id}`}>
                 <img src={DP} alt="" className="post-profile-img" />
               </Link>:
@@ -108,7 +103,7 @@ const Timeline = ({post}) => {
               </Link>
             }
             <span className="post-username-date">
-              {user.isAdmin?
+              {user._id===currentUser._id?
                 <Link to={`/admin/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
                   <div className="post-username"> {name} </div>
                 </Link>:
@@ -151,7 +146,7 @@ const Timeline = ({post}) => {
         </div>
         <hr className='post-hr'/>
         <div className="comment-section">
-          <img className='comment-profile-img' src={DP} alt="" />
+          <img className='comment-profile-img' src={PF+currentUser.profilePicture} alt="" />
           <input type="text" className="comment-input" placeholder='Write a comment...'/>
           <div className="send-icon">
             <i className="fa-solid fa-paper-plane"></i>
@@ -162,4 +157,4 @@ const Timeline = ({post}) => {
   )
 }
 
-export default Timeline
+export default Timeline;

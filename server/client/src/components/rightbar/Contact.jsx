@@ -1,7 +1,6 @@
 import axios from 'axios';
 import React, { useState, useEffect, useContext } from 'react';
 import Cont from './Cont';
-import ContactPerson from './ContactPerson';
 import {AuthContext} from "../../context/AuthContext"
 
 const Contact = () => {
@@ -10,7 +9,6 @@ const Contact = () => {
     const [following, setFollowing] = useState([]);
     const {user} = useContext(AuthContext);
 
-    
     function changeColorWhite(){
         setClr("#fff");
     }
@@ -50,4 +48,4 @@ const Contact = () => {
   )
 }
 
-export default Contact
+export default Contact;

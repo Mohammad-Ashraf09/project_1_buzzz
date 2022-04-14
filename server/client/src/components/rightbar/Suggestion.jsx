@@ -6,25 +6,36 @@ import Sugg from './Sugg';
 const Suggestion = () => {
 
     const [clr, setClr] = useState("#000");
+    const [allUsers, setAllUsers] = useState([]);
     const [following, setFollowing] = useState([]);
     const {user} = useContext(AuthContext);
-    
+
+    useEffect(()=>{
+        const fetchFollowings = async() =>{
+            const res = await axios.get("users/"+user._id);
+            const arr = res.data.followings;
+            setFollowing(arr);
+            //console.log(arr)
+        }
+        fetchFollowings();
+    },[user._id]);
+
+    useEffect(()=>{
+        const fetchAllUsers = async() =>{
+            const res = await axios.get("all/");
+            const arr = res.data
+            setAllUsers(arr);
+            //console.log(res.data)
+        }
+        fetchAllUsers();
+    },[]);
+
     function changeColorWhite(){
         setClr("#fff");
     }
     function changeColorBlack(){
         setClr("#000");
     }
-
-    useEffect(()=>{
-        const fetchFollowings = async() =>{
-          const res = await axios.get("users/"+user._id);
-          const arr = res.data.followings
-          setFollowing(arr);
-          //console.log(arr)
-        }
-        fetchFollowings();
-    },[user._id]);
 
   return (
     <div className='suggestion'>
@@ -39,8 +50,8 @@ const Suggestion = () => {
                 </div>
             </div>
             <ul className="suggestion-list">
-                {following.map((data)=>(
-                    <Sugg key={data} follow={data}/>
+                {allUsers.map((data)=>(
+                    <Sugg key={data._id} users={data} myFollowings={following}/>
                 ))}
             </ul>
         </div>
@@ -48,4 +59,4 @@ const Suggestion = () => {
   )
 }
 
-export default Suggestion
+export default Suggestion;

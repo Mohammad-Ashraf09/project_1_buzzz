@@ -50,6 +50,10 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    totalPosts:{
+      type: Number,
+      default: 0
+    },
     isAdmin: {
       type: Boolean,
       default: false,

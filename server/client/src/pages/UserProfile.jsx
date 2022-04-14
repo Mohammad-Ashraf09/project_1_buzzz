@@ -1,25 +1,30 @@
 import Suggestion from "../components/rightbar/Suggestion";
 import Topbar from "../components/Topbar"
 import { useParams } from "react-router";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import axios from "axios";
+import { AuthContext } from "../context/AuthContext";
 
 const UserProfile = () => {
   const [user, setUser] = useState({});
+  const [followed, setFollowed] = useState(false);
+
+  const {user:currentUser} = useContext(AuthContext);
   const userId = useParams().id;
-  //console.log(userId);
+
+  useEffect(()=>{
+    setFollowed(currentUser.followings.includes(user._id))
+  },[currentUser, user._id]);
 
   useEffect(()=>{
     const fetchUser = async() =>{
       const res = await axios.get(`/users/${userId}`);
       setUser(res.data);
-      //console.log(res.data)
     }
     fetchUser();
   },[userId]);
 
-  const {profilePicture, coverPicture, fname, lname, desc, followers, city, from, zip} = user;
-
+  const {profilePicture, coverPicture, fname, lname, desc, city, from} = user;
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   //console.log(followers)     // it shows followers is an array
@@ -34,6 +39,21 @@ const UserProfile = () => {
       var profile = PF+"default-profile.png";
   else
       var profile = PF+profilePicture;
+
+
+  const followHandler = async () =>{
+    try{
+      if(followed){
+        await axios.put("/users/"+ user._id + "/unfollow", {userId: currentUser._id})
+      }
+      else{
+        await axios.put("/users/"+ user._id + "/follow", {userId: currentUser._id})
+      }
+    }catch(err){
+
+    }
+    setFollowed(!followed);
+  }
 
   return (
     <div className="user-profile-conatiner">
@@ -51,8 +71,16 @@ const UserProfile = () => {
             <p className="user-location"> {from}  &#8226; {city}  &#8226; India  &#8226; 2 friends </p>
           </div>
           <div>
-            <button className="user-btns" id="user-add-frnd"><i className="fas fa-user-plus"></i> Add Friend</button>
-            <button className="user-btns" id="user-visit-website"><i className="fas fa-share-square"></i> Visit Website</button>
+
+            <button className="user-btns" id="user-add-frnd" onClick={followHandler} >
+              <i className="fas fa-user-plus"></i>
+              {followed ? "Remove Friend" : "Add Friend"}
+            </button>
+            <button className="user-btns" id="user-visit-website">
+              <i className="fas fa-share-square"></i>
+              Visit Website
+            </button>
+
           </div>
         </div>
 

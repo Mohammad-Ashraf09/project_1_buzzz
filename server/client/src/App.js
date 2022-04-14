@@ -1,6 +1,6 @@
+import "./App.css";
 import React, { useContext } from 'react';
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
-import "./App.css";
 import { AuthContext } from './context/AuthContext';
 import AdminProfile from './pages/AdminProfile';
 import Feed from "./pages/Feed";

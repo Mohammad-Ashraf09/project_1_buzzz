@@ -1,6 +1,3 @@
-
-import Input from "../components/Input";
-import Button from "../components/Button";
 import { useContext, useRef, useState} from 'react'
 import TopbarForLogin from "../components/TopbarForLogin";
 import { Link } from "react-router-dom";
@@ -12,14 +9,14 @@ const Login = ()=> {
 
   const email = useRef();
   const password = useRef();
-  const {user, isFetching, error, dispatch} = useContext(AuthContext);
+  const {dispatch} = useContext(AuthContext);
   
   const clickHandler = (e)=>{
     e.preventDefault();
     loginCall({email: email.current.value, password: password.current.value}, dispatch)
   }
 
-  //console.log(user);
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
     <div className="login-container">
@@ -27,7 +24,7 @@ const Login = ()=> {
       <div className="login-container-wrapper">
         <div className="signup-section">
           <form>
-            <img className="ttn-logo" src="assets/images/ttn.jpg" alt=""/>
+            <img className="ttn-logo" src={PF+"/images/ttn.jpg"} alt=""/>
             <h2 className="signup-text"> Enter your details and Start your journey with us </h2>
             <h4>Don't Stop until you're proud.</h4>
             <button className="google-btn"> Sign In with Google </button>

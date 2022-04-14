@@ -9,7 +9,8 @@ const authRoute = require("./router/Auth");
 const postRoute = require("./router/Posts");
 const multer = require("multer");
 const path = require("path");
-//const upload = require("express-fileupload");
+const { db } = require("./model/User");
+const MongoClient = require("mongodb").MongoClient;
 
 
 const port = process.env.PORT || 8000;
@@ -29,16 +30,13 @@ app.use(express.json());
 app.use(helmet());
 app.use(morgan("common"));
 
-// app.get("/", (req,res)=>{
-//     res.send("home");
-// })
 
 const storage = multer.diskStorage({
   destination: (req, file, cb)=>{
-    cb(null, "./public/images")
+    cb(null, "public/images")
   },
   filename:(req, file, cb)=>{
-    cb(null, file.originalname);
+    cb(null, req.body.name);    // jo file name client side se aa raha hai usko ye pulic/images folder me save kr dega with same name
   }
 })
 
@@ -52,54 +50,28 @@ app.post("/api/upload", upload.single('file'), (req, res)=>{
   }
 })
 
-// app.use(upload());
-
-// // app.post("/api/upload", (req, res)=>{
-// //   if(req.files){
-// //       console.log(req.files)
-// //       var file = req.files.file
-// //       var filename = file.name:"car.jpg";
-// //       console.log(filename)
-
-// //       file.mv('./public/images/'+filename, ()=>{
-// //           if(err){
-// //               res.send(err)
-// //           }else{
-// //               res.send("file uploaded...")
-// //           }
-// //       })
-// //   }
-// // });
-
-// app.post('/api/upload', function(req, res) {
-//   let sampleFile;
-//   let uploadPath;
-
-//   if (!req.files || Object.keys(req.files).length === 0) {
-//     res.status(400).send('No files were uploaded.');
-//     return;
-//   }
-
-//   console.log('req.files >>>', req.files); // eslint-disable-line
-
-//   sampleFile = req.files.sampleFile;
-
-//   uploadPath = __dirname + 'public/images/' + sampleFile.name;
-
-//   sampleFile.mv(uploadPath, function(err) {
-//     if (err) {
-//       return res.status(500).send(err);
-//     }
-
-//     res.send('File uploaded to ' + uploadPath);
-//   });
-// });
-
-
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
+
+
+// get all the users from social collection name of database
+var database;
+
+app.get("/api/all", (req, res)=>{
+  database.collection("users").find({}).toArray((err, result)=>{
+    if(err) throw err
+    res.send(result)
+  })
+})
+
+MongoClient.connect(process.env.DATABASE, (err, db)=>{
+  if(err) throw err;
+  database = db.db("social");
+  console.log("connected...")
+})
+
 
 app.listen(port, () => {
   console.log(`server is running at port 8000`);

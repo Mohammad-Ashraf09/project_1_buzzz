@@ -3,15 +3,11 @@ import { Link } from 'react-router-dom';
 
 const ContactPerson = ({friend}) => {
 
-    const {fname, lname, username, profilePicture, _id} = friend;
+    const {fname, lname, profilePicture, _id} = friend;
     
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
     const dp = profilePicture ? PF+profilePicture : PF+'default-dp.png';
-    const name = fname +' '+ lname
-    
-    // console.log(username);
-    // console.log(PF+profilePicture);
+    const name = fname +' '+ lname;
 
   return (
     <>
@@ -28,4 +24,4 @@ const ContactPerson = ({friend}) => {
   )
 }
 
-export default ContactPerson
+export default ContactPerson;

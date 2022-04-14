@@ -172,7 +172,7 @@ body{
     color: var(--grey-dark);
 }
 .small-profile-text{
-    font-size: 14px;
+    font-size: 12px;
     color: var(--grey-light);
 }
 
@@ -289,7 +289,7 @@ hr{
     border-radius: 50%;
     color: white;
     position: absolute;
-    bottom: -2px;
+    bottom: 1px;
     left: 13px;
 }
 .search-box{
@@ -405,7 +405,7 @@ hr{
     border-radius: 50%;
     color: white;
     position: absolute;
-    bottom: -2px;
+    bottom: 1px;
     left: 27px;
 }
 .friend-link{
@@ -415,7 +415,6 @@ hr{
     margin-left: 20px;
     cursor: pointer;
 }
-
 .x{
     width: 162px;
     display: flex;
@@ -470,7 +469,6 @@ hr{
     margin-left: 5px;
     cursor: pointer;
 }
-
 .y button{
     margin-top: 16px;
     padding: 5px 15px;
@@ -481,9 +479,26 @@ hr{
     border-radius: 4px;
     cursor: pointer;
 }
-
 .post-input::-webkit-scrollbar{
     display: none;
+}
+
+.share-img-container{
+    position: relative;
+}
+.share-img{
+    margin-top: 15px;
+    border-radius: 6px;
+    height: 380px;
+    width: 100%;
+    object-fit: cover;
+}
+.fa-square-xmark{
+    position:absolute;
+    top: 22px;
+    right: 8px;
+    cursor: pointer;
+    color: #03bfbc;
 }
 
 
@@ -539,7 +554,6 @@ hr{
     border-radius: 50%;
     cursor: pointer;
 }
-
 .post-caption{
     font-size: 13px;
     margin-top: 14px;
@@ -601,7 +615,6 @@ hr{
     font-weight: 500;
     cursor: pointer;
 }
-
 .comment-section{
     display: flex;
     margin-top: 15px;
@@ -634,10 +647,6 @@ hr{
     cursor: pointer;
 }
 
-
-
-/* ############################################################################################################################################# */
-/* ############################################################################################################################################# */
 
 /* --------------------------------- login page CSS ------------------------------- */
 
@@ -709,7 +718,6 @@ hr{
     margin-bottom: 40px;
     font-size: 17px;
 }
-
 .username{
     width: 350px;
     border: none;
@@ -1077,7 +1085,6 @@ hr{
 .btns:hover{
     transform: scale(1.02);
 }
-
 
 
 /*--------------------- SignUp page CSS ----------------------------*/

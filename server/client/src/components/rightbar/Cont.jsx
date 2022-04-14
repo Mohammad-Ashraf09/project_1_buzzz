@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react'
 import ContactPerson from './ContactPerson';
 
 const Cont = ({follow}) => {
-
-    const [friend, setFriend] = useState({})
+    const [friend, setFriend] = useState({});
 
     useEffect(()=>{
         const fetchFriend = async() =>{
@@ -15,12 +14,11 @@ const Cont = ({follow}) => {
         fetchFriend();
     },[]);
 
-    
-  return (
-    <div>
-        <ContactPerson friend={friend}/>
-    </div>
-  )
+    return (
+      <div>
+          <ContactPerson friend={friend}/>
+      </div>
+    )
 }
 
-export default Cont
+export default Cont;

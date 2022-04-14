@@ -1,25 +1,17 @@
-import axios from 'axios';
-import React, { useEffect, useState } from 'react'
+import React, { useContext } from 'react'
+import { AuthContext } from '../../context/AuthContext';
 import SuggestionPerson from './SuggestionPerson';
 
-const Sugg = ({follow}) => {
+const Sugg = ({users, myFollowings}) => {          // users is total users. an object, myFollowings is array of Ids of my followings 
+    
+    const {user} = useContext(AuthContext);
+    //console.log(user);
 
-    const [friend, setFriend] = useState({})
-
-    useEffect(()=>{
-        const fetchFriend = async() =>{
-          const res = await axios.get(`users/${follow}`);
-          setFriend(res.data);
-          //console.log(res.data)
-        }
-        fetchFriend();
-    },[]);
-
-  return (
-    <div>
-        <SuggestionPerson friend={friend}/>
-    </div>
-  )
+    return (
+      <div>
+          {myFollowings.includes(users._id)?"":<SuggestionPerson users={users}/>}
+      </div>
+    )
 }
 
-export default Sugg
+export default Sugg;
