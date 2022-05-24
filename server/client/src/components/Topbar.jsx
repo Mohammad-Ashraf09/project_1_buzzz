@@ -12,6 +12,14 @@ const Topbar = () => {
     const dp = profilePicture ? PF+profilePicture : PF+"default-dp.png";
     const name = fname +" "+ lname;
 
+    const logoutHandler = () =>{
+        const logout = window.confirm("Are you sure, you want to logout?");
+        if(logout){
+            localStorage.clear();
+            window.location.reload();
+        }
+    }
+
   return (
     <div className='topbar-container'>
         <div className="topbar-left">
@@ -28,15 +36,23 @@ const Topbar = () => {
                 </Link>
             </div>
             <div className="topbar-icons">
-                <div className="topbar-icon">
-                    <i className="fa-brands fa-facebook-messenger"></i>
-                    <span className="topbar-icon-badge">1</span>
-                </div>
+                <Link to="/messenger" style={{textDecoration: 'none', color: 'black'}}>
+                    <div className="topbar-icon">
+                        <i className="fa-brands fa-facebook-messenger"></i>
+                        <span className="topbar-icon-badge">1</span>
+                    </div>
+                </Link>
                 <div className="topbar-icon">
                     <i className="fa-solid fa-user-check"></i>
                     <span className="topbar-icon-badge">2</span>
                 </div>
             </div>
+            {/* <Link to="/login" style={{ textDecoration: "none" }}> */}
+                <div className="logout-icon" onClick={logoutHandler}>
+                    <i className="fa-solid fa-arrow-right-from-bracket"></i>
+                    {/* <i class="fa-solid fa-power-off"></i> */}
+                </div>
+            {/* </Link> */}
         </div>
     </div>
   )

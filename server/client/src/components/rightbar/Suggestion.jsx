@@ -22,7 +22,7 @@ const Suggestion = () => {
 
     useEffect(()=>{
         const fetchAllUsers = async() =>{
-            const res = await axios.get("all/");
+            const res = await axios.get("users/");
             const arr = res.data
             setAllUsers(arr);
             //console.log(res.data)

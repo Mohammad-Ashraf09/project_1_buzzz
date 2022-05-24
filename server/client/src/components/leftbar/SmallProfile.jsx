@@ -21,8 +21,8 @@ const SmallProfile = () => {
     //console.log(totalPosts)
 
   return (
-    <Link to={`/admin/${_id}`} style={{textDecoration: 'none'}}>
-        <div className='small-profile'>
+    <div className='small-profile'>
+        <Link to={`/admin/${_id}`} style={{textDecoration: 'none'}}>
             <div className="small-profile-cover">
                 <img src={cover} alt="" className="cover-img" />
                 <img src={profile} alt="" className="user-img" />
@@ -45,8 +45,8 @@ const SmallProfile = () => {
                     </div>
                 </div>
             </div>
-        </div>
-    </Link>
+        </Link>
+    </div>
   )
 }
 

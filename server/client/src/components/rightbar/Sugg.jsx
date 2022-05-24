@@ -9,7 +9,7 @@ const Sugg = ({users, myFollowings}) => {          // users is total users. an o
 
     return (
       <div>
-          {myFollowings.includes(users._id)?"":<SuggestionPerson users={users}/>}
+          {users._id !== user._id && (myFollowings.includes(users._id)?"":<SuggestionPerson users={users}/>)}
       </div>
     )
 }

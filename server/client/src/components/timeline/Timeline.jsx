@@ -1,12 +1,15 @@
 import axios from 'axios';
-import React, { useState, useEffect, useContext } from 'react';
+import React, { useState, useEffect, useContext, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { format } from 'timeago.js';
-import {AuthContext} from "../../context/AuthContext"
+import {AuthContext} from "../../context/AuthContext";
+import Comment from "./Comment";
+import SearchBox from './SearchBox';
 
 const Timeline = ({post}) => {
 
-  const {desc, img, userId, likes, dislikes, comments, createdAt, _id} = post;
+  const {desc, img, userId, likes, dislikes, comments, createdAt, updatedAt, _id} = post;
+  //console.log(post.comments);
 
   const [comment, setComment] = useState(comments.length);
   const [lik, setLik] = useState(likes.length);
@@ -17,7 +20,9 @@ const Timeline = ({post}) => {
   const [clr2, setClr2] = useState("rgb(108, 104, 104)");
   const [user, setUser] = useState({});                 // jis user ne post dali hai wo hai ye
   const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
-
+  const comment_text = useRef();
+  const [showComment, setShowComment] = useState(false);
+  const [show3Dots, setShow3Dots] = useState(false);
 
   useEffect(()=>{
     setIsLiked(likes.includes(currentUser._id));
@@ -40,9 +45,9 @@ const Timeline = ({post}) => {
   },[userId]);
 
   
-  const likeHandler = () =>{
+  const likeHandler = async() =>{
     try{
-      axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
+      await axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
 
       setLik(isLiked ? lik-1 : lik+1);
       setIsLiked(!isLiked)
@@ -56,15 +61,15 @@ const Timeline = ({post}) => {
         setDisLik(dislik-1);
         setClr2("rgb(108, 104, 104)");
         setIsDisLiked(false);
-        axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id});
+        await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id});
       }
     }
     catch(err){}
   }
   
-  const dislikeHandler = () =>{
+  const dislikeHandler = async() =>{
     try{
-      axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id})
+      await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id})
 
       setDisLik(isDisLiked ? dislik-1 : dislik+1);
       setIsDisLiked(!isDisLiked);
@@ -78,11 +83,60 @@ const Timeline = ({post}) => {
         setLik(lik-1);
         setClr("rgb(108, 104, 104)");
         setIsLiked(false);
-        axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
+        await axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
       }
     }
     catch(err){}
   }
+
+  const commentHandler = async()=>{
+    const newComment = {
+      dp: currentUser.profilePicture,
+      name: currentUser.fname + " " + currentUser.lname,
+      comment: comment_text.current.value,
+      date: new Date()
+    }
+    try{
+      await axios.put("posts/"+ _id +"/comment", newComment);
+      // window.location.reload();
+      setComment(comment+1);
+      comment_text.current.value= "";
+    }
+    catch(err){}
+  }
+
+  const showCommentHandler = () =>{
+    if(comments.length!==0)
+      setShowComment(!showComment);
+  }
+
+  const deletePostHandler = async()=>{
+    try{
+      // console.log(_id)
+      // console.log(post.userId)
+      // console.log(currentUser._id)
+      //await axios.delete("posts/"+ _id, {userId: currentUser._id});
+
+      const remove = window.confirm("Are you sure, you want to remove this post?");
+      if(remove){
+        await axios.delete("posts/"+ _id);
+        await axios.put("users/"+currentUser._id, {userId: currentUser._id, totalPosts: currentUser.totalPosts-1});
+        window.location.reload();
+      }
+    }
+    catch(err){}
+    setShow3Dots(!show3Dots)
+  }
+
+  const updatePostHandler = async()=>{
+    
+    setShow3Dots(!show3Dots)
+  }
+
+  const reportPostHandler = ()=>{
+    setShow3Dots(!show3Dots)
+  }
+
   
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const name = user.fname + ' ' + user.lname;
@@ -114,12 +168,34 @@ const Timeline = ({post}) => {
               <div className="post-date"> {format(createdAt)} </div>
             </span>
           </div>
-          <div className="post-top-dots">
+          <div className="post-top-dots" onClick={()=>{setShow3Dots(!show3Dots)}}>
             <i className="fa-solid fa-ellipsis"></i>
           </div>
+          {currentUser._id===post.userId ?
+            ( show3Dots && (
+              <div className="post-3-dots-functionality">
+                <div className="post-3-dots-functionality-wrapper">
+                  <div className="three-dots-fun" id="delete-post" onClick={deletePostHandler}>Delete</div>
+                  <hr className='three-dots-hr'/>
+                  <div className="three-dots-fun" id="update-post" onClick={updatePostHandler}>Update</div>
+                  <hr className='three-dots-hr' />
+                  <div className="three-dots-fun" id="cancel-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Cancel</div>
+                </div>
+              </div>
+            )) :
+            ( show3Dots && (
+              <div className="post-3-dots-functionality" >
+                <div className="post-3-dots-functionality-wrapper">
+                  <div className="three-dots-fun" id="delete-post" onClick={reportPostHandler}>Report</div>
+                  <hr className='three-dots-hr' />
+                  <div className="three-dots-fun" id="cancel-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Cancel</div>
+                </div>
+              </div>
+            ))
+          }
         </div>
         <div className="post-caption"> {desc} </div>
-        <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} />
+        {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} />}
         <div className="post-reaction-count">
           <div className="like-dislike-count">
             <i className="fa-solid fa-thumbs-up solid-thumbs-up"></i>
@@ -139,19 +215,26 @@ const Timeline = ({post}) => {
             <i className="fa-regular fa-thumbs-down regular-thumbs-down" onClick={dislikeHandler} style={{color:clr2}} ></i>
             <span onClick={dislikeHandler} style={{color:clr2}}>Dislike</span>
           </div>
-          <div className="comment">
+          <div className="comment" onClick={showCommentHandler}>
             <i className="fa-regular fa-message"></i>
             <span>Comment</span>
           </div>
         </div>
         <hr className='post-hr'/>
-        <div className="comment-section">
-          <img className='comment-profile-img' src={PF+currentUser.profilePicture} alt="" />
-          <input type="text" className="comment-input" placeholder='Write a comment...'/>
-          <div className="send-icon">
-            <i className="fa-solid fa-paper-plane"></i>
+        { showComment && (
+          <div className="comment-div">
+            {comments.map((data)=>(
+                <Comment key={data} cmnt={data} />
+            ))}
           </div>
-        </div>
+        )}
+        <form className="comment-section">
+          <img className='comment-profile-img' src={PF+currentUser.profilePicture} alt="" />
+          <input type="text" className="comment-input" placeholder='Write a comment...' ref={comment_text} />
+          <div className="send-icon">
+            <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
+          </div>
+        </form>
       </div>
     </div>
   )

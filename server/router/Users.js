@@ -3,6 +3,29 @@ const router = require("express").Router();
 const bcrypt = require("bcrypt");
 const { append } = require("express/lib/response");
 
+//get all users
+router.get("/", async (req, res) => {
+  try {
+    const user = await User.find();
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
+//get a user
+router.get("/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+    const { password, updatedAt, ...other } = user._doc;
+    res.status(200).json(other);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
 //update user
 router.put("/:id", async (req, res) => {
   if (req.body.userId === req.params.id || req.body.isAdmin) {
@@ -39,18 +62,6 @@ router.delete("/:id", async (req, res) => {
     }
   } else {
     return res.status(403).json("You can delete only your account!");
-  }
-});
-
-
-//get a user
-router.get("/:id", async (req, res) => {
-  try {
-    const user = await User.findById(req.params.id);
-    const { password, updatedAt, ...other } = user._doc;
-    res.status(200).json(other);
-  } catch (err) {
-    res.status(500).json(err);
   }
 });
 
@@ -97,6 +108,5 @@ router.put("/:id/unfollow", async (req, res) => {
       res.status(403).json("you cant unfollow yourself");
     }
 });
-
 
 module.exports = router;

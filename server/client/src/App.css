@@ -19,7 +19,7 @@ body{
     display: flex;
     align-items: center;
     position: sticky;
-    z-index: 10;
+    z-index: 5463546546;
     background-color: white;
     top: 0;
     box-shadow: 0px 2px 5px var(--shadow-color);
@@ -92,6 +92,12 @@ body{
     justify-content: center;
     font-size: 12px;
 }
+.logout-icon{
+    margin-right: 10px;
+    color: rgb(180, 6, 6);
+    font-size: 20px;
+    cursor: pointer;
+}
 
 
 /* ########################## timeline container ##########################*/
@@ -99,7 +105,8 @@ body{
 .feed-container{
     display: flex;
     width: 100%;
-    background-color: var(--bg-color);
+    /* background-color: var(--bg-color); */
+    background-color: #03bfbc;
     padding-bottom: 40px;
 }
 .leftbar{
@@ -121,7 +128,6 @@ body{
     text-align: center;
     background-color: white;
     box-shadow: 4px 4px 8px var(--shadow-color);
-    cursor: pointer;
 }
 .small-profile-cover{
     height: 140px;
@@ -469,16 +475,25 @@ hr{
     margin-left: 5px;
     cursor: pointer;
 }
-.y button{
+.btn button{
     margin-top: 16px;
     padding: 5px 15px;
     font-weight: 600;
     border: none;
-    background-color: var(--link-color);
+    /* background-color: var(--link-color); */
     color: white;
     border-radius: 4px;
+    /* cursor: pointer; */
+}
+.btn button:disabled{
+    background-color: var(--grey-light);
+    cursor: not-allowed;
+}
+.btn button:enabled{
+    background-color: var(--link-color);
     cursor: pointer;
 }
+
 .post-input::-webkit-scrollbar{
     display: none;
 }
@@ -523,6 +538,7 @@ hr{
 .post-top-section{
     display: flex;
     justify-content: space-between;
+    position: relative;
 }
 .post-top-left{
     display: flex;
@@ -553,6 +569,31 @@ hr{
     align-items: center;
     border-radius: 50%;
     cursor: pointer;
+}
+.post-3-dots-functionality{
+    width: 90px;
+    height: auto;
+    border-radius: 4px;
+    position: absolute;
+    right: 0;
+    z-index: 53454;
+    background-color: rgb(243, 245, 243);
+    text-align: center;
+    box-shadow: 6px 6px 10px var(--shadow-color);
+}
+.post-3-dots-functionality-wrapper{
+    margin: 12px 0;
+}
+.three-dots-fun{
+    padding: 2px;
+    font-size: 12px;
+    cursor: pointer;
+}
+.three-dots-hr{
+    height: 1px;
+}
+#delete-post{
+    color: red;
 }
 .post-caption{
     font-size: 13px;
@@ -623,7 +664,7 @@ hr{
 }
 .comment-profile-img{
     height: 40px;
-    width: 45px;
+    width: 40px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 10px;
@@ -647,12 +688,65 @@ hr{
     cursor: pointer;
 }
 
+.comment-div{
+    /* border: 1px solid red; */
+    height: 250px;
+    width: 100%;
+    border-radius: 8px;
+    background-color: var(--bg-color);
+    overflow: auto;
+}
+.comment-div::-webkit-scrollbar{
+    display: none;
+}
+.comment-list{
+    margin: 10px 10px 4px 10px;
+    display: flex;
+    justify-content: space-between;
+}
+.comment-top-left{
+    display: flex;
+}
+.comment-list-profile-img{
+    height: 30px;
+    width: 30px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 7px;
+    cursor: pointer;
+}
+.comment-username{
+    font-weight: 500;
+    font-size: 13px;
+    cursor: pointer;
+}
+.comment-date{
+    font-size: 10px;
+    color: var(--grey-dark);
+    margin-top: 2px;
+}
+.comment-3-dots{
+    background-color: rgb(201, 200, 200);
+    height: 30px;
+    width: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.comment-caption{
+    font-size: 13px;
+    margin-left: 48px;
+    margin-bottom: 25px;
+}
 
 /* --------------------------------- login page CSS ------------------------------- */
 
 .login-container{
     height: 100vh;
-    background-color: var(--bg-color);
+    /* background-color: var(--bg-color); */
+    background-color: #03bfbc;
 }
 .login-container-wrapper{
     display: flex;
@@ -790,7 +884,7 @@ hr{
 @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
 .user-suggestion-conatiner{
-    background-color: var(--bg-color);
+    background-color: #03bfbc;
     height: calc(100vh - 50px);
     display: flex;
 }
@@ -879,7 +973,7 @@ hr{
 /*----------------------------- Admin Profile CSS ---------------------------------*/
 
 .admin-suggestion-conatiner{
-    background-color: var(--bg-color);
+    background-color: #03bfbc;
     display: flex;
     color: var(--grey-dark);
 }
@@ -1092,7 +1186,8 @@ hr{
 
 .signup-container{
     height: 100vh;
-    background-color: var(--bg-color);
+    /* background-color: var(--bg-color); */
+    background-color: #03bfbc;
 }
 .signup-box {
   position: relative;
@@ -1163,10 +1258,21 @@ hr{
   text-transform: uppercase;
   cursor: pointer;
   box-shadow: 4px 4px 10px var(--theme-shadow);
+  opacity: 0.8;
 }
 .register-btn:hover {
-  opacity: 0.8;
+  opacity: 1;
   transition: 0.2s ease;
+}
+.register-btn:disabled {
+    background-color: var(--grey-light);
+    box-shadow: none;
+}
+.register-btn:disabled:hover {
+    background-color: var(--grey-light);
+    box-shadow: none;
+    opacity: 0.8;
+    cursor:not-allowed;
 }
 .right {
     position: absolute;
@@ -1194,4 +1300,257 @@ hr{
     left: 220px;
     color: var(--theme-color);
     font-size: 15px;
+}
+
+
+
+/*################################# Messenger ##################################*/
+.messenger{
+    height: calc(100vh - 50px);
+    display: flex;
+    background-color: #03bfbc;
+}
+.messenger-leftbar{
+    flex: 3.2;
+}
+.messenger-chat-area{
+    flex: 5.8;
+}
+.messenger-rightbar{
+    flex: 3;
+}
+.messenger-leftbar-wrapper, .messenger-chat-area-wrapper, .messenger-rightbar-wrapper{
+    padding: 20px 10px;
+}
+
+/*--------------------- messenger leftside --------------------------*/
+.messenger-input{
+    width: 80%;
+    padding: 4px 10px;
+    border: none;
+    border-bottom: 2px solid gray;
+    background-color: transparent;
+    color: black;
+    font-size: 16px;
+    margin-bottom: 15px;
+}
+.messenger-input:focus{
+    outline: none;
+}
+.messenger-input::placeholder{
+    color: black;
+}
+.conversation-div{
+    padding: 10px 0;
+    width: 84%;
+    height: 78.5vh;
+    overflow: auto;
+    border-radius: 8px;
+    background-color: #0c9a97;
+}
+.conversation-div::-webkit-scrollbar{
+    width: 20px;
+}
+.conversation-div::-webkit-scrollbar-thumb{
+    background-color: #03bfbc;
+    border-radius: 100vh;
+    border: 7px solid #0c9a97;
+}
+.conversation-div::-webkit-scrollbar-thumb:hover{
+    background-color: #17cdca;
+}
+.conversation-div::-webkit-scrollbar-track{
+    border-radius: 8px;
+}
+.conversation{
+    display: flex;
+    align-items: center;
+    padding: 10px 0 10px 10px;
+    margin-left: 10px;
+    width: 90%;
+    cursor: pointer;
+    border-radius: 6px;
+}
+.conversation:hover{
+    background-color: #05aaa7;
+    transition: all 0.4s ease;
+}
+.conversation-dp{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+.conversation-name{
+    font-weight: 500;
+}
+
+/*--------------------- messenger chat area --------------------------*/
+.chat-area-top{
+    margin: 20px 0 10px 0;
+    height: 72vh;
+    overflow: auto;
+}
+.chat-area-top::-webkit-scrollbar{
+    display: none;
+}
+.message{
+    display: flex;
+    flex-direction: column;
+    margin: 15px 0;
+}
+.message-top{
+    display: flex;
+}
+.message-img{
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 10px;
+}
+.message-text{
+    margin: 0;
+    background-color: rgba(188, 187, 187, 0.7);
+    padding: 10px 18px;
+    border-radius: 20px;
+    max-width: 320px;
+}    
+.msg-text{
+    margin: 0;
+    font-size: 14px;
+    line-height: 18px;
+}
+.message-time{
+    text-align: end;
+    font-size: 12px;
+    color: var(--grey-dark);
+    margin-top: 5px;
+}
+
+.message.my{
+    align-items: flex-end;
+}
+.message.my .message-text{
+    background-color: #0c9a97;
+}
+
+
+.chat-area-bottom{
+    display: flex;
+    align-items: center;
+}
+.chat-area-input{
+    background-color: var(--bg-color);
+    width: 630px;
+    height: 80px;
+    border: none;
+    outline: none;
+    border-radius: 8px;
+    padding: 10px 15px;
+    margin-right: 10px;
+    resize: none;
+    font-family: 'Franklin Gothic Medium';
+    font-size: 15px;
+    box-sizing: border-box;
+}
+.chat-area-input:focus{
+    border: 2px solid #0c9a97;
+}
+.chat-area-input::-webkit-scrollbar{
+    display: none;
+}
+.message-send-icon{
+    background-color: var(--bg-color);
+    height: 50px;
+    width: 50px;
+    font-size: 26px;
+    color: #0c9a97;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+}
+.message-send-icon:hover{
+    color: #326161;
+    transform: scale(1.03);
+}
+.no-conversation-text{
+    position: absolute;
+    top: 40%;
+    width: 650px;
+    font-size: 50px;
+    font-weight: 700;
+    color: rgb(119, 206, 201);
+    cursor: default;
+}
+
+/*--------------------- messenger rightside online friends--------------------------*/
+.online-friend-heading{
+    margin: 0 0 0 45px;
+    padding: 15px 0 10px 20px;
+    width: 84%;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #0c9a97;
+    box-sizing: border-box;
+}
+.online-friend-div{
+    margin-left: 45px;
+    padding: 10px 0;
+    width: 84%;
+    height: 78vh;
+    overflow: auto;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    background-color: #0c9a97;
+}
+.online-friend-div::-webkit-scrollbar{
+    width: 20px;
+}
+.online-friend-div::-webkit-scrollbar-thumb{
+    background-color: #03bfbc;
+    border-radius: 100vh;
+    border: 7px solid #0c9a97;
+}
+.online-friend-div::-webkit-scrollbar-thumb:hover{
+    background-color: #17cdca;
+}
+.online-friend-div::-webkit-scrollbar-track{
+    border-radius: 8px;
+}
+.online-friend{
+    display: flex;
+    align-items: center;
+    padding: 10px 0 10px 10px;
+    margin-left: 10px;
+    width: 90%;
+    cursor: pointer;
+    border-radius: 6px;
+    position: relative;
+}
+.online-friend:hover{
+    background-color: #05aaa7;
+    transition: all 0.4s ease;
+}
+.online-friend-dp{
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 20px;
+}
+.online-friend-name{
+    font-weight: 500;
+}
+.online-friend-icon-badge{
+    width: 10px;
+    height: 10px;
+    background-color: rgb(0, 255, 0);
+    border-radius: 50%;
+    position: absolute;
+    bottom: 10px;
+    left: 40px;
 }

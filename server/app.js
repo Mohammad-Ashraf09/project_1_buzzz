@@ -7,10 +7,11 @@ const morgan = require("morgan");
 const userRoute = require("./router/Users");
 const authRoute = require("./router/Auth");
 const postRoute = require("./router/Posts");
+const conversationRoute = require("./router/Conversations");
+const messageRoute = require("./router/Messages");
 const multer = require("multer");
 const path = require("path");
-const { db } = require("./model/User");
-const MongoClient = require("mongodb").MongoClient;
+// const MongoClient = require("mongodb").MongoClient;
 
 
 const port = process.env.PORT || 8000;
@@ -54,23 +55,25 @@ app.post("/api/upload", upload.single('file'), (req, res)=>{
 app.use("/api/auth", authRoute);
 app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
+app.use("/api/conversations", conversationRoute);
+app.use("/api/messages", messageRoute);
 
 
 // get all the users from social collection name of database
-var database;
+// var database;
 
-app.get("/api/all", (req, res)=>{
-  database.collection("users").find({}).toArray((err, result)=>{
-    if(err) throw err
-    res.send(result)
-  })
-})
+// app.get("/api/all", (req, res)=>{
+//   database.collection("users").find({}).toArray((err, result)=>{
+//     if(err) throw err
+//     res.send(result)
+//   })
+// })
 
-MongoClient.connect(process.env.DATABASE, (err, db)=>{
-  if(err) throw err;
-  database = db.db("social");
-  console.log("connected...")
-})
+// MongoClient.connect(process.env.DATABASE, (err, db)=>{
+//   if(err) throw err;
+//   database = db.db("social");
+//   console.log("connected...")
+// })
 
 
 app.listen(port, () => {

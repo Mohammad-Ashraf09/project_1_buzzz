@@ -5,6 +5,8 @@ import TopbarForLogin from '../components/TopbarForLogin';
 
 const Signup = () => {
 
+    const [disable, setDisable] = useState(true);
+
     const fname = useRef();
     const lname = useRef();
     const username = useRef();
@@ -37,6 +39,10 @@ const Signup = () => {
         }   
     }
 
+    const disableHandler = () =>{
+        setDisable(!disable);
+    }
+
     
     return (
         <div className='signup-container'>
@@ -52,10 +58,10 @@ const Signup = () => {
                     <input type="password" name="password" placeholder="Password" required ref={password} minLength='6' />
                     <input type="password" name="retypePassword" placeholder="Retype Password" required ref={passwordAgain} />
                     <div className="agreement-div">
-                        <input type="checkbox" id="agreement" name="agreement"/>
-                        <label for="agreement"> I agree all statements in <a href="">Terms of Service</a></label>
+                        <input type="checkbox" id="agreement" name="agreement" onClick={disableHandler}/>
+                        <label htmlFor="agreement"> I agree all statements in <a href="">Terms of Service</a></label>
                     </div>
-                    <button type="submit" className="register-btn" >Register</button>
+                    <button type="submit" className="register-btn" disabled={disable}>Register</button>
                     <br />
                     <br />
                 </form>
