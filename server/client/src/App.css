@@ -98,7 +98,53 @@ body{
     font-size: 20px;
     cursor: pointer;
 }
-
+.notification-div{
+    position: absolute;
+    top: 55px;
+    right: 10px;
+    height: 400px;
+    width: 260px;
+    box-sizing: border-box;
+    padding: 10px;
+    border-radius: 8px;
+    background-color: rgba(232, 232, 232, 0.9);
+    display: flex;
+    flex-direction: column;
+    overflow: auto;
+}
+.notification-div::-webkit-scrollbar{
+    display: none;
+}
+.notification{
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+.notification-avatar{
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+}
+.notification-text{
+    padding: 5px;
+    font-size: 12px;
+}
+.markReadBtn{
+    margin-top: 15px;
+    padding: 8px;
+    font-size: 16px;
+    border-radius: 6px;
+    background-color: #03bfbc;
+    border: none;
+    cursor: pointer;
+}
+.markReadBtn:hover{
+    background-color: #03bfbcc7;
+}
+.noNotification{
+    display: flex;
+    justify-content: center;
+}
 
 /* ########################## timeline container ##########################*/
 

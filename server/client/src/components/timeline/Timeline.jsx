@@ -6,7 +6,7 @@ import {AuthContext} from "../../context/AuthContext";
 import Comment from "./Comment";
 import SearchBox from './SearchBox';
 
-const Timeline = ({post}) => {
+const Timeline = ({post, socket}) => {
 
   const {desc, img, userId, likes, dislikes, comments, createdAt, updatedAt, _id} = post;
   //console.log(post.comments);
@@ -44,6 +44,18 @@ const Timeline = ({post}) => {
     fetchUser();
   },[userId]);
 
+//console.log(socket);
+  const notificationHandler = (type)=>{
+    socket.emit("sendNotification", {
+      senderId : currentUser._id,
+      name : currentUser.fname + " " + currentUser.lname,
+      avatar : currentUser.profilePicture,
+      receiverId : user._id,
+      type,
+    });
+    // console.log(user);
+  };
+
   
   const likeHandler = async() =>{
     try{
@@ -63,6 +75,8 @@ const Timeline = ({post}) => {
         setIsDisLiked(false);
         await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id});
       }
+
+      notificationHandler("liked");
     }
     catch(err){}
   }
@@ -85,6 +99,8 @@ const Timeline = ({post}) => {
         setIsLiked(false);
         await axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
       }
+
+      notificationHandler("disliked");
     }
     catch(err){}
   }
@@ -101,6 +117,8 @@ const Timeline = ({post}) => {
       // window.location.reload();
       setComment(comment+1);
       comment_text.current.value= "";
+
+      notificationHandler("commented");
     }
     catch(err){}
   }

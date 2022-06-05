@@ -8,12 +8,14 @@ import SearchBox from '../components/timeline/SearchBox';
 import Timeline from '../components/timeline/Timeline';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
+import {io} from "socket.io-client";
 
 
 const Feed = () => {
 
   const [posts, setPosts] = useState([]);
-  const {user} = useContext(AuthContext)
+  const [socket, setSocket] = useState(null);
+  const {user} = useContext(AuthContext);
 
   useEffect(()=>{
     const fetchPosts = async() =>{
@@ -26,9 +28,20 @@ const Feed = () => {
     fetchPosts();
   },[user._id]);
 
+  useEffect(()=>{
+    setSocket(io("ws://localhost:8100"));
+    //console.log(socket);
+  },[]);
+
+  useEffect(()=>{
+    socket?.emit("addUser2", user._id);
+  },[socket, user._id])
+
+  //console.log(socket);
+
   return (
     <>
-      <Topbar/>
+      <Topbar socket={socket} firstName={user.fname} lastName={user.lname} avatar={user.profilePicture}/>
       <div className="feed-container">
         <div className="leftbar">
           <SmallProfile/>
@@ -38,7 +51,7 @@ const Feed = () => {
           <SearchBox/>
           <div className="timeline-post-area">
             {posts.map((data)=>(
-              <Timeline key={data._id} post={data}/>
+              <Timeline key={data._id} post={data} socket={socket} />
             ))}
           </div>
         </div>
