@@ -35,13 +35,14 @@ const Feed = () => {
 
   useEffect(()=>{
     socket?.emit("addUser2", user._id);
+    // socket?.emit("addUser3", user._id);
   },[socket, user._id])
 
   //console.log(socket);
 
   return (
     <>
-      <Topbar socket={socket} firstName={user.fname} lastName={user.lname} avatar={user.profilePicture}/>
+      <Topbar socket={socket} />
       <div className="feed-container">
         <div className="leftbar">
           <SmallProfile/>
@@ -56,8 +57,8 @@ const Feed = () => {
           </div>
         </div>
         <div className="rightbar">
-          <Contact/>
-          <Suggestion/>
+          <Contact socket={socket} />
+          <Suggestion socket={socket} />
         </div>
       </div>
     </>

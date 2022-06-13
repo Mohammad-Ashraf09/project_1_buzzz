@@ -3,23 +3,23 @@ import React, { useContext, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
-const SuggestionPerson = ({users}) => {
+const SuggestionPerson = ({users, onlineUsers}) => {
 
   const [followed, setFollowed] = useState(false);
   const {user:currentUser} = useContext(AuthContext);
 
   useEffect(()=>{
-    setFollowed(currentUser.followings.includes(users._id))
+    setFollowed(currentUser.followings.some(e=>e.id===users._id))
   },[currentUser, users._id]);
 
 
   const followHandler = async () =>{
     try{
       if(followed){
-        await axios.put("/users/"+ users._id + "/unfollow", {userId: currentUser._id})
+        await axios.put("/users/"+ users._id + "/unfollow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
       }
       else{
-        await axios.put("/users/"+ users._id + "/follow", {userId: currentUser._id})
+        await axios.put("/users/"+ users._id + "/follow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
       }
     }
     catch(err){
@@ -27,8 +27,8 @@ const SuggestionPerson = ({users}) => {
     }
     setFollowed(!followed);
   }
-  
 
+console.log(users)
   const {fname, lname, profilePicture, _id} = users;
     
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -42,7 +42,7 @@ const SuggestionPerson = ({users}) => {
           <div>
           <Link to={`/user/${_id}`}>
             <img src={dp} alt="" className="suggestion-img" />
-            <span className="suggestion-badge"></span>
+            {onlineUsers.some(data=>data.userId === _id) && <span className="suggestion-badge"></span>}
           </Link>
           </div>
           <div className="x">

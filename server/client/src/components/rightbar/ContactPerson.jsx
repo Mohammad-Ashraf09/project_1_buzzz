@@ -1,23 +1,22 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
 
-const ContactPerson = ({friend}) => {
+const ContactPerson = ({onlineUsers, follow}) => {
 
-    const {fname, lname, profilePicture, _id} = friend;
+  // const {fname, lname, profilePicture, _id} = friend;
     
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const dp = profilePicture ? PF+profilePicture : PF+'default-dp.png';
-    const name = fname +' '+ lname;
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const DP = follow.dp ? PF+follow.dp : PF+'default-dp.png';
 
   return (
     <>
         <li className="contact-list-item">
-            <Link to={`/user/${_id}`}>
-              <img src={dp} alt="" className="contact-img" />
-              <span className="contact-badge"></span>
+            <Link to={`/user/${follow.id}`}>
+              <img src={DP} alt="" className="contact-img" />
+              {onlineUsers.some(data=>data.userId === follow.id) && <span className="contact-badge"></span>}
             </Link>
-            <Link to={`/user/${_id}`} style={{textDecoration: 'none'}}>
-              <span className="contact-name">{name}</span>
+            <Link to={`/user/${follow.id}`} style={{textDecoration: 'none'}}>
+              <span className="contact-name">{follow.name}</span>
             </Link>
         </li>
     </>

@@ -13,7 +13,7 @@ const UserProfile = () => {
   const userId = useParams().id;
 
   useEffect(()=>{
-    setFollowed(currentUser.followings.includes(user._id))
+    setFollowed(currentUser.followings.some(e=>e.id===user._id))
   },[currentUser, user._id]);
 
   useEffect(()=>{
@@ -44,10 +44,10 @@ const UserProfile = () => {
   const followHandler = async () =>{
     try{
       if(followed){
-        await axios.put("/users/"+ user._id + "/unfollow", {userId: currentUser._id})
+        await axios.put("/users/"+ user._id + "/unfollow", {userId: currentUser._id, name: user.fname+" "+user.lname, dp:user.profilePicture})
       }
       else{
-        await axios.put("/users/"+ user._id + "/follow", {userId: currentUser._id})
+        await axios.put("/users/"+ user._id + "/follow", {userId: currentUser._id, name: user.fname+" "+user.lname, dp:user.profilePicture})
       }
     }catch(err){
 

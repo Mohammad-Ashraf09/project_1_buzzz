@@ -6,6 +6,7 @@ const io = new Server({
     },
 });
 
+// for messanger
 let users = [];
 const addUser = (userId, socketId)=>{
     !users.some(user=>user.userId === userId) && users.push({userId, socketId});
@@ -17,7 +18,7 @@ const getUser = (userId)=>{
     return users.find((user)=> user.userId === userId);
 }
 
-
+//for notification
 let users2 = [];
 const addUser2 = (userId, socketId)=>{
     !users2.some(user=>user.userId === userId) && users2.push({userId, socketId});
@@ -28,6 +29,15 @@ const removeUser2 = (socketId)=>{
 const getUser2 = (userId)=>{
     return users2.find((user)=> user.userId === userId);
 }
+
+//for online friends
+// let users3 = [];
+// const addUser3 = (userId)=>{
+//     !users3.some(user=>user.userId === userId) && users3.push(userId);
+// }
+// const removeUser3 = (socketId)=>{
+//     users3 = users3.filter((user) => user.socketId !== socketId);
+// }
 
 io.on("connection", (socket)=>{
     // when a user comming messenger page or connect
@@ -52,7 +62,7 @@ io.on("connection", (socket)=>{
         addUser2(userId, socket.id);
         console.log(userId);
         console.log(socket.id);
-        // io.emit("getUsers2", users2);
+        io.emit("getUsers2", users2);
         // console.log("someone has connected...");
     });
 
@@ -71,9 +81,23 @@ io.on("connection", (socket)=>{
         });
     });
 
+    // socket.on("addUser3", (userId)=>{
+    //     addUser3(userId);
+    //     io.emit("getUsers3", users3);
+    //     // console.log("someone has connected...");
+    // });
+
+    // socket.on("disconnect", ()=>{
+    //     removeUser(socket.id);
+    // });
     socket.on("disconnect", ()=>{
         removeUser2(socket.id);
+        console.log("disconnected...", socket.id);
     });
+    // socket.on("disconnect", ()=>{
+    //     removeUser3(socket.id);
+    //     console.log("disconnected...", socket.id);
+    // });
 });
 
 io.listen(8100);

@@ -23,6 +23,8 @@ const Timeline = ({post, socket}) => {
   const comment_text = useRef();
   const [showComment, setShowComment] = useState(false);
   const [show3Dots, setShow3Dots] = useState(false);
+  const [edit, setEdit] = useState(false);
+  const editedDesc = useRef();
 
   useEffect(()=>{
     setIsLiked(likes.includes(currentUser._id));
@@ -44,15 +46,16 @@ const Timeline = ({post, socket}) => {
     fetchUser();
   },[userId]);
 
-//console.log(socket);
   const notificationHandler = (type)=>{
-    socket.emit("sendNotification", {
-      senderId : currentUser._id,
-      name : currentUser.fname + " " + currentUser.lname,
-      avatar : currentUser.profilePicture,
-      receiverId : user._id,
-      type,
-    });
+    if(currentUser._id !== user._id){
+      socket.emit("sendNotification", {
+        senderId : currentUser._id,
+        name : currentUser.fname + " " + currentUser.lname,
+        avatar : currentUser.profilePicture,
+        receiverId : user._id,
+        type,
+      });
+    }
     // console.log(user);
   };
 
@@ -106,21 +109,24 @@ const Timeline = ({post, socket}) => {
   }
 
   const commentHandler = async()=>{
-    const newComment = {
-      dp: currentUser.profilePicture,
-      name: currentUser.fname + " " + currentUser.lname,
-      comment: comment_text.current.value,
-      date: new Date()
-    }
-    try{
-      await axios.put("posts/"+ _id +"/comment", newComment);
-      // window.location.reload();
-      setComment(comment+1);
-      comment_text.current.value= "";
+    if(comment_text.current.value){
+      const newComment = {
+        dp: currentUser.profilePicture,
+        name: currentUser.fname + " " + currentUser.lname,
+        comment: comment_text.current.value,
+        date: new Date()
+      }
+    
+      try{
+        await axios.put("posts/"+ _id +"/comment", newComment);
+        // window.location.reload();
+        setComment(comment+1);
+        comment_text.current.value= "";
 
-      notificationHandler("commented");
+        notificationHandler("commented");
+      }
+      catch(err){}
     }
-    catch(err){}
   }
 
   const showCommentHandler = () =>{
@@ -146,9 +152,22 @@ const Timeline = ({post, socket}) => {
     setShow3Dots(!show3Dots)
   }
 
-  const updatePostHandler = async()=>{
-    
+  const editPostHandler =()=>{
+    setEdit(true);
     setShow3Dots(!show3Dots)
+  }
+
+  const updateBtnHandler = async()=>{
+    const updatedPost = {
+      userId: currentUser._id,
+      desc: editedDesc.current.value,
+    }
+
+    try{
+      await axios.put("/posts/"+_id, updatedPost)
+      window.location.reload();
+    }
+    catch(err){}
   }
 
   const reportPostHandler = ()=>{
@@ -195,7 +214,7 @@ const Timeline = ({post, socket}) => {
                 <div className="post-3-dots-functionality-wrapper">
                   <div className="three-dots-fun" id="delete-post" onClick={deletePostHandler}>Delete</div>
                   <hr className='three-dots-hr'/>
-                  <div className="three-dots-fun" id="update-post" onClick={updatePostHandler}>Update</div>
+                  <div className="three-dots-fun" id="update-post" onClick={editPostHandler}>Edit</div>
                   <hr className='three-dots-hr' />
                   <div className="three-dots-fun" id="cancel-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Cancel</div>
                 </div>
@@ -212,7 +231,15 @@ const Timeline = ({post, socket}) => {
             ))
           }
         </div>
-        <div className="post-caption"> {desc} </div>
+        {edit 
+          ? <div className="edit-post">
+              <textarea type="text" className="post-input-edit" placeholder={"Start a post..."} defaultValue={desc} ref={editedDesc} />
+              <div className="edit-btn">
+                <button type="submit" className="update-btn" onClick={updateBtnHandler}>Update</button>
+                <button type="submit" className="cancel-btn" onClick={()=>{setEdit(false)}}>Cancel</button>
+              </div>
+            </div>
+          : <div className="post-caption"> {desc} </div>}
         {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} />}
         <div className="post-reaction-count">
           <div className="like-dislike-count">

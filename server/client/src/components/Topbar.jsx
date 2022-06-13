@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import {Link} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext"
 
-const Topbar = ({socket, firstName, lastName, avatar}) => {
+const Topbar = ({socket}) => {
 
     const [notification, setNotification] = useState([]);
     const [open, setOpen] = useState(false);
@@ -24,23 +24,14 @@ const Topbar = ({socket, firstName, lastName, avatar}) => {
 
     useEffect(()=>{
         socket?.on("getNotification", (data)=>{
-            console.log(data);
+            // console.log(data);
             setNotification((prev)=>[...prev, data]);
         });
     },[socket]);
     
-    console.log(notification);
+    //console.log(notification);
 
     const displayNotification = ({name, avatar, type})=>{
-        // let action;
-
-        // if(type===1)
-        //     action="liked"
-        // else if(type===2)
-        //     action="disliked"
-        // else
-        //     action="commented"
-
         return(
             <div className='notification'>
                 <img src={PF+avatar} alt="" className="notification-avatar"/>

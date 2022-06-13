@@ -16,30 +16,32 @@ const Messenger = () => {
   const [arrivalMessage, setArrivalMessage] = useState(null);
   const {user} = useContext(AuthContext);
   const scrollRef = useRef();
-  const socket = useRef();
+  const [socket, setSocket] = useState(null);
 
   useEffect(()=>{
-    socket.current = io("ws://localhost:8100");
+    setSocket(io("ws://localhost:8100"));
+  },[]);
 
-    socket.current.on("getMessage", data =>{
+  useEffect(()=>{
+    socket?.on("getMessage", data =>{
       setArrivalMessage({
         sender:data.senderId,
         text:data.text,
         createdAt:Date.now(),
       })
     })
-  },[])
+  },[socket])
 
   useEffect(()=>{
     arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && setMessages((prev)=> [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
   
   useEffect(()=>{
-    socket.current.emit("addUser", user._id);
+    socket?.emit("addUser", user._id);
     // socket.current.on("getUsers", users=>{
     //   console.log(users);                      // jobhi user massenger open karega wo users me aa jayega as array with there id and socketId
     // })
-  },[user]);
+  },[socket, user._id]);
 
   //console.log(socket)
   
@@ -80,7 +82,7 @@ const Messenger = () => {
       };
 
       const receiverId = currentChat.members.find(member => member !== user._id);
-      socket.current.emit("sendMessage",{
+      socket?.emit("sendMessage",{
         senderId : user._id,
         receiverId,
         text : newMessage,
