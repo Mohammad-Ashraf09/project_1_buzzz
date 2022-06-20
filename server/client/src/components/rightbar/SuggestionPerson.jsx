@@ -28,7 +28,7 @@ const SuggestionPerson = ({users, onlineUsers}) => {
     setFollowed(!followed);
   }
 
-console.log(users)
+  //console.log(users)
   const {fname, lname, profilePicture, _id} = users;
     
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;

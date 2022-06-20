@@ -5,7 +5,7 @@
 - implement google login 
 
 ----- Signup page -----
- - validation
+✔ - validation
 
 ----- Home page -----
  ✔ - realtime notification
@@ -16,16 +16,23 @@
  ✔ - implement seach filter
  ✔ - fix green badges for real online friends
  ✋- implement friend request option
+ - fix search input shifting of right side
 
 ----- Admin page -----
- - refactor complete admin page (implement only admin's posts)
- - there should be option for edit profile
+✋- refactor complete admin page (implement only admin's posts)
+✋- there should be option for edit profile
 
 ----- User page -----
- - refactor complete user page (implement only user's posts)
- - no edit option for other users
+✋- refactor complete user page (implement only user's posts)
+✋- no edit option for other users
 
 ----- Messager page -----
  ✔ - realtime message
- - search filter
- - implement start conversation with new friends
+ ✔ - search filter
+ ✔ - implement start conversation with new friends
+  - delete extra Nikhil
+ ✋- validation on add conversation
+  - on left div show delete icon on hover at any name
+ ✋- clear chat option on center chat area
+
+------ RESPONSIVEness --------------

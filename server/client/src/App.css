@@ -1326,6 +1326,47 @@ hr{
   border-bottom: 2px solid #9933ff;
   transition: 0.2s ease;
 }
+
+.gender-div{
+    display: flex;
+    margin-bottom: 10px;
+}
+.gender-title{
+    display: flex;
+    align-items: center;
+    flex: 4;
+    margin-left: 4px;
+}
+.gender-text{
+    font-size: 15px !important;
+    color: var(--shadow-color)
+}
+.gender-radio{
+    flex: 8;
+    display: flex;
+    justify-content: space-around;
+}
+.gender-radio input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+}
+.gender-radio label {
+    display: inline-block;
+    background-color: white;
+    padding: 10px 10px;
+    font-family: sans-serif, Arial;
+    font-size: 15px;
+    border: 1px solid black;
+    border-radius: 4px;
+    margin-left: 5px;
+    border: none;
+}
+.gender-radio input[type="radio"]:checked + label {
+    background-color: var(--theme-color);
+    border: none;
+    color: white;
+}
 .agreement-div{
     display: flex;
     align-items: center;
@@ -1395,7 +1436,19 @@ hr{
     color: var(--theme-color);
     font-size: 15px;
 }
-
+.error-msg{
+    font-size: 11px;
+    color: red;
+    margin-bottom: 10px;
+    margin-top: -15px;
+    display: none;
+}
+input:invalid[focused="true"]{
+    border-bottom: 1px solid red;
+}
+input:invalid[focused="true"] ~ .error-msg{
+    display: block;
+}
 
 
 /*################################# Messenger ##################################*/
@@ -1470,6 +1523,7 @@ hr{
     transition: all 0.4s ease;
 }
 .conversation-dp{
+    flex: 1;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -1477,7 +1531,19 @@ hr{
     margin-right: 20px;
 }
 .conversation-name{
+    flex: 8;
     font-weight: 500;
+}
+.delete-icon{
+    display: none;
+}
+.conversation:hover > .delete-icon{
+    flex: 3;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 40px;
+    color: rgb(164, 7, 7);
 }
 
 /*--------------------- messenger chat area --------------------------*/
@@ -1539,7 +1605,7 @@ hr{
     background-color: var(--bg-color);
     width: 630px;
     height: 80px;
-    border: none;
+    border: 2px solid rgba(218, 227, 218, 0);
     outline: none;
     border-radius: 8px;
     padding: 10px 15px;
@@ -1582,6 +1648,9 @@ hr{
 }
 
 /*--------------------- messenger rightside online friends--------------------------*/
+.search-online-friend{
+    margin-left: 45px;
+}
 .online-friend-heading{
     margin: 0 0 0 45px;
     padding: 15px 0 10px 20px;
@@ -1595,7 +1664,7 @@ hr{
     margin-left: 45px;
     padding: 10px 0;
     width: 84%;
-    height: 78vh;
+    height: 72vh;
     overflow: auto;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;

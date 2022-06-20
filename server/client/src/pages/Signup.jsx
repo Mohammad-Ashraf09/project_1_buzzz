@@ -1,47 +1,106 @@
 import axios from 'axios';
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import FormInput from '../components/FormInput';
 import TopbarForLogin from '../components/TopbarForLogin';
 
 const Signup = () => {
 
     const [disable, setDisable] = useState(true);
-
-    const fname = useRef();
-    const lname = useRef();
-    const username = useRef();
-    const email = useRef();
-    const phone = useRef();
-    const password = useRef();
-    const passwordAgain = useRef();
     const navigate = useNavigate();
+    const [values, setValues] = useState({
+        fname:"",
+        lname:"",
+        gender:"male",
+        email:"",
+        phone:"",
+        password:"",
+        confirmPassword:"",
+    });
+
+    const inputs = [
+        {
+            id: 1,
+            name: "fname",
+            type: "text",
+            placeholder: "First Name",
+            errorMsg: "First Name should be 3-16 characters and shouldn't include any special character!",
+            pattern:"^[A-Za-z]{3,16}$",
+            required: true,
+        },
+        {
+            id: 2,
+            name: "lname",
+            type: "text",
+            placeholder: "Last Name",
+            errorMsg: "Last Name should be 3-16 characters and shouldn't include any special character!",
+            pattern:"^[A-Za-z]{3,16}$",
+            required: true,
+        },
+        {
+            id: 3,
+            name: "gender",
+            type: "radio",
+            placeholder: "",
+        },
+        {
+            id: 4,
+            name: "email",
+            type: "email",
+            placeholder: "Email",
+            errorMsg: "It should be a valid email address!",
+            required: true,
+        },
+        {
+            id: 5,
+            name: "phone",
+            type: "text",
+            placeholder: "Phone",
+            errorMsg: "Phone number should contains 10 digits!",
+            pattern:"^[0-9]{10}$",
+            required: true,
+        },
+        {
+            id: 6,
+            name: "password",
+            type: "password",
+            placeholder: "Password",
+            errorMsg: "Password should be 8-20 character and include at least 1 letter, 1 number and 1 special character!",
+            pattern:"^(?=.*[0-9])(?=.*[A-Za-z])(?=.*[!@#$%^&*])[A-Za-z0-9!@#$%^&*]{8,20}$",
+            required: true,
+        },
+        {
+            id: 7,
+            name: "confirmPassword",
+            type: "password",
+            placeholder: "Confirm Password",
+            errorMsg: "Passwords don't match!",
+            pattern: values.password,
+            required: true,
+        },
+    ]
 
     const clickHandler = async(e) =>{
         e.preventDefault();
-        if(password.current.value !== passwordAgain.current.value){
-            passwordAgain.current.setCustomValidity("Passwords NOT matched")
-        }
-        else{
-            const user = {
-                fname: fname.current.value,
-                lname: lname.current.value,
-                username: username.current.value,
-                email: email.current.value,
-                phone: phone.current.value,
-                password: password.current.value,
-            };
-            try{
-                await axios.post("/auth/register", user);
-                navigate("/login");
-            }catch(err){
-                console.log(err);
-            }
-        }   
+        
+        try{
+            console.log(values)
+            await axios.post("/auth/register", values);
+            navigate("/login");
+        }catch(err){
+            console.log(err);
+        } 
     }
 
     const disableHandler = () =>{
         setDisable(!disable);
     }
+
+    const onChange = (e)=>{
+        setValues({...values, [e.target.name]: e.target.value});
+    }
+
+    //console.log(values);
 
     
     return (
@@ -50,13 +109,11 @@ const Signup = () => {
             <div className="signup-box">
                 <form className="left" onSubmit={clickHandler}>
                     <h1>Sign up</h1>
-                    <input type="text" name="firstname" placeholder="First Name" required ref={fname} />
-                    <input type="text" name="lastname" placeholder="Last Name" required ref={lname} />
-                    <input type="text" name="username" placeholder="Username should contains numbers" required ref={username} />
-                    <input type="email" name="email" placeholder="Email" required ref={email} />
-                    <input type="text" name="phone" placeholder="Phone" required ref={phone} />
-                    <input type="password" name="password" placeholder="Password" required ref={password} minLength='6' />
-                    <input type="password" name="retypePassword" placeholder="Retype Password" required ref={passwordAgain} />
+
+                    {inputs.map((item)=>(
+                        <FormInput key={item.id} name={item.name} type={item.type} placeholder={item.placeholder} errorMsg={item.errorMsg} pattern={item.pattern} required={item.required} values={values[item.name]} onChange={onChange} />
+                    ))}
+
                     <div className="agreement-div">
                         <input type="checkbox" id="agreement" name="agreement" onClick={disableHandler}/>
                         <label htmlFor="agreement"> I agree all statements in <a href="">Terms of Service</a></label>

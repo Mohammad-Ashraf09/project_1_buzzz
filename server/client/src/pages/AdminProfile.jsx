@@ -98,7 +98,7 @@ const AdminProfile = () => {
                 <label htmlFor="male">Male</label>
                 <input type="radio" id="female"  value="female" name='gender' onBlur={(e)=>handleChange('gender','female')} />
                 <label htmlFor="female">Female</label>
-              <input id='details-value2-bday' type="text" placeholder='MM/DD/YYYY' name='birthday' onBlur={(e)=>handleChange(e.target.name,e.target.value)}/>
+              <input id='details-value2-bday' type="Date" placeholder='MM/DD/YYYY' name='birthday' onBlur={(e)=>handleChange(e.target.name,e.target.value)}/>
               </div>
             </div>
             <br/>

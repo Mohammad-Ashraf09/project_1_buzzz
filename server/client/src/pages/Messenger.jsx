@@ -17,6 +17,9 @@ const Messenger = () => {
   const {user} = useContext(AuthContext);
   const scrollRef = useRef();
   const [socket, setSocket] = useState(null);
+  const [following, setFollowing] = useState([]);
+  const [onlineUsers, setOnlineUsers] = useState([]);
+  const [query, setQuery] = useState("");
 
   useEffect(()=>{
     setSocket(io("ws://localhost:8100"));
@@ -50,7 +53,7 @@ const Messenger = () => {
       try{
         const res = await axios.get("/conversations/"+user._id);  // logged in user ke jitne bhi conversations hai sab return karega
         setConversations(res.data);
-        //console.log(res.data);
+        // console.log(res.data);
       }
       catch(err){
         console.log(err);
@@ -100,7 +103,24 @@ const Messenger = () => {
 
   useEffect(()=>{
     scrollRef.current?.scrollIntoView({behavior: "smooth"});
-  },[messages])
+  },[messages]);
+
+  useEffect(()=>{
+    const fetchFollowings = async() =>{
+      const res = await axios.get("users/"+user._id);
+      const arr = res.data.followings                    // array of objects de raha hai ye
+      setFollowing(arr);
+    }
+    fetchFollowings();
+  },[user._id]);
+
+  useEffect(()=>{
+    socket?.on("getUsers", (data)=>{
+        setOnlineUsers(data);
+    });
+  },[socket, onlineUsers]);
+
+  // console.log(conversations)
 
   return (
     <>
@@ -144,26 +164,12 @@ const Messenger = () => {
         </div>
         <div className="messenger-rightbar">
           <div className="messenger-rightbar-wrapper">
+            <input className='messenger-input search-online-friend' type="text" placeholder='Search for friend' onChange={(e)=>setQuery(e.target.value)} />
             <h3 className='online-friend-heading'>Online Friends</h3>
             <div className="online-friend-div">
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
-              <OnlineFriends/>
+              {following.filter((x)=>x.name.toLowerCase().includes(query)).map((data)=>(
+                <OnlineFriends key={data.id} follow={data} onlineUsers={onlineUsers} user={user}/>
+              ))}
             </div>
           </div>
         </div>

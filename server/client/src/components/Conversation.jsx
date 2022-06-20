@@ -22,6 +22,11 @@ const Conversation = ({conversation, currentUser}) => {
     getUser();
   },[currentUser, conversation])
 
+  const deleteHandler = async(e)=>{
+    e.preventDefault();
+    window.alert("hi.....")
+  }
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const DP = dp ? PF+dp : PF+"default-dp.png";
 
@@ -29,6 +34,9 @@ const Conversation = ({conversation, currentUser}) => {
     <div className='conversation'>
         <img className='conversation-dp' src={DP} alt="" />
         <span className='conversation-name'>{name}</span>
+        <div className="delete-icon" onClick={deleteHandler}>
+          <i class="fa-solid fa-trash-can"></i>
+        </div>
     </div>
   )
 }
