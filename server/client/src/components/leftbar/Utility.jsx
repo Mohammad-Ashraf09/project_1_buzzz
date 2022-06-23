@@ -1,6 +1,23 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useContext } from 'react'
+import { AuthContext } from '../../context/AuthContext';
+
 
 const Utility = () => {
+    const {user} = useContext(AuthContext);
+
+
+    const deleteAccountHandler = async(e)=>{
+        e.preventDefault();
+        const remove = window.confirm("Are you sure, you want to delete your account!");
+    
+        if(remove){
+            await axios.delete("/users/"+user._id);
+            localStorage.clear();
+            window.location.reload();
+        }
+    }
+
   return (
     <div className='utility'>
         <div className="utility-wrapper">
@@ -68,6 +85,15 @@ const Utility = () => {
                 <i className="fa-solid fa-chevron-down"></i>
                 <span>Show More</span>
             </div>
+            <hr className='sidebar-line'/>
+
+            <div className="utility-name">Account</div>
+            <ul className="sidebar-list">
+                <li className="sidebar-list-item">
+                    <i class="fa-solid fa-trash-can"></i>
+                    <span className="sidebar-list-text delete-account" onClick={deleteAccountHandler}>Delete Account</span>
+                </li>
+            </ul>
         
         </div>
     </div>

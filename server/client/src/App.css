@@ -188,7 +188,7 @@ body{
 }
 .user-img{
     height: 90px;
-    width: 35%;
+    width: 90px;
     border-radius: 50%;
     object-fit: cover;
     position: absolute;
@@ -275,6 +275,9 @@ hr{
     height: 2px;
     background-color: var(--grey-xl-light);
     border: none;
+}
+.delete-account, .fa-trash-can{
+    color: red;
 }
 
 
@@ -924,7 +927,7 @@ hr{
     padding: 5px;
     font-weight: 500;
     font-size: 15px;
-    margin-bottom: 30px;
+    /* margin-bottom: 30px; */
 }
 [placeholder]{
     opacity: 0.6;
@@ -934,9 +937,16 @@ hr{
     text-indent: -100%;
     opacity: 1;
 }
+.invalid-credential{
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+    /* display: none; */
+}
 .form-group{
     display: flex;
     justify-content: space-between;
+    margin-top: 30px;
     margin-left: 100px;
     margin-right: 100px;
     font-size: 13px;
@@ -958,7 +968,7 @@ hr{
     color: var(--theme-color);
 }
 .signin-btn{
-    margin-top: 68px;
+    margin-top: 55px;
     font-weight: 500;
     padding: 14px 42px;
     border-radius: 25px;
