@@ -13,6 +13,324 @@ body{
     --theme-shadow : rgba(156, 56, 233, 0.5);
 }
 
+
+/*################################################## SignUp page CSS #################################################*/
+
+@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500);
+
+.signup-container{
+    height: 100vh;
+    background-color: #03bfbc;
+    position: relative;
+}
+.signup-box {
+  width: 65%;
+  height: 85%;
+  background: rgb(244, 240, 240);
+  border-radius: 8px;
+  box-shadow: 4px 4px 10px var(--shadow-color);
+  display: flex;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin-top: 1.5rem;
+}
+.left {
+  box-sizing: border-box;
+  padding: 40px;
+  width: 45%;
+  height: 100%;
+  position: relative;
+}
+.left h1 {
+  font-family: 'Roboto', sans-serif;
+  margin: 0 0 20px 0;
+  font-size: 30px;
+  color: var(--theme-color);
+  font-weight: normal;
+}
+.left input[type="text"], .left input[type="email"], .left input[type="password"] {
+  display: block;
+  box-sizing: border-box;
+  margin-bottom: 20px;
+  padding: 4px;
+  width: 100%;
+  height: 32px;
+  border: none;
+  border-bottom: 1px solid #AAA;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 400;
+  font-size: 15px;
+  transition: 0.2s ease;
+}
+.gender-div{
+    display: flex;
+    margin-bottom: 10px;
+}
+.gender-title{
+    display: flex;
+    align-items: center;
+    flex: 4;
+    margin-left: 4px;
+}
+.gender-text{
+    font-size: 15px !important;
+    color: var(--shadow-color)
+}
+.gender-radio{
+    flex: 8;
+    display: flex;
+    justify-content: space-around;
+}
+.gender-radio input[type="radio"] {
+    opacity: 0;
+    position: fixed;
+    width: 0;
+}
+.gender-radio label {
+    display: inline-block;
+    background-color: white;
+    padding: 10px 10px;
+    font-family: sans-serif, Arial;
+    font-size: 15px;
+    border: 1px solid black;
+    border-radius: 4px;
+    margin-left: 5px;
+    border: none;
+}
+.gender-radio input[type="radio"]:checked + label {
+    background-color: var(--theme-color);
+    border: none;
+    color: white;
+}
+.agreement-div{
+    display: flex;
+    align-items: center;
+}
+#agreement{
+    height: 14px;
+    width: 14px;
+}
+.left label{
+    font-size: 13px;
+}
+.agreement-div a{
+    color: var(--theme-color);
+}
+.register-btn {
+  margin-top: 28px;
+  padding: 15px 35px;
+  background-color: var(--theme-color);
+  border: none;
+  border-radius: 25px;
+  color: #FFF;
+  font-family: 'Roboto', sans-serif;
+  font-weight: 500;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 4px 4px 10px var(--theme-shadow);
+  opacity: 0.8;
+}
+.register-btn:hover {
+  opacity: 1;
+  transition: 0.2s ease;
+}
+.register-btn:disabled {
+    background-color: var(--grey-light);
+    box-shadow: none;
+}
+.register-btn:disabled:hover {
+    background-color: var(--grey-light);
+    box-shadow: none;
+    opacity: 0.8;
+    cursor:not-allowed;
+}
+.right {
+    box-sizing: border-box;
+    width: 55%;
+    height: 100%;
+}
+.banner-img{
+    height: 80%;
+    width: 100%;
+    border-top-right-radius: 8px;
+}
+#existing-member{
+    position: absolute;
+    bottom: 12%;
+    right: 20%;
+    color: var(--theme-color);
+    font-size: 15px;
+}
+#existing-member-hidden{
+    color: var(--theme-color);
+    font-size: 13px;
+    margin-left: 18%;
+    display: none;
+}
+.error-msg{
+    font-size: 11px;
+    color: red;
+    margin-bottom: 10px;
+    margin-top: -15px;
+    display: none;
+}
+input:invalid[focused="true"]{
+    border-bottom: 1px solid red;
+}
+input:invalid[focused="true"] ~ .error-msg{
+    display: block;
+}
+
+
+/* ################################################### login page CSS ####################################### */
+
+.login-container{
+    height: 100vh;
+    /* background-color: var(--bg-color); */
+    background-color: #03bfbc;
+}
+.login-container-wrapper{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 500px;
+    margin: 10vh 8%;
+    border-radius: 8px;
+}
+.signup-section{
+    text-align: center;
+    flex: 6;
+    background-color: white;
+    border-radius: 6px;
+    margin-right: 15px;
+    margin-left: 55px;
+    box-shadow: 8px 8px 12px var(--grey-light);
+    height: 80%;
+}
+.ttn-logo{
+    margin-top: 50px;
+    height: 50px;
+    width: 85px;
+}
+.signup-text{
+    margin: 40px 60px 20px 60px;
+    font-weight: 500;
+    color: var(--grey-dark);
+}
+.signup-section h4{
+    font-weight: 400;
+    color: var(--grey-light);
+}
+.google-btn{
+    margin-top: 50px;
+    color: rgb(221, 44, 156);
+    font-weight: 600;
+    padding: 12px 24px;
+    border-radius: 25px;
+    border: 1px solid rgb(221, 44, 156);
+    background-color: white;
+    cursor: pointer;
+}
+.google-btn:hover{
+    transform: scale(1.02);
+}
+.or{
+    margin: 0 20px;
+    color: var(--grey-light);
+}
+.signin-section{
+    text-align: center;
+    flex: 6;
+    background-color: white;
+    border-radius: 6px;
+    margin-left: 15px;
+    margin-right: 55px;
+    box-shadow: 8px 8px 12px var(--grey-light);
+    height: 80%;
+}
+.signin-text{
+    margin-top: 50px;
+    margin-bottom: 40px;
+    font-size: 17px;
+}
+.username{
+    width: 350px;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid var(--shadow-color);
+    padding: 5px;
+    font-weight: 500;
+    font-size: 15px;
+    margin-bottom: 30px;
+}
+.password{
+    width: 350px;
+    border: none;
+    outline: none;
+    border-bottom: 1px solid var(--shadow-color);
+    padding: 5px;
+    font-weight: 500;
+    font-size: 15px;
+    /* margin-bottom: 30px; */
+}
+[placeholder]{
+    opacity: 0.6;
+}
+[placeholder]:focus::-webkit-input-placeholder {
+    transition: text-indent 0.4s 0.4s ease; 
+    text-indent: -100%;
+    opacity: 1;
+}
+.invalid-credential{
+    color: red;
+    margin-top: 10px;
+    font-size: 14px;
+    /* display: none; */
+}
+.form-group{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 30px;
+    margin-left: 100px;
+    margin-right: 100px;
+    font-size: 13px;
+}
+.checkbox{
+    display: flex;
+    align-items: center;
+    color: var(--grey-light);
+}
+.checkbox-input{
+    height: 15px;
+    width: 15px;
+}
+.forgot-pass a{
+    text-decoration: none;
+    color: rgba(156, 56, 233, 0.5);
+}
+.forgot-pass a:hover{
+    color: var(--theme-color);
+}
+.signin-btn{
+    margin-top: 55px;
+    font-weight: 500;
+    padding: 14px 42px;
+    border-radius: 25px;
+    color: white;
+    background-color: var(--theme-color);
+    border: none;
+    box-shadow: 5px 5px 20px var(--theme-shadow);
+    cursor: pointer;
+}
+.signin-btn:hover{
+    transform: scale(1.02);
+}
+
+
+/* ################################################ home page CSS ############################################## */
+
 .topbar-container{
     height: 50px;
     width: 100%;
@@ -146,8 +464,7 @@ body{
     justify-content: center;
 }
 
-/* ########################## timeline container ##########################*/
-
+/* -------------- timeline container -----------*/
 .feed-container{
     display: flex;
     width: 100%;
@@ -165,6 +482,7 @@ body{
 .rightbar{
     flex: 3;
 }
+
 /*----------leftsidebar profile section---------*/
 .small-profile{
     border-radius: 8px;
@@ -228,9 +546,7 @@ body{
     color: var(--grey-light);
 }
 
-
 /* ------------- left sidebar utility section ------------*/
-
 .utility-wrapper{
     border-radius: 8px;
     width: 65%;
@@ -282,7 +598,6 @@ hr{
 
 
 /*----------- right sidebar contact section --------------*/
-
 .contact-wrapper{
     border-radius: 8px;
     width: 65%;
@@ -398,7 +713,6 @@ hr{
 }
 
 /*----------- right sidebar suggestion section --------------*/
-
 .suggestion-wrapper{
     border-radius: 8px;
     width: 65%;
@@ -475,7 +789,6 @@ hr{
     display: flex;
     justify-content: space-between;
 }
-
 
 /*-------------- timeline post input --------------------*/
 .timeline-search{
@@ -565,9 +878,7 @@ hr{
     color: #03bfbc;
 }
 
-
 /*----------------- timeline post area ----------------*/
-
 .timeline-post-area{
     height: 1000px;
     overflow: auto;
@@ -838,152 +1149,36 @@ hr{
     margin-bottom: 25px;
 }
 
-/* --------------------------------- login page CSS ------------------------------- */
-
-.login-container{
-    height: 100vh;
-    /* background-color: var(--bg-color); */
-    background-color: #03bfbc;
-}
-.login-container-wrapper{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 500px;
-    margin: 10vh 8%;
-    border-radius: 8px;
-}
-.signup-section{
-    text-align: center;
-    flex: 6;
+/*----------------- timeline bottombar ----------------*/
+.bottombar-container{
+    display: none;
+    position: sticky;
+    bottom: 0;
     background-color: white;
-    border-radius: 6px;
-    margin-right: 15px;
-    margin-left: 55px;
-    box-shadow: 8px 8px 12px var(--grey-light);
-    height: 80%;
+    z-index: 5497845;
+    height: 42px;
+    box-shadow: 0px 2px 5px var(--shadow-color);
+    padding-left: 15px;
+    padding-right: 15px;
 }
-.ttn-logo{
-    margin-top: 50px;
-    height: 50px;
-    width: 85px;
-}
-.signup-text{
-    margin: 40px 60px 20px 60px;
-    font-weight: 500;
-    color: var(--grey-dark);
-}
-.signup-section h4{
-    font-weight: 400;
-    color: var(--grey-light);
-}
-.google-btn{
-    margin-top: 50px;
-    color: rgb(221, 44, 156);
-    font-weight: 600;
-    padding: 12px 24px;
-    border-radius: 25px;
-    border: 1px solid rgb(221, 44, 156);
-    background-color: white;
-    cursor: pointer;
-}
-.google-btn:hover{
-    transform: scale(1.02);
-}
-.or{
-    margin: 0 20px;
-    color: var(--grey-light);
-}
-.signin-section{
-    text-align: center;
-    flex: 6;
-    background-color: white;
-    border-radius: 6px;
-    margin-left: 15px;
-    margin-right: 55px;
-    box-shadow: 8px 8px 12px var(--grey-light);
-    height: 80%;
-}
-.signin-text{
-    margin-top: 50px;
-    margin-bottom: 40px;
-    font-size: 17px;
-}
-.username{
-    width: 350px;
-    border: none;
-    outline: none;
-    border-bottom: 1px solid var(--shadow-color);
-    padding: 5px;
-    font-weight: 500;
-    font-size: 15px;
-    margin-bottom: 30px;
-}
-.password{
-    width: 350px;
-    border: none;
-    outline: none;
-    border-bottom: 1px solid var(--shadow-color);
-    padding: 5px;
-    font-weight: 500;
-    font-size: 15px;
-    /* margin-bottom: 30px; */
-}
-[placeholder]{
-    opacity: 0.6;
-}
-[placeholder]:focus::-webkit-input-placeholder {
-    transition: text-indent 0.4s 0.4s ease; 
-    text-indent: -100%;
-    opacity: 1;
-}
-.invalid-credential{
-    color: red;
-    margin-top: 10px;
-    font-size: 14px;
-    /* display: none; */
-}
-.form-group{
+.bottombar-icons{
     display: flex;
     justify-content: space-between;
-    margin-top: 30px;
-    margin-left: 100px;
-    margin-right: 100px;
-    font-size: 13px;
+    padding-top: 4px;
 }
-.checkbox{
+.bottombar-icon{
+    cursor: pointer;
+    background-color: var(--bg-color);
+    height: 34px;
+    width: 34px;
+    border-radius: 50%;
     display: flex;
     align-items: center;
-    color: var(--grey-light);
-}
-.checkbox-input{
-    height: 15px;
-    width: 15px;
-}
-.forgot-pass a{
-    text-decoration: none;
-    color: rgba(156, 56, 233, 0.5);
-}
-.forgot-pass a:hover{
-    color: var(--theme-color);
-}
-.signin-btn{
-    margin-top: 55px;
-    font-weight: 500;
-    padding: 14px 42px;
-    border-radius: 25px;
-    color: white;
-    background-color: var(--theme-color);
-    border: none;
-    box-shadow: 5px 5px 20px var(--theme-shadow);
-    cursor: pointer;
-}
-.signin-btn:hover{
-    transform: scale(1.02);
+    justify-content: center;
 }
 
 
-/* ----------------------------- UserProfile CSS -------------------------- */
+/* ############################################ UserProfile CSS ################################################ */
 
 @import url('https://fonts.googleapis.com/css?family=Lato:400,700');
 
@@ -1073,8 +1268,7 @@ hr{
 }
 
 
-
-/*----------------------------- Admin Profile CSS ---------------------------------*/
+/*################################################## Admin Profile CSS #############################################*/
 
 .admin-suggestion-conatiner{
     background-color: #03bfbc;
@@ -1285,183 +1479,8 @@ hr{
 }
 
 
-/*--------------------- SignUp page CSS ----------------------------*/
-@import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500);
+/*########################################### Messenger page #############################################*/
 
-.signup-container{
-    height: 100vh;
-    /* background-color: var(--bg-color); */
-    background-color: #03bfbc;
-}
-.signup-box {
-  position: relative;
-  margin: 3% auto;
-  width: 800px;
-  height: 580px;
-  background: #FFF;
-  border-radius: 8px;
-  box-shadow: 4px 4px 10px var(--shadow-color);
-}
-.left {
-  position: absolute;
-  top: 0;
-  left: 0;
-  box-sizing: border-box;
-  padding: 40px;
-  width: 400px;
-  height: 400px;
-}
-.left h1 {
-    font-family: 'Roboto', sans-serif;
-  margin: 0 0 20px 0;
-  font-size: 30px;
-  color: var(--theme-color);
-  font-weight: normal;
-}
-.left input[type="text"], .left input[type="email"], .left input[type="password"] {
-  display: block;
-  box-sizing: border-box;
-  margin-bottom: 20px;
-  padding: 4px;
-  width: 340px;
-  height: 32px;
-  border: none;
-  border-bottom: 1px solid #AAA;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 400;
-  font-size: 15px;
-  transition: 0.2s ease;
-}
-.left input[type="text"]:focus, .left input[type="password"]:focus {
-  border-bottom: 2px solid #9933ff;
-  transition: 0.2s ease;
-}
-
-.gender-div{
-    display: flex;
-    margin-bottom: 10px;
-}
-.gender-title{
-    display: flex;
-    align-items: center;
-    flex: 4;
-    margin-left: 4px;
-}
-.gender-text{
-    font-size: 15px !important;
-    color: var(--shadow-color)
-}
-.gender-radio{
-    flex: 8;
-    display: flex;
-    justify-content: space-around;
-}
-.gender-radio input[type="radio"] {
-    opacity: 0;
-    position: fixed;
-    width: 0;
-}
-.gender-radio label {
-    display: inline-block;
-    background-color: white;
-    padding: 10px 10px;
-    font-family: sans-serif, Arial;
-    font-size: 15px;
-    border: 1px solid black;
-    border-radius: 4px;
-    margin-left: 5px;
-    border: none;
-}
-.gender-radio input[type="radio"]:checked + label {
-    background-color: var(--theme-color);
-    border: none;
-    color: white;
-}
-.agreement-div{
-    display: flex;
-    align-items: center;
-}
-#agreement{
-    height: 14px;
-    width: 14px;
-}
-.left label{
-    font-size: 13px;
-}
-.agreement-div a{
-    color: var(--theme-color);
-}
-.register-btn {
-  margin-top: 28px;
-  padding: 15px 35px;
-  background-color: var(--theme-color);
-  border: none;
-  border-radius: 25px;
-  color: #FFF;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 4px 4px 10px var(--theme-shadow);
-  opacity: 0.8;
-}
-.register-btn:hover {
-  opacity: 1;
-  transition: 0.2s ease;
-}
-.register-btn:disabled {
-    background-color: var(--grey-light);
-    box-shadow: none;
-}
-.register-btn:disabled:hover {
-    background-color: var(--grey-light);
-    box-shadow: none;
-    opacity: 0.8;
-    cursor:not-allowed;
-}
-.right {
-    position: absolute;
-    top: 0;
-    right: 0;
-    box-sizing: border-box;
-    padding: 40px;
-    width: 400px;
-    height: 500px;
-    background: url('https://cdn.dribbble.com/users/537878/screenshots/14511603/poem-1---c_4x.gif?compress=1&resize=400x300');
-    background-size: cover;
-    background-position: center;
-    border-radius: 8px;
-}
-.right .loginwith {
-    display: block;
-    margin-bottom: 40px;
-    font-size: 28px;
-    color: #FFF;
-    text-align: center;
-}
-#existing-member{
-    position: absolute;
-    bottom: -35px;
-    left: 220px;
-    color: var(--theme-color);
-    font-size: 15px;
-}
-.error-msg{
-    font-size: 11px;
-    color: red;
-    margin-bottom: 10px;
-    margin-top: -15px;
-    display: none;
-}
-input:invalid[focused="true"]{
-    border-bottom: 1px solid red;
-}
-input:invalid[focused="true"] ~ .error-msg{
-    display: block;
-}
-
-
-/*################################# Messenger ##################################*/
 .messenger{
     height: calc(100vh - 50px);
     display: flex;
@@ -1606,7 +1625,6 @@ input:invalid[focused="true"] ~ .error-msg{
     background-color: #0c9a97;
 }
 
-
 .chat-area-bottom{
     display: flex;
     align-items: center;
@@ -1727,3 +1745,1404 @@ input:invalid[focused="true"] ~ .error-msg{
     bottom: 10px;
     left: 40px;
 }
+
+/*--------------------------------------------- meadia querry for opto 400px ----------------------*/
+@media only screen and (max-width: 400px){
+    body{
+        margin: 0;
+    }
+
+    /*--------------------- SignUp page --------------------------*/
+    .signup-container{
+        height: 100vh;
+        background-color: #03bfbc;
+        position: relative;
+    }
+    .signup-box {
+      width: 90%;
+      display: block;
+    }
+    .left {
+      padding: 20px;
+      width: 100%;
+    }
+    .left h1 {
+      margin: 0 0 15px 0;
+    }
+    .left input[type="text"], .left input[type="email"], .left input[type="password"]{
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .gender-text{
+        font-size: 14px !important;
+    }
+    .gender-radio label {
+        font-size: 14px;
+    }
+    .left label{
+        font-size: 12px;
+    }
+    .register-btn {
+      margin-top: 24px;
+    }
+    .right {
+        display: none;
+    }
+    #existing-member-hidden{
+        display: inline-block;
+    }
+
+    /* -------------------------Sign in page -------------------- */
+    .login-container{
+        height: 100vh;
+    }
+    .login-container-wrapper{
+        flex-direction: column;
+        margin: 0rem 1rem;
+    }
+    .signup-section{
+        margin: 120px 0 4vh 0;
+        width: 90vw;
+        height: 42vh;
+    }
+    .ttn-logo{
+        margin-top: 10px;
+        height: 40px;
+        width: 70px;
+    }
+    .signup-text{
+        margin: 10px 0;
+        font-size: 20px;
+    }
+    .google-btn{
+        margin: 20px 5px 30px 5px;
+    }
+    .or{
+        margin: 0 5px;
+    }
+
+    .signin-section{
+        margin: 0;
+        width: 90vw;
+        height: 42vh;
+    }
+    .signin-text{
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+    .username{
+        width: 80%;
+        margin-bottom: 20px;
+    }
+    .password{
+        width: 80%;
+    }
+    .form-group{
+        justify-content: space-around;
+        margin-top: 10px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .signin-btn{
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    /* -------------------------Home page -------------------- */
+    .topbar-container{
+        height: 42px;
+    }
+    .logo-img{
+        height: 40px;
+        width: 40px;
+    }
+    .logo-text{
+        font-size: 20px;
+        margin-left: 0px;
+    }
+    .topbar-user{
+        display: none;
+    }
+    .topbar-icon{
+        margin-right: 10px;
+        height: 32px;
+        width: 32px;
+    }
+    .topbar-icon-badge{
+        width: 14px;
+        height: 14px;
+        top: -1px;
+        right: -5px;
+        font-size: 10px;
+    }
+    .logout-icon{
+        font-size: 16px;
+    }
+    .notification-div{
+        height: 350px;
+        width: 220px;
+    }
+    .feed-container{
+        width: 100vw;
+        padding-bottom: 0px;
+    }
+    .leftbar{
+        display: none;
+    }
+    .rightbar{
+        display: none;
+    }
+    .timeline-search{
+        margin: 2rem 1rem;
+        padding: 7px;
+        width: 88vw;
+    }
+    .post-user-img{
+        height: 64px;
+        width: 50px;
+        margin-right: 6px;
+    }
+    .post-input{
+        width: 167px;
+        padding: 6px;
+        margin-right: 6px;
+    }
+    .timeline-search-wrapper i{
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    .photo-video{
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 4px;
+    }
+    .btn button{
+        font-weight: 500;
+    }
+    .share-img{
+        margin-top: 10px;
+        height: 220px;
+    }
+    .timeline-post-area{
+        height: 100vh;
+        margin: 2rem 1rem;
+    }
+    .timeline-post-wrapper{
+        padding: 10px;
+        margin-bottom: 1rem;
+    }
+    .post-username{
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .post-input-edit{
+        padding: 10px;
+    }
+    .post-img{
+        height: 200px;
+    }
+    .post-reaction-icon i{
+        margin-right: 6px;
+    }
+    .post-reaction-icon span{
+        font-size: 14px;
+    }
+    .bottombar-container{
+        display: block;
+    }
+}
+
+/*--------------------------------------------- meadia querry for 400px to 500px ----------------------*/
+@media only screen and (min-width: 400px) and (max-width: 500px){
+    body{
+        margin: 0;
+    }
+
+    /*--------------------- SignUp page --------------------------*/
+    .signup-container{
+        height: 100vh;
+        background-color: #03bfbc;
+        position: relative;
+    }
+    .signup-box {
+      width: 90%;
+      display: block;
+    }
+    .left {
+      padding: 20px;
+      width: 100%;
+    }
+    .left h1 {
+      margin: 0 0 15px 0;
+    }
+    .left input[type="text"], .left input[type="email"], .left input[type="password"]{
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .gender-text{
+        font-size: 14px !important;
+    }
+    .gender-radio label {
+        font-size: 14px;
+    }
+    .left label{
+        font-size: 12px;
+    }
+    .register-btn {
+      margin-top: 24px;
+    }
+    .right {
+        display: none;
+    }
+    #existing-member-hidden{
+        display: inline-block;
+    }
+
+    /* -------------------------Sign in page -------------------- */
+    .login-container{
+        height: 100vh;
+    }
+    .login-container-wrapper{
+        flex-direction: column;
+        margin: 0rem 1rem;
+    }
+    .signup-section{
+        margin: 120px 0 4vh 0;
+        width: 90vw;
+        height: 42vh;
+    }
+    .ttn-logo{
+        margin-top: 10px;
+        height: 40px;
+        width: 70px;
+    }
+    .signup-text{
+        margin: 10px 0;
+        font-size: 20px;
+    }
+    .google-btn{
+        margin: 20px 5px 30px 5px;
+    }
+    .or{
+        margin: 0 5px;
+    }
+    .signin-section{
+        margin: 0;
+        width: 90vw;
+        height: 42vh;
+    }
+    .signin-text{
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+    .username{
+        width: 80%;
+        margin-bottom: 20px;
+    }
+    .password{
+        width: 80%;
+    }
+    .form-group{
+        justify-content: space-around;
+        margin-top: 10px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .signin-btn{
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    /* -------------------------Home page -------------------- */
+    .topbar-container{
+        height: 42px;
+    }
+    .logo-img{
+        height: 40px;
+        width: 40px;
+    }
+    .logo-text{
+        font-size: 20px;
+        margin-left: 0px;
+    }
+    .topbar-user{
+        display: none;
+    }
+    .topbar-icon{
+        margin-right: 10px;
+        height: 32px;
+        width: 32px;
+    }
+    .topbar-icon-badge{
+        width: 14px;
+        height: 14px;
+        top: -1px;
+        right: -5px;
+        font-size: 10px;
+    }
+    .logout-icon{
+        font-size: 16px;
+    }
+    .notification-div{
+        height: 350px;
+        width: 220px;
+    }
+    .feed-container{
+        width: 100vw;
+        padding-bottom: 0px;
+    }
+    .leftbar{
+        display: none;
+    }
+    .rightbar{
+        display: none;
+    }
+    .timeline-search{
+        margin: 2rem 1rem;
+        padding: 7px;
+        width: 88vw;
+    }
+    .post-user-img{
+        height: 64px;
+        width: 50px;
+        margin-right: 6px;
+    }
+    .post-input{
+        width: 54%;
+        padding: 6px;
+        margin-right: 6px;
+    }
+    .timeline-search-wrapper i{
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    .photo-video{
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 4px;
+    }
+    .btn button{
+        font-weight: 500;
+    }
+    .share-img{
+        margin-top: 10px;
+        height: 220px;
+    }
+    .timeline-post-area{
+        height: 100vh;
+        margin: 2rem 1rem;
+    }
+    .timeline-post-wrapper{
+        padding: 10px;
+        margin-bottom: 1rem;
+    }
+    .post-username{
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .post-input-edit{
+        padding: 10px;
+    }
+    .post-img{
+        height: 220px;
+    }
+    .post-reaction-icon i{
+        margin-right: 6px;
+    }
+    .post-reaction-icon span{
+        font-size: 14px;
+    }
+    .bottombar-container{
+        display: block;
+    }
+}
+
+/*--------------------------------------------- meadia querry for 500px to 767px ----------------------*/
+@media only screen and (min-width: 500px) and (max-width: 600px){
+    body{
+        margin: 0;
+    }
+
+    /*--------------------- SignUp page --------------------------*/
+    .signup-container{
+        height: 100vh;
+        background-color: #03bfbc;
+        position: relative;
+    }
+    .signup-box {
+      width: 70%;
+      display: block;
+    }
+    .left {
+      padding: 20px;
+      width: 80%;
+    }
+    .left h1 {
+      margin: 0 0 15px 0;
+    }
+    .left input[type="text"], .left input[type="email"], .left input[type="password"]{
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .gender-text{
+        font-size: 14px !important;
+    }
+    .gender-radio label {
+        font-size: 14px;
+    }
+    .left label{
+        font-size: 12px;
+    }
+    .register-btn {
+      margin-top: 24px;
+    }
+    .right {
+        display: none;
+    }
+    #existing-member-hidden{
+        display: inline-block;
+        margin-left: 10%;
+    }
+
+    /* -------------------------Sign in page -------------------- */
+    .login-container{
+        height: 180vh;
+    }
+    .login-container-wrapper{
+        flex-direction: column;
+        margin: 0rem 1rem;
+    }
+    .signup-section{
+        margin: 120px 0 4vh 0;
+        width: 90vw;
+        height: 70vh;
+    }
+    .ttn-logo{
+        margin-top: 10px;
+        height: 40px;
+        width: 70px;
+    }
+    .signup-text{
+        margin: 10px 0;
+        font-size: 20px;
+    }
+    .google-btn{
+        margin: 20px 5px 30px 5px;
+    }
+    .or{
+        margin: 0 5px;
+    }
+    .signin-section{
+        margin: 0;
+        width: 90vw;
+        height: 70vh;
+    }
+    .signin-text{
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+    .username{
+        width: 80%;
+        margin-bottom: 20px;
+    }
+    .password{
+        width: 80%;
+    }
+    .form-group{
+        justify-content: space-around;
+        margin-top: 10px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .signin-btn{
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    /* -------------------------Home page -------------------- */
+    .topbar-container{
+        height: 42px;
+    }
+    .logo-img{
+        height: 40px;
+        width: 40px;
+    }
+    .logo-text{
+        font-size: 20px;
+        margin-left: 0px;
+    }
+    .topbar-user{
+        display: none;
+    }
+    .topbar-icon{
+        margin-right: 10px;
+        height: 32px;
+        width: 32px;
+    }
+    .topbar-icon-badge{
+        width: 14px;
+        height: 14px;
+        top: -1px;
+        right: -5px;
+        font-size: 10px;
+    }
+    .logout-icon{
+        font-size: 16px;
+    }
+    .notification-div{
+        height: 350px;
+        width: 220px;
+    }
+    .feed-container{
+        width: 100vw;
+        padding-bottom: 0px;
+    }
+    .leftbar{
+        display: none;
+    }
+    .rightbar{
+        display: none;
+    }
+    .timeline-search{
+        margin: 2rem 1rem;
+        padding: 7px;
+        width: 92vw;
+    }
+    .post-user-img{
+        height: 64px;
+        width: 50px;
+        margin-right: 6px;
+    }
+    .post-input{
+        width: 63%;
+        padding: 6px;
+        margin-right: 6px;
+    }
+    .timeline-search-wrapper i{
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    .photo-video{
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 4px;
+    }
+    .btn button{
+        font-weight: 500;
+    }
+    .share-img{
+        margin-top: 10px;
+        height: 300px;
+    }
+    .timeline-post-area{
+        height: 100vh;
+        margin: 2rem 1rem;
+    }
+    .timeline-post-wrapper{
+        padding: 10px;
+        margin-bottom: 1rem;
+    }
+    .post-username{
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .post-input-edit{
+        padding: 10px;
+    }
+    .post-img{
+        height: 300px;
+    }
+    .post-reaction-icon i{
+        margin-right: 6px;
+    }
+    .post-reaction-icon span{
+        font-size: 14px;
+    }
+    .bottombar-container{
+        display: block;
+    }
+}
+
+/*--------------------------------------------- meadia querry for 600px to 767px ----------------------*/
+@media only screen and (min-width: 600px) and (max-width: 767px){
+    body{
+        margin: 0;
+    }
+
+    /*--------------------- SignUp page --------------------------*/
+    .signup-container{
+        height: 180vh;
+        background-color: #03bfbc;
+        position: relative;
+    }
+    .signup-box {
+      width: 60%;
+      display: block;
+    }
+    .left {
+      padding: 20px;
+      width: 80%;
+    }
+    .left h1 {
+      margin: 0 0 15px 0;
+    }
+    .left input[type="text"], .left input[type="email"], .left input[type="password"]{
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .gender-text{
+        font-size: 14px !important;
+    }
+    .gender-radio label {
+        font-size: 14px;
+    }
+    .left label{
+        font-size: 12px;
+    }
+    .register-btn {
+      margin-top: 24px;
+    }
+    .right {
+        display: none;
+    }
+    #existing-member-hidden{
+        display: inline-block;
+        margin-left: 10%;
+    }
+
+    /* -------------------------Sign in page -------------------- */
+    .login-container{
+        height: 180vh;
+    }
+    .login-container-wrapper{
+        flex-direction: column;
+        margin: 0rem 1rem;
+    }
+    .signup-section{
+        margin: 120px 0 4vh 0;
+        width: 90vw;
+        height: 70vh;
+    }
+    .ttn-logo{
+        margin-top: 10px;
+        height: 40px;
+        width: 70px;
+    }
+    .signup-text{
+        margin: 10px 0;
+        font-size: 20px;
+    }
+    .google-btn{
+        margin: 20px 5px 30px 5px;
+    }
+    .or{
+        margin: 0 5px;
+    }
+    .signin-section{
+        margin: 0;
+        width: 90vw;
+        height: 70vh;
+    }
+    .signin-text{
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+    .username{
+        width: 80%;
+        margin-bottom: 20px;
+    }
+    .password{
+        width: 80%;
+    }
+    .form-group{
+        justify-content: space-around;
+        margin-top: 10px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .signin-btn{
+        margin-top: 20px;
+        margin-bottom: 30px;
+    }
+
+    /* -------------------------Home page -------------------- */
+    .logo-img{
+        height: 40px;
+        width: 40px;
+    }
+    .logo-text{
+        font-size: 20px;
+        margin-left: 0px;
+    }
+    .topbar-left{
+        flex: 6;
+    }
+    .topbar-right{
+        flex: 6;
+    }
+    .topbar-icon{
+        margin-right: 10px;
+        height: 32px;
+        width: 32px;
+    }
+    .topbar-icon-badge{
+        width: 14px;
+        height: 14px;
+        top: -1px;
+        right: -5px;
+        font-size: 10px;
+    }
+    .logout-icon{
+        font-size: 16px;
+    }
+    .notification-div{
+        height: 280px;
+        width: 220px;
+    }
+    .feed-container{
+        width: 100vw;
+        padding-bottom: 0px;
+    }
+    .leftbar{
+        display: none;
+    }
+    .rightbar{
+        display: none;
+    }
+    .timeline-search{
+        margin: 2rem 1rem;
+        padding: 7px;
+        width: 92vw;
+    }
+    .post-user-img{
+        height: 64px;
+        width: 50px;
+        margin-right: 6px;
+    }
+    .post-input{
+        width: 72%;
+        padding: 6px;
+        margin-right: 6px;
+    }
+    .timeline-search-wrapper i{
+        font-size: 14px;
+        margin-top: 4px;
+    }
+    .photo-video{
+        font-size: 12px;
+        font-weight: 500;
+        margin-left: 4px;
+    }
+    .btn button{
+        font-weight: 500;
+    }
+    .share-img{
+        margin-top: 10px;
+        height: 360px;
+    }
+    .timeline-post-area{
+        height: 100vh;
+        margin: 2rem 1rem;
+    }
+    .timeline-post-wrapper{
+        padding: 10px;
+        margin-bottom: 1rem;
+    }
+    .post-username{
+        font-size: 14px;
+        font-weight: 500;
+        cursor: pointer;
+    }
+    .post-input-edit{
+        padding: 10px;
+    }
+    .post-img{
+        height: 360px;
+    }
+    .post-reaction-icon i{
+        margin-right: 6px;
+    }
+    .post-reaction-icon span{
+        font-size: 14px;
+    }
+}
+
+/*--------------------------------------------- meadia querry for 767px to 1023px ----------------------*/
+@media only screen and (min-width: 767px) and (max-width: 1023px){
+    body{
+        margin: 0;
+    }
+
+    /* -------------------------Signup page -------------------- */
+    .signup-container{
+        height: 100vh;
+        background-color: #03bfbc;
+        position: relative;
+    }
+    .signup-box {
+      width: 70%;
+      display: block;
+    }
+    .left {
+      padding: 20px;
+      width: 80%;
+    }
+    .left h1 {
+      margin: 0 0 15px 0;
+    }
+    .left input[type="text"], .left input[type="email"], .left input[type="password"]{
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    .gender-text{
+        font-size: 14px !important;
+    }
+    .gender-radio label {
+        font-size: 14px;
+    }
+    .left label{
+        font-size: 12px;
+    }
+    .register-btn {
+      margin-top: 24px;
+    }
+    .right {
+        display: none;
+    }
+
+    /* -------------------------Sign in page -------------------- */
+    .login-container{
+        height: 100vh;
+    }
+    .login-container-wrapper{
+        flex-direction: column;
+        margin: 3rem 1rem;
+    }
+    .signup-section{
+        margin: 120px 0 4vh 0;
+        width: 80vw;
+        height: 42vh;
+    }
+    .ttn-logo{
+        margin-top: 20px;
+        height: 50px;
+        width: 85px;
+    }
+    .signup-text{
+        margin: 10px 0;
+        font-size: 22px;
+    }
+    .google-btn{
+        margin: 30px 20px 40px 5px;
+    }
+    .or{
+        margin: 0 15px;
+    }
+    .signin-section{
+        margin: 0;
+        width: 80vw;
+        height: 42vh;
+    }
+    .signin-text{
+        margin-top: 25px;
+        margin-bottom: 30px;
+    }
+    .username{
+        width: 70%;
+        margin-bottom: 30px;
+    }
+    .password{
+        width: 70%;
+    }
+    .form-group{
+        justify-content: space-around;
+        margin-top: 20px;
+        margin-left: 0px;
+        margin-right: 0px;
+    }
+    .signin-btn{
+        margin-top: 30px;
+        margin-bottom: 40px;
+    }
+
+    /* -------------------------Home page -------------------- */
+    .topbar-left{
+        flex: 7;
+    }
+    .logo-img{
+        height: 45px;
+        width: 45px;
+    }
+    .logo-text{
+        font-size: 22px;
+    }
+    .topbar-right{
+        flex: 5;
+    }
+    .topbar-username{
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .topbar-icon{
+        height: 34px;
+        width: 34px;
+    }
+    .topbar-icon-badge{
+        width: 16px;
+        height: 16px;
+        top: -2px;
+        right: -4px;
+        font-size: 10px;
+    }
+    .logout-icon{
+        font-size: 16px;
+    }
+
+    .small-profile{
+        width: 96%;
+        margin-left: 4%;
+        margin-top: 2rem;
+    }
+    .small-profile-cover{
+        height: 110px;
+        position: relative;
+    }
+    .cover-img{
+        height: 70px;
+    }
+    .user-img{
+        height: 80px;
+        width: 80px;
+        top: 26px;
+    }
+    .small-profile-info{
+        padding: 0 5px;
+    }
+    .small-profile-username{
+        font-size: 16px;
+    }
+    .small-profile-desc{
+        font-size: 12px;
+    }
+    .small-profile-data1{
+        padding-right: 16px;
+    }
+    .small-profile-number{
+        font-size: 16px;
+    }
+    .small-profile-text{
+        font-size: 10px;
+    }
+    
+    .utility-wrapper{
+        width: 96%;
+        margin-left: 4%;
+        margin-top: 2rem;
+    }
+    .utility-name{
+        padding: 10px 0 5px 10px;
+        font-size: 18px;
+    }
+    .sidebar-list{
+        padding-left: 10px;
+    }
+    .sidebar-list-item{
+        padding-bottom: 10px;
+    }
+    .sidebar-list-item i{
+        padding-right: 8px;
+        font-size: 14px;
+    }
+    .sidebar-list-text{
+        font-size: 10px;
+    }
+    .show-more-link{
+        font-size: 11px;
+    }
+    .rightbar{
+        width: 165px;
+    }
+    .contact-wrapper{
+        width: 95%;
+        height: 360px;
+        margin-left: 0;
+        margin-top: 2rem;
+        margin-right: 0;
+    }
+    .contact-wrapper::-webkit-scrollbar{
+        display: none;
+    }
+    .contact-list{
+        padding-left: 6px;
+        margin-top: 15px;
+    }
+    .contact-list-item{
+        margin-bottom: 10px;
+    }
+    .contact-img{
+        height: 36px;
+        width: 36px;
+    }
+    .contact-list-item span{
+        margin-left: 8px;
+        font-size: 12px;
+    }
+    .search-box{
+        right: 5px;
+    }
+    .search-txt{
+        font-size: 13px;
+    }
+    .search-box:hover > .search-txt{
+        width: 115px;
+    }
+    .contact-title{
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .suggestion-wrapper{
+        width: 95%;
+        height: 360px;
+        margin-left: 0;
+        margin-top: 2rem;
+    }
+    .suggestion-wrapper::-webkit-scrollbar{
+        display: none;
+    }
+    .suggestion-list{
+        padding-left: 6px;
+        margin-top: 15px;
+    }
+    .suggestion-list-item{
+        margin-bottom: 10px;
+    }
+    .suggestion-img{
+        height: 36px;
+        width: 36px;
+    }
+    .suggestion-name{
+        margin-left: 8px;
+        font-size: 12px;
+    }
+    .friend-link{
+        font-size: 10px;
+        margin-right: 4px;
+    }
+    
+    .timeline-search{
+        margin: 2rem 0.5rem;
+        padding: 10px;
+        width: 410px;
+    }
+    .post-user-img{
+        height: 64px;
+        width: 50px;
+        margin-right: 10px;
+    }
+    .post-input{
+        width: 245px;
+        padding: 6px;
+        margin-right: 5px;
+    }
+    .timeline-search-wrapper i{
+        font-size: 16px;
+    }
+    .photo-video{
+        font-size: 11px;
+        font-weight: 500;
+    }
+    .share-img{
+        height: 260px;
+    }
+    
+    .timeline-post-area{
+        height: 100vh;
+        margin: 2rem 1rem;
+    }
+    .timeline-post-wrapper{
+        padding: 10px;
+        margin-bottom: 2rem;
+    }
+    .post-profile-img{
+        height: 36px;
+        width: 36px;
+    }
+    .post-username{
+        font-weight: 500;
+        font-size: 14px;
+    }
+    .post-date{
+        font-size: 10px;
+    }
+    .post-img{
+        height: 250px;
+    }
+    .post-reaction-icon i{
+        font-size: 14px;
+    }
+    .post-reaction-icon span{
+        font-size: 14px;
+    }
+    .comment-profile-img{
+        height: 36px;
+        width: 36px;
+    }
+}
+
+/*--------------------------------------------- meadia querry for 1023px to 1300px ----------------------*/
+@media only screen and (min-width: 1023px) and (max-width: 1300px){
+    body{
+        margin: 0;
+    }
+
+    /* -------------------------Signup page -------------------- */
+    .signup-box {
+        width: 85%;
+      }
+      #existing-member{
+          bottom: 18%;
+      }
+
+    /* -------------------------Sign in page -------------------- */
+    .login-container-wrapper{
+        margin: 10vh 0;
+    }
+    .form-group{
+        justify-content: space-around;
+        margin-left: 50px;
+        margin-right: 50px;
+    }
+
+    /* -------------------------Home page -------------------- */
+    .topbar-left{
+        flex: 8;
+    }
+    .logo-img{
+        height: 45px;
+        width: 45px;
+    }
+    .logo-text{
+        font-size: 22px;
+    }
+    .topbar-right{
+        flex: 4;
+    }
+    .topbar-username{
+        font-size: 14px;
+        font-weight: 500;
+    }
+    .topbar-icon{
+        height: 34px;
+        width: 34px;
+    }
+    .topbar-icon-badge{
+        width: 16px;
+        height: 16px;
+        top: -2px;
+        right: -4px;
+        font-size: 10px;
+    }
+    .logout-icon{
+        font-size: 16px;
+    }
+
+    .small-profile{
+        width: 82%;
+        margin-left: 4%;
+        margin-top: 2rem;
+    }
+    .small-profile-cover{
+        height: 110px;
+        position: relative;
+    }
+    .cover-img{
+        height: 70px;
+    }
+    .user-img{
+        height: 80px;
+        width: 80px;
+        top: 26px;
+    }
+    .small-profile-info{
+        padding: 0 5px;
+    }
+    .small-profile-username{
+        font-size: 16px;
+    }
+    .small-profile-desc{
+        font-size: 12px;
+    }
+    .small-profile-data1{
+        padding-right: 16px;
+    }
+    .small-profile-number{
+        font-size: 16px;
+    }
+    .small-profile-text{
+        font-size: 10px;
+    }
+    
+    .utility-wrapper{
+        width: 82%;
+        margin-left: 4%;
+        margin-top: 2rem;
+    }
+    .utility-name{
+        padding: 10px 0 5px 10px;
+        font-size: 18px;
+    }
+    .sidebar-list{
+        padding-left: 10px;
+    }
+    .sidebar-list-item{
+        padding-bottom: 10px;
+    }
+    .sidebar-list-item i{
+        padding-right: 8px;
+        font-size: 14px;
+    }
+    .sidebar-list-text{
+        font-size: 10px;
+    }
+    .show-more-link{
+        font-size: 11px;
+    }
+    .rightbar{
+        width: 165px;
+    }
+    .contact-wrapper{
+        width: 82%;
+        height: 400px;
+        margin-left: 2rem;
+        margin-top: 2rem;
+        margin-right: 0;
+    }
+    .contact-wrapper::-webkit-scrollbar{
+        display: none;
+    }
+    .contact-list{
+        padding-left: 10px;
+        margin-top: 15px;
+    }
+    .contact-list-item{
+        margin-bottom: 10px;
+    }
+    .contact-img{
+        height: 36px;
+        width: 36px;
+    }
+    .contact-list-item span{
+        margin-left: 10px;
+        font-size: 13px;
+    }
+    .search-box{
+        right: 10px;
+    }
+    .search-txt{
+        font-size: 13px;
+    }
+    .search-box:hover > .search-txt{
+        width: 160px;
+    }
+    .contact-title{
+        font-size: 18px;
+        font-weight: 600;
+    }
+
+    .suggestion-wrapper{
+        width: 82%;
+        height: 400px;
+        margin-left: 2rem;
+        margin-top: 2rem;
+    }
+    .suggestion-wrapper::-webkit-scrollbar{
+        display: none;
+    }
+    .suggestion-list{
+        padding-left: 10px;
+        margin-top: 15px;
+    }
+    .suggestion-list-item{
+        margin-bottom: 10px;
+    }
+    .suggestion-img{
+        height: 36px;
+        width: 36px;
+    }
+    .suggestion-name{
+        margin-left: 10px;
+        font-size: 13px;
+    }
+    .friend-link{
+        font-size: 11px;
+        margin-right: 4px;
+    }
+    
+    .timeline-search{
+        margin: 2rem 0rem;
+        padding: 10px;
+        width: 500px;
+    }
+    .post-user-img{
+        height: 64px;
+        width: 50px;
+        margin-right: 10px;
+    }
+    .post-input{
+        width: 335px;
+        padding: 6px;
+        margin-right: 5px;
+    }
+    .timeline-search-wrapper i{
+        font-size: 16px;
+    }
+    .photo-video{
+        font-size: 11px;
+        font-weight: 500;
+    }
+    .share-img{
+        height: 300px;
+    }
+    
+    .timeline-post-area{
+        height: 100vh;
+        margin: 2rem 0rem;
+    }
+    .timeline-post-wrapper{
+        padding: 10px;
+        margin-bottom: 2rem;
+    }
+    .post-profile-img{
+        height: 36px;
+        width: 36px;
+    }
+    .post-username{
+        font-weight: 500;
+        font-size: 14px;
+    }
+    .post-date{
+        font-size: 10px;
+    }
+    .post-img{
+        height: 300px;
+    }
+    .post-reaction-icon i{
+        font-size: 14px;
+    }
+    .post-reaction-icon span{
+        font-size: 14px;
+    }
+    .comment-profile-img{
+        height: 36px;
+        width: 36px;
+    }
+}
+
+
+
+/*--------------------------------------------- meadia querry for 1300px to full with-1 (full width = 1536px) ----------------------*/
+/* @media only screen and (min-width: 1300px) and (max-width: 1535px) */

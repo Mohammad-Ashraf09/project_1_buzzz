@@ -5,7 +5,7 @@ const FormInput = (props) => {
     const {name, type, placeholder, errorMsg, pattern, required, onChange} = props;
 
     return (
-        <div>
+        <>
             {type==="radio" ?
                 <div className="gender-div">
                     <div className='gender-title'>
@@ -34,7 +34,7 @@ const FormInput = (props) => {
                     <div className='error-msg'>{errorMsg}</div>
                 </div>
             }
-        </div>
+        </>
     )
 }
 

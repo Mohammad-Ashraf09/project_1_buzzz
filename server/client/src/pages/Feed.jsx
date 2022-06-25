@@ -6,6 +6,7 @@ import Contact from '../components/rightbar/Contact';
 import Suggestion from '../components/rightbar/Suggestion';
 import SearchBox from '../components/timeline/SearchBox';
 import Timeline from '../components/timeline/Timeline';
+import Bottombar from '../components/Bottombar';
 import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import {io} from "socket.io-client";
@@ -61,6 +62,7 @@ const Feed = () => {
           <Suggestion socket={socket} />
         </div>
       </div>
+      <Bottombar/>
     </>
   )
 }

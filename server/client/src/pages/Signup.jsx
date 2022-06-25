@@ -18,6 +18,9 @@ const Signup = () => {
         confirmPassword:"",
     });
 
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const banner = PF+"signup_banner.jpg";
+
     const inputs = [
         {
             id: 1,
@@ -110,21 +113,22 @@ const Signup = () => {
                 <form className="left" onSubmit={clickHandler}>
                     <h1>Sign up</h1>
 
-                    {inputs.map((item)=>(
-                        <FormInput key={item.id} name={item.name} type={item.type} placeholder={item.placeholder} errorMsg={item.errorMsg} pattern={item.pattern} required={item.required} values={values[item.name]} onChange={onChange} />
-                    ))}
+                    <div className="input-section">
+                        {inputs.map((item)=>(
+                            <FormInput key={item.id} name={item.name} type={item.type} placeholder={item.placeholder} errorMsg={item.errorMsg} pattern={item.pattern} required={item.required} values={values[item.name]} onChange={onChange} />
+                        ))}
+                    </div>
 
                     <div className="agreement-div">
                         <input type="checkbox" id="agreement" name="agreement" onClick={disableHandler}/>
                         <label htmlFor="agreement"> I agree all statements in <a href="">Terms of Service</a></label>
                     </div>
                     <button type="submit" className="register-btn" disabled={disable}>Register</button>
-                    <br />
-                    <br />
+                    <Link to="/login" id='existing-member-hidden'>Already a Member?</Link>
                 </form>
             
                 <div className="right">
-                    <span className="loginwith"><br /></span>
+                    <img src={banner} alt="" className="banner-img" />
                     <Link to="/login" id='existing-member'>Already a Member?</Link>
                 </div>
             </div>

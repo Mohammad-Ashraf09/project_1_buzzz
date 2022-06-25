@@ -38,3 +38,10 @@
  ✋- clear chat option on center chat area
 
 ------ RESPONSIVEness --------------
+ ✔ - login
+ ✔ - signup
+ ✔ - home
+ - user
+ - messanger
+
+ - add functinality of bottom bar
