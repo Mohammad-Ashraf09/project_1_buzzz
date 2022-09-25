@@ -45,3 +45,9 @@
  - messanger
 
  - add functinality of bottom bar
+
+
+ ------- Run comands --------
+ - cd server --->          nodemon app.js
+ - cd server/client -----> npm start
+ - cd socket ----->        npm start

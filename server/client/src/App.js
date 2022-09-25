@@ -8,6 +8,7 @@ import Login from "./pages/Login";
 import Signup from './pages/Signup';
 import UserProfile from './pages/UserProfile';
 import Messenger from "./pages/Messenger";
+import ConversationsForMobile from "./pages/ConversationsForMobile";
 
 const App = () => {
 
@@ -22,6 +23,7 @@ const App = () => {
         <Route path='/messenger' element={ !user ? <Navigate to="/" /> : <Messenger/>}/>
         <Route path='/user/:id' element={<UserProfile/>}/>
         <Route path='/admin/:id' element={<AdminProfile/>}/>
+        <Route path='/conversations' element={<ConversationsForMobile/>}/>
       </Routes>
     </BrowserRouter>
   )

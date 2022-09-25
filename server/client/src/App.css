@@ -1490,10 +1490,10 @@ hr{
     flex: 3.2;
 }
 .messenger-chat-area{
-    flex: 5.8;
+    flex: 5.6;
 }
 .messenger-rightbar{
-    flex: 3;
+    flex: 3.2;
 }
 .messenger-leftbar-wrapper, .messenger-chat-area-wrapper, .messenger-rightbar-wrapper{
     padding: 20px 10px;
@@ -1605,7 +1605,11 @@ hr{
     padding: 10px 18px;
     border-radius: 20px;
     max-width: 320px;
+    overflow: auto;
 }    
+.message-text::-webkit-scrollbar{
+    display: none;
+}
 .msg-text{
     margin: 0;
     font-size: 14px;
@@ -1631,7 +1635,7 @@ hr{
 }
 .chat-area-input{
     background-color: var(--bg-color);
-    width: 630px;
+    width: 91%;
     height: 80px;
     border: 2px solid rgba(218, 227, 218, 0);
     outline: none;
@@ -1668,7 +1672,7 @@ hr{
 .no-conversation-text{
     position: absolute;
     top: 40%;
-    width: 650px;
+    width: 45%;
     font-size: 50px;
     font-weight: 700;
     color: rgb(119, 206, 201);
@@ -1951,6 +1955,14 @@ hr{
     .bottombar-container{
         display: block;
     }
+
+    /* -------------------------Messenger page -------------------- */
+    .conversation-div{
+        width: 90vw;
+        height: calc(90vh - 42px);
+        margin-top: 3vh;
+        margin-left: 5vw;
+    }
 }
 
 /*--------------------------------------------- meadia querry for 400px to 500px ----------------------*/
@@ -2156,6 +2168,14 @@ hr{
     }
     .bottombar-container{
         display: block;
+    }
+
+    /* -------------------------Messenger page -------------------- */
+    .conversation-div{
+        width: 90vw;
+        height: calc(90vh - 42px);
+        margin-top: 3vh;
+        margin-left: 5vw;
     }
 }
 
@@ -2364,6 +2384,14 @@ hr{
     .bottombar-container{
         display: block;
     }
+
+    /* -------------------------Messenger page -------------------- */
+    .conversation-div{
+        width: 90vw;
+        height: calc(90vh - 42px);
+        margin-top: 3vh;
+        margin-left: 5vw;
+    }
 }
 
 /*--------------------------------------------- meadia querry for 600px to 767px ----------------------*/
@@ -2567,6 +2595,14 @@ hr{
     }
     .post-reaction-icon span{
         font-size: 14px;
+    }
+
+    /* -------------------------Messenger page -------------------- */
+    .conversation-div{
+        width: 90vw;
+        height: calc(90vh - 42px);
+        margin-top: 3vh;
+        margin-left: 5vw;
     }
 }
 
@@ -2891,6 +2927,51 @@ hr{
         height: 36px;
         width: 36px;
     }
+
+    /* -------------------------Messenger page -------------------- */
+    .conversation-div{
+        height: 77vh;
+        width: 100%;
+    }
+    .conversation{
+        padding: 10px 0px;
+    }
+    .conversation-dp{
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+    }
+    /*------ messenger chat area ------*/
+    .message-text{
+        max-width: 200px;
+    }
+    .chat-area-input{
+        width: 87%;
+    }
+    .no-conversation-text{
+        font-size: 35px;
+    }
+    /*------ messenger rightside online friends-------*/
+    .search-online-friend{
+        margin-left: 0px;
+        width: 80%;
+    }
+    .online-friend-heading{
+        margin: 0;
+        width: 100%;
+    }
+    .online-friend-div{
+        margin-left: 0px;
+        width: 100%;
+    }
+    .online-friend{
+        padding: 10px 0;
+    }
+    .online-friend-dp{
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+    }
 }
 
 /*--------------------------------------------- meadia querry for 1023px to 1300px ----------------------*/
@@ -3139,6 +3220,51 @@ hr{
     .comment-profile-img{
         height: 36px;
         width: 36px;
+    }
+
+    /* -------------------------Messenger page -------------------- */
+    .conversation-div{
+        height: 77vh;
+        width: 100%;
+    }
+    .conversation{
+        padding: 10px 0px;
+    }
+    .conversation-dp{
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
+    }
+    /*------ messenger chat area ------*/
+    .message-text{
+        max-width: 200px;
+    }
+    .chat-area-input{
+        width: 87%;
+    }
+    .no-conversation-text{
+        font-size: 35px;
+    }
+    /*------ messenger rightside online friends-------*/
+    .search-online-friend{
+        margin-left: 0px;
+        width: 80%;
+    }
+    .online-friend-heading{
+        margin: 0;
+        width: 100%;
+    }
+    .online-friend-div{
+        margin-left: 0px;
+        width: 100%;
+    }
+    .online-friend{
+        padding: 10px 0;
+    }
+    .online-friend-dp{
+        width: 36px;
+        height: 36px;
+        margin-right: 10px;
     }
 }
 
