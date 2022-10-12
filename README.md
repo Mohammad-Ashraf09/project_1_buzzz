@@ -1,53 +1,39 @@
-------------------- TO DO LIST ---------------------
+----- ABOUT PROJECT -----
+Project named as Buzzz is a social media react JS project in which ReactJS used as frontend, NodeJS and ExpressJs as backend and MongoDB as database.
+This project also includes different frontend as well as backend libraries such as
 
------ Login page -----
-✔ - validation for wrong password and email
-✋ - implement google login 
+ - axios --> for api fetch/calling
+ - bcryptjs --> for password encryption and decryption
+ - emoji-picker-react --> for emoji
+ - socket.io-client --> for real time notification and messaging
+ - timeago.js --> for formatting the time like 1 min ago, 3 hours ago etc
 
------ Signup page -----
-✔ - validation
+ - bcrypt --> for password encryption and decryption in backend
+ - dotenv --> for .env file
+ - express
+ - express-fileupload --> for uploading file in local system
+ - helmet --> for securing Express apps by setting various HTTP headers
+ - mongodb
+ - mongoose --> makes use of mongoDB easy
+ - morgan --> middleware between NodeJS and Express
+ - multer --> for uploading files
+ - path
 
------ Home page -----
- ✔ - realtime notification
- - implement messanger realtime notification
- ✔ - implement update/edit of post in 3 dots
- ✔ - fix empty comment send  
- ✋- implement 3 dots inside comment
- ✔ - implement seach filter
- ✔ - fix green badges for real online friends
- ✋- implement friend request option
- ✋- fix search input shifting of right side
- ✔ - implement delete account option
-  - fix empty post
+ - nodemon --> for server in socket folder
+ - socket.io --> for socket server
 
------ Admin page -----
-✋- refactor complete admin page (implement only admin's posts)
-✋- there should be option for edit profile
+----- FUNCTIONALITY -----
+ - signup for new users with proper validations
+ - login for registered users with proper validations
+ - user can post new posts
+ - user can like, dislike, comment on post of own or other
+ - user can update, delete own posts
+ - add/remove friends
+ - shows realtime notifications and online friends
+ - messenger with realtime send/receive
+ - and many more.......
 
------ User page -----
-✋- refactor complete user page (implement only user's posts)
-✋- no edit option for other users
-
------ Messager page -----
- ✔ - realtime message
- ✔ - search filter
- ✔ - implement start conversation with new friends
- ✔ - delete extra Nikhil
- ✋- validation on add conversation
-  - on left div show delete icon on hover at any name
- ✋- clear chat option on center chat area
-
------- RESPONSIVEness --------------
- ✔ - login
- ✔ - signup
- ✔ - home
- - user
- - messanger
-
- - add functinality of bottom bar
-
-
- ------- Run comands --------
- - cd server --->          nodemon app.js
- - cd server/client -----> npm start
- - cd socket ----->        npm start
+----- RUN COMMANDS -----
+ - cd server --> npm i --> nodemon app.js
+ - cd client --> npm i --> npm start
+ - cd socket --> npm i --> npm start

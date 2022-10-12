@@ -822,7 +822,7 @@ hr{
     border-radius: 8px;
     padding: 10px;
     
-    margin-right: 30px;
+    margin-right: 10px;
     resize: none;
 }
 .timeline-search-wrapper i{
@@ -830,6 +830,7 @@ hr{
     color: rgb(11, 192, 11);
     cursor: pointer;
     margin-top: 4px;
+    margin-right: 12px;
 }
 .photo-video{
     font-size: 13px;
@@ -876,6 +877,19 @@ hr{
     right: 8px;
     cursor: pointer;
     color: #03bfbc;
+}
+/* ------------------------- dynamic classes of Emoji-Picker */
+.EmojiPickerReact{
+    height: 40vh !important;
+    width: 25vw !important;
+    position: absolute !important;
+    top: 28vh;
+    right: 28vw;
+    z-index: 99999999;
+    background-color: rgba(232, 232, 232, 0.9) !important;
+}
+.Flex{
+    display: none !important;
 }
 
 /*----------------- timeline post area ----------------*/
@@ -958,6 +972,7 @@ hr{
 .post-caption{
     font-size: 13px;
     margin-top: 14px;
+    white-space: pre-line;     /* for rendering the 'Enter' white space on browser */
 }
 .edit-post{
     display: flex;

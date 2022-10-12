@@ -4,7 +4,7 @@ import SmallProfile from '../components/leftbar/SmallProfile';
 import Utility from '../components/leftbar/Utility';
 import Contact from '../components/rightbar/Contact';
 import Suggestion from '../components/rightbar/Suggestion';
-import SearchBox from '../components/timeline/SearchBox';
+import CreateNewPost from '../components/timeline/CreateNewPost';
 import Timeline from '../components/timeline/Timeline';
 import Bottombar from '../components/Bottombar';
 import axios from 'axios';
@@ -50,7 +50,8 @@ const Feed = () => {
           <Utility/>
         </div>
         <div className="timeline">
-          <SearchBox/>
+          <CreateNewPost/>
+          {/* create 1 new component of name Posts.jsx and call it inside Timeline.jsx and implement map there and only pass here <Timeline socket={socket} /> */}
           <div className="timeline-post-area">
             {posts.map((data)=>(
               <Timeline key={data._id} post={data} socket={socket} />

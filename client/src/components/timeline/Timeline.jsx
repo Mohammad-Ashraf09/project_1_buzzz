@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { format } from 'timeago.js';
 import {AuthContext} from "../../context/AuthContext";
 import Comment from "./Comment";
-import SearchBox from './SearchBox';
 
 const Timeline = ({post, socket}) => {
 
@@ -25,6 +24,7 @@ const Timeline = ({post, socket}) => {
   const [show3Dots, setShow3Dots] = useState(false);
   const [edit, setEdit] = useState(false);
   const editedDesc = useRef();
+  const [updatedDesc, setUpdatedDesc] = useState(desc);
 
   useEffect(()=>{
     setIsLiked(likes.includes(currentUser._id));
@@ -108,7 +108,9 @@ const Timeline = ({post, socket}) => {
     catch(err){}
   }
 
-  const commentHandler = async()=>{
+  const commentHandler = async(e)=>{
+    e.preventDefault();
+
     if(comment_text.current.value){
       const newComment = {
         dp: currentUser.profilePicture,
@@ -116,16 +118,19 @@ const Timeline = ({post, socket}) => {
         comment: comment_text.current.value,
         date: new Date()
       }
-    
+
       try{
         await axios.put("posts/"+ _id +"/comment", newComment);
         // window.location.reload();
         setComment(comment+1);
         comment_text.current.value= "";
-
+        
         notificationHandler("commented");
       }
       catch(err){}
+
+      comments.push(newComment);
+      setShowComment(true);
     }
   }
 
@@ -136,11 +141,6 @@ const Timeline = ({post, socket}) => {
 
   const deletePostHandler = async()=>{
     try{
-      // console.log(_id)
-      // console.log(post.userId)
-      // console.log(currentUser._id)
-      //await axios.delete("posts/"+ _id, {userId: currentUser._id});
-
       const remove = window.confirm("Are you sure, you want to remove this post?");
       if(remove){
         await axios.delete("posts/"+ _id);
@@ -165,7 +165,9 @@ const Timeline = ({post, socket}) => {
 
     try{
       await axios.put("/posts/"+_id, updatedPost)
-      window.location.reload();
+      // window.location.reload();
+      setEdit(false);
+      setUpdatedDesc(editedDesc.current.value);
     }
     catch(err){}
   }
@@ -174,7 +176,10 @@ const Timeline = ({post, socket}) => {
     setShow3Dots(!show3Dots)
   }
 
-  
+  console.log(desc)
+
+  const reverseOrderComment = [...comments].reverse();       // last commented shown first
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const name = user.fname + ' ' + user.lname;
   const DP = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
@@ -233,13 +238,13 @@ const Timeline = ({post, socket}) => {
         </div>
         {edit 
           ? <div className="edit-post">
-              <textarea type="text" className="post-input-edit" placeholder={"Start a post..."} defaultValue={desc} ref={editedDesc} />
+              <textarea type="text" className="post-input-edit" placeholder={"Start a post..."} defaultValue={updatedDesc} ref={editedDesc} />
               <div className="edit-btn">
                 <button type="submit" className="update-btn" onClick={updateBtnHandler}>Update</button>
                 <button type="submit" className="cancel-btn" onClick={()=>{setEdit(false)}}>Cancel</button>
               </div>
             </div>
-          : <div className="post-caption"> {desc} </div>}
+          : <div className="post-caption"> {updatedDesc} </div>}
         {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} />}
         <div className="post-reaction-count">
           <div className="like-dislike-count">
@@ -268,12 +273,12 @@ const Timeline = ({post, socket}) => {
         <hr className='post-hr'/>
         { showComment && (
           <div className="comment-div">
-            {comments.map((data)=>(
+            {reverseOrderComment.map((data)=>(
                 <Comment key={data} cmnt={data} />
             ))}
           </div>
         )}
-        <form className="comment-section">
+        <form className="comment-section" onSubmit={commentHandler}>
           <img className='comment-profile-img' src={PF+currentUser.profilePicture} alt="" />
           <input type="text" className="comment-input" placeholder='Write a comment...' ref={comment_text} />
           <div className="send-icon">
