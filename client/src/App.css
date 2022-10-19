@@ -856,11 +856,40 @@ hr{
     background-color: var(--link-color);
     cursor: pointer;
 }
-
 .post-input::-webkit-scrollbar{
     display: none;
 }
-
+.location-post-container{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 12px;
+}
+.location-post-container-wrapper{
+    display: flex;
+    margin-bottom: 5px;
+}
+.location-post-icon{
+    font-size: 12px;
+    padding: 4px 0 4px 8px;
+    background-color: var(--grey-xl-light);
+    color: var(--grey-dark);
+    border-radius: 4px 0 0 4px;
+}
+.location-post-name{
+    font-size: 12px;
+    padding: 3.5px 12px 3px 4px;
+    background-color: var(--grey-xl-light);
+    color: var(--grey-dark);
+}
+.location-post-cross{
+    font-size: 12px;
+    padding: 4px 8px 3px 2px;
+    background-color: var(--grey-xl-light);
+    color: var(--grey-dark);
+    border-radius: 0 4px 4px 0;
+    margin-right: 6px;
+    cursor: pointer;
+}
 .share-img-container{
     position: relative;
 }
@@ -890,6 +919,115 @@ hr{
 }
 .Flex{
     display: none !important;
+}
+.location-div{
+    height: 50vh;
+    width: 20vw;
+    border-radius: 8px;
+    position: absolute;
+    top: 28vh;
+    right: 27.8vw;
+    z-index: 99999999;
+    background-color: rgba(232, 232, 232, 0.9);
+    overflow: auto;
+}
+.location-div::-webkit-scrollbar{
+    width: 20px;
+}
+.location-div::-webkit-scrollbar-thumb{
+    background-color: var(--grey-light);
+    border-radius: 100vh;
+    border: 7px solid rgb(232, 232, 232);
+}
+.location-div::-webkit-scrollbar-thumb:hover{
+    background-color: var(--grey-light);
+}
+.location-div::-webkit-scrollbar-track{
+    background-color: transparent;
+    border-radius: 8px;
+}
+.location-search-filter{
+    display: flex;
+    justify-content: center;
+    margin-top: 15px;
+}
+.location-search-input{
+    width: 85%;
+    height: 25px;
+    border-radius: 25px;
+    border: 2px solid black;
+    padding: 3px 4px 3px 12px;
+    font-size: 14px;
+}
+.locations-list{
+    margin-left: -30px;
+    list-style: none;
+}
+.locations-list-item{
+    cursor: pointer;
+    padding: 8px;
+    border-radius: 5px;
+    font-size: 14px;
+    margin-right: 10px;
+}
+.locations-list-item:hover{
+    background-color: rgb(204, 199, 199);
+}
+.friend-list-container{
+    height: 50vh;
+    width: 18vw;
+    border-radius: 8px;
+    position: absolute;
+    top: 28vh;
+    right: 27.8vw;
+    z-index: 99999999;
+    background-color: rgba(232, 232, 232, 0.9);
+    overflow: auto;
+}
+.friend-list-container::-webkit-scrollbar{
+    width: 20px;
+}
+.friend-list-container::-webkit-scrollbar-thumb{
+    background-color: var(--grey-light);
+    border-radius: 100vh;
+    border: 7px solid rgb(232, 232, 232);
+}
+.friend-list-container::-webkit-scrollbar-thumb:hover{
+    background-color: var(--grey-light);
+}
+.friend-list-container::-webkit-scrollbar-track{
+    background-color: transparent;
+    border-radius: 8px;
+}
+.friend-list{
+    padding-left: 10px;
+    list-style: none;
+    margin-bottom: 0;
+    margin-top: 15px;
+}
+.friend-list-item{
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    border-radius: 5px;
+    margin-right: 10px;
+    position: relative;
+    cursor: pointer;
+}
+.friend-list-item:hover{
+    background-color: rgb(204, 199, 199);
+}
+.friend-img{
+    height: 32px;
+    width: 32px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.friend-list-item span{
+    margin-left: 10px;
+    color: var(--grey-dark);
+    font-size: 12px;
+    font-weight: 500;
 }
 
 /*----------------- timeline post area ----------------*/
@@ -929,10 +1067,22 @@ hr{
     font-weight: 600;
     cursor: pointer;
 }
-.post-date{
+.post-date-location{
     font-size: 12px;
     color: var(--grey-light);
     margin-top: 3px;
+    display: flex;
+}
+.post-date{
+    margin-right: 3px;
+}
+.dot{
+    font-size: 30px;
+    margin-top: -19px;
+    margin-right: 3px;
+}
+.location-name{
+    margin: 0 0 0 3px;
 }
 .post-top-dots{
     background-color: var(--bg-color);
@@ -1021,6 +1171,21 @@ hr{
 }
 .cancel-btn:hover{
     background-color: rgba(184, 46, 8, 0.8);
+}
+.tagged-friend-container{
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
+}
+.tagged-friend{
+    margin-right: 6px;
+    margin-bottom: 6px;
+    padding: 3px 8px;
+    font-size: 12px;
+    color: blue;
+    border-radius: 25px;
+    background-color: rgba(232, 232, 232, 0.9);
+    cursor: pointer;
 }
 .post-img{
     width: 100%;
@@ -2926,7 +3091,7 @@ hr{
         font-weight: 500;
         font-size: 14px;
     }
-    .post-date{
+    .post-date-location{
         font-size: 10px;
     }
     .post-img{
@@ -3220,7 +3385,7 @@ hr{
         font-weight: 500;
         font-size: 14px;
     }
-    .post-date{
+    .post-date-location{
         font-size: 10px;
     }
     .post-img{

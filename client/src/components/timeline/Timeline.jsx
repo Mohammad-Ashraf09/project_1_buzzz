@@ -7,8 +7,8 @@ import Comment from "./Comment";
 
 const Timeline = ({post, socket}) => {
 
-  const {desc, img, userId, likes, dislikes, comments, createdAt, updatedAt, _id} = post;
-  //console.log(post.comments);
+  const {desc, img, location, taggedFriends, userId, likes, dislikes, comments, createdAt, updatedAt, _id} = post;
+  // console.log(taggedFriends);
 
   const [comment, setComment] = useState(comments.length);
   const [lik, setLik] = useState(likes.length);
@@ -176,7 +176,7 @@ const Timeline = ({post, socket}) => {
     setShow3Dots(!show3Dots)
   }
 
-  console.log(desc)
+  // console.log(desc)
 
   const reverseOrderComment = [...comments].reverse();       // last commented shown first
 
@@ -207,7 +207,16 @@ const Timeline = ({post, socket}) => {
                   <div className="post-username"> {name} </div>
                 </Link>
               }
-              <div className="post-date"> {format(createdAt)} </div>
+              <div className="post-date-location">
+                <div className='post-date'>{format(createdAt)}</div>
+                {location &&
+                  <>
+                    <div className='dot'>.</div>
+                    <i class="fa-solid fa-location-dot"></i>
+                    <p className='location-name'>{location}</p>
+                  </>
+                }
+              </div>
             </span>
           </div>
           <div className="post-top-dots" onClick={()=>{setShow3Dots(!show3Dots)}}>
@@ -244,7 +253,13 @@ const Timeline = ({post, socket}) => {
                 <button type="submit" className="cancel-btn" onClick={()=>{setEdit(false)}}>Cancel</button>
               </div>
             </div>
-          : <div className="post-caption"> {updatedDesc} </div>}
+          : <div className="post-caption"> {updatedDesc} </div>
+        }
+        <div className='tagged-friend-container'>
+          {taggedFriends.map((friend)=>(
+                <div className='tagged-friend'>@{friend}</div>
+            ))}
+        </div>
         {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} />}
         <div className="post-reaction-count">
           <div className="like-dislike-count">

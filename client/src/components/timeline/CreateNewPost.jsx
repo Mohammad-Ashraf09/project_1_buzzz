@@ -3,6 +3,10 @@ import React, { useContext, useEffect, useRef, useState, createRef } from 'react
 import { AuthContext } from '../../context/AuthContext';
 import EmojiInput from "../EmojiInput";
 import { EmojiStyle, SkinTones, Theme, Categories, EmojiClickData, Emoji, SuggestionMode } from "emoji-picker-react";
+import Location from '../Location';
+import { locationsList } from '../../locationList';
+import FriendList from '../FriendList';
+import TaggedFriend from '../TaggedFriend';
 
 
 const CreateNewPost = () => {
@@ -17,6 +21,15 @@ const CreateNewPost = () => {
   const [cursorPosition, setCursorPosition] = useState();
   const [selectedEmoji, setSelectedEmoji] = useState("");
   // const [emojiList, setEmojiList] = useState([]);
+  const [showLocations, setShowLocations] = useState(false);
+  const [query, setQuery] = useState("");
+  const [location, setLocation] = useState("");
+  const [showLocationPostContainer, setShowLocationPostContainer] = useState(false)
+
+  const [following, setFollowing] = useState([]);
+  const [showFriendList, setShowFriendList] = useState(false);
+  const [taggedFriends, setTaggedFriends] = useState([]);
+  const [showTaggedFriendsPostContainer, setShowTaggedFriendsPostContainer] = useState(false)
 
   const handleChange = (e)=>{
     setMessage(e.target.value);
@@ -54,6 +67,15 @@ const CreateNewPost = () => {
 
   },[file]);
 
+  useEffect(()=>{
+    const fetchFollowings = async() =>{
+      const res = await axios.get("users/"+user._id);
+      const arr = res.data.followings
+      setFollowing(arr);
+    }
+    fetchFollowings();
+  },[user._id]);
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const profile = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
   const name = user.fname;
@@ -64,6 +86,8 @@ const CreateNewPost = () => {
       const newPost = {
         userId: user._id,
         desc: message,
+        location: showLocationPostContainer ? location : "",
+        taggedFriends: showTaggedFriendsPostContainer ? taggedFriends : [],
       }
       if(file){
         const data = new FormData();
@@ -105,14 +129,35 @@ const CreateNewPost = () => {
               <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg' onChange={(e)=>setFile(e.target.files[0])}/>
             </label>
             <i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
-            <i class="fa-solid fa-tags"></i>
-            <i class="fa-solid fa-location-dot"></i>
+            <i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList)}}></i>
+            <i class="fa-solid fa-location-dot" onClick={()=>{setShowLocations(!showLocations)}}></i>
 
             <div className="btn">
               <button type="submit">Post</button>
             </div>
           </div>
         </div>
+
+        {showLocationPostContainer && <div className='location-post-container'>
+          <i class="fa-solid fa-location-dot location-post-icon"></i>
+          <div className='location-post-name'>{location}</div>
+          <div className='location-post-cross'><i class="fa-solid fa-xmark" onClick={()=>{setShowLocationPostContainer(false)}}></i></div>
+        </div>}
+
+        {showTaggedFriendsPostContainer &&
+          <div className='location-post-container'>
+              {taggedFriends.map((friend)=>(
+                <TaggedFriend
+                  key={Math.random()}
+                  friend={friend}
+                  setTaggedFriends={setTaggedFriends}
+                  setShowTaggedFriendsPostContainer={setShowTaggedFriendsPostContainer}
+                  taggedFriends={taggedFriends}
+                />
+              ))}
+          </div>
+        }
+
         <div className="share-img-container">
           {file && <img className="share-img" src={preview} alt="" />}
           {file && <i class="fa-solid fa-square-xmark" onClick={()=>setFile(null)} ></i>}
@@ -129,8 +174,45 @@ const CreateNewPost = () => {
 
         </div> */}
       <div className='emoji-container'>
-        {showEmojis ? <EmojiInput onClick={onClick} selectedEmoji={selectedEmoji}/> : null}
+        {showEmojis && <EmojiInput onClick={onClick} selectedEmoji={selectedEmoji}/>}
       </div>
+
+      {showLocations && <div className='location-div'>
+        <div className='location-search-filter'>
+          <input type="text" className='location-search-input' name="" placeholder='Search Location' onChange={(e)=>setQuery(e.target.value)} />
+        </div>
+        <ul className="locations-list">
+          {locationsList.sort().filter((x)=>x.toLowerCase().includes(query)).map((location)=>(
+            <Location
+              key={location}
+              location={location}
+              setShowLocations={setShowLocations}
+              setLocation={setLocation}
+              setShowLocationPostContainer={setShowLocationPostContainer}
+              setQuery={setQuery}
+            />
+          ))}
+        </ul>
+      </div>}
+
+      {showFriendList && <div className="friend-list-container">
+        <div className='location-search-filter'>
+            <input type="text" className='location-search-input' name="" placeholder='Search Friend' onChange={(e)=>setQuery(e.target.value)} />
+        </div>
+        <ul className="friend-list">
+            {following.filter((data)=>data.name.toLowerCase().includes(query)).map((friend)=>(
+                <FriendList
+                  key={friend.id}
+                  friend={friend}
+                  setShowFriendList={setShowFriendList}
+                  setTaggedFriends={setTaggedFriends}
+                  setShowTaggedFriendsPostContainer={setShowTaggedFriendsPostContainer}
+                  setQuery={setQuery}
+                />
+            ))}
+        </ul>
+      </div>}
+
     </>
   )
 }
