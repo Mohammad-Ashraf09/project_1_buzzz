@@ -104,7 +104,7 @@ router.get("/timeline/:userId", async (req, res) => {
   }
 });
 
-//add comments
+//add comment
 router.put("/:id/comment", async(req, res)=>{
   try {
     const post = await Post.findById(req.params.id);
@@ -114,6 +114,106 @@ router.put("/:id/comment", async(req, res)=>{
   catch (err) {
     res.status(500).json(err);
   }
-})
+});
+
+//get particular comment
+router.get("/:id/comment/:commentId", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const comment = await post.comments.find((cmnt)=>cmnt.commentId===req.params.commentId);
+    
+    res.status(200).json(comment);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//like comment
+router.put("/:id/comment/:commentId/like", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const comment = await post.comments.find((cmnt)=>cmnt.commentId===req.params.commentId);
+    if (!comment.commentLikes.includes(req.body.userId)) {
+      await Post.updateOne({"comments.commentId": req.params.commentId}, {$push: {"comments.$.commentLikes": req.body.userId}});
+      res.status(200).json("The comment has been liked");
+    } else {
+      await Post.updateOne({"comments.commentId": req.params.commentId}, {$pull: {"comments.$.commentLikes": req.body.userId}});   // toggle
+      res.status(200).json("like removed");
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//add nested comment (reply)
+router.put("/:id/comment/:commentId/reply", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    await Post.updateOne({"comments.commentId": req.params.commentId}, {$push: {"comments.$.nestedComments": req.body}});
+    res.status(200).json("nested comment added");
+
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//edit comment
+router.put("/:id/comment/:commentId/edit", async (req, res) => {
+  try {
+    await Post.updateOne({"comments.commentId": req.params.commentId}, {$set: {"comments.$.comment": req.body.updatedComment}});
+    res.status(200).json("Comment updated");
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//delete comment
+router.put("/:id/comment/:commentId", async(req, res)=>{
+  try {
+    const post = await Post.findById(req.params.id);
+    await post.updateOne({$pull: {comments: {commentId: req.params.commentId }}});
+    res.status(200).json("Comment deleted...");
+  }
+  catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+
+//get particular nested comment
+router.get("/:id/comment/:commentId/reply/:nestedCommentId", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const comment = await post.comments.find((cmnt)=>cmnt.commentId===req.params.commentId);
+    const nestedComment = await comment.nestedComments.find((cmnt)=>cmnt.nestedCommentId===req.params.nestedCommentId);
+    
+    res.status(200).json(nestedComment);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//like nested comment
+// router.put("/:id/comment/:commentId/like/:nestedCommentId/nestedLike", async (req, res) => {
+//   try {
+//     const post = await Post.findById(req.params.id);
+//     const comment = await post.comments.find((cmnt)=>cmnt.commentId===req.params.commentId);
+//     const nestedComment = await comment.nestedComments.find((cmnt)=>cmnt.nestedCommentId===req.params.nestedCommentId);
+
+//     if (!nestedComment.nestedCommentLikes.includes(req.body.userId)) {
+//       await Post.updateOne(
+//         {"comments.nestedComments.nestedCommentId": req.params.nestedCommentId},
+//         {$push: {"comments.$[outer].nestedComments.$[inner].nestedCommentLikes": req.body.userId}},
+//         {arrayFilters: [{ "outer.commentId": req.params.commentId }, { "inner.nestedCommentId": req.params.nestedCommentId }]}
+//       );
+//       res.status(200).json("The comment has been liked");
+//     } else {
+//       await Post.updateOne({"comments.commentId": req.params.commentId}, {$pull: {"comments.$.commentLikes": req.body.userId}});   // toggle
+//       res.status(200).json("like removed");
+//     }
+//   } catch (err) {
+//     res.status(500).json(err);
+//   }
+// });
 
 module.exports = router;

@@ -1,9 +1,8 @@
 import React from 'react'
 
-const FriendList = ({friend, setShowFriendList, setTaggedFriends, setShowTaggedFriendsPostContainer, setQuery}) => {
+const FriendList = ({friend, setTaggedFriends, setShowTaggedFriendsPostContainer, setQuery}) => {
     const clickHandler = ()=>{
-        setTaggedFriends((prev)=>[...prev, friend.name]);
-        // setShowFriendList(false);
+        setTaggedFriends((prev)=>[...prev, {name: friend.name, id: friend.id}]);
         setShowTaggedFriendsPostContainer(true);
         setQuery("");
     }

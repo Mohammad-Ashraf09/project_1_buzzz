@@ -46,7 +46,7 @@ const Suggestion = ({socket}) => {
         setClr("#000");
     }
 
-    console.log(allUsers);
+    // console.log(allUsers);
 
   return (
     <div className='suggestion'>

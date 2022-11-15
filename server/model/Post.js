@@ -20,6 +20,10 @@ const PostSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
+    edited: {
+      type: Boolean,
+      default: false,
+    },
     likes: {
       type: Array,
       default: [],

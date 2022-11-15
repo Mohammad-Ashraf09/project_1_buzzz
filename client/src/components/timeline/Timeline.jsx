@@ -1,30 +1,69 @@
 import axios from 'axios';
-import React, { useState, useEffect, useContext, useRef } from 'react';
+import React, { useState, useEffect, useContext, createRef } from 'react';
 import { Link } from 'react-router-dom';
 import { format } from 'timeago.js';
 import {AuthContext} from "../../context/AuthContext";
+import { locationsList } from '../../locationList';
+import ClickedPost from '../ClickedPost';
+import EmojiContainer from '../emoji/EmojiContainer';
+import FriendList from '../FriendList';
+import Location from '../Location';
+import TaggedFriend from '../TaggedFriend';
 import Comment from "./Comment";
 
 const Timeline = ({post, socket}) => {
 
-  const {desc, img, location, taggedFriends, userId, likes, dislikes, comments, createdAt, updatedAt, _id} = post;
-  // console.log(taggedFriends);
+  const {_id, userId, createdAt, updatedAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
+  // console.log(comments);
 
-  const [comment, setComment] = useState(comments.length);
+  const [totalComment, setTotalComment] = useState(comments);
+  const [numberOfComments, setNumberOfComments] = useState(comments.length);
   const [lik, setLik] = useState(likes.length);
   const [isLiked, setIsLiked] = useState(false);
   const [clr, setClr] = useState("rgb(108, 104, 104)");
-  const [dislik, setDisLik] = useState(dislikes.length);
+  const [disLik, setDisLik] = useState(dislikes.length);
   const [isDisLiked, setIsDisLiked] = useState(false);
   const [clr2, setClr2] = useState("rgb(108, 104, 104)");
   const [user, setUser] = useState({});                 // jis user ne post dali hai wo hai ye
   const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
-  const comment_text = useRef();
   const [showComment, setShowComment] = useState(false);
   const [show3Dots, setShow3Dots] = useState(false);
   const [edit, setEdit] = useState(false);
-  const editedDesc = useRef();
-  const [updatedDesc, setUpdatedDesc] = useState(desc);
+
+  const [editedDone, setEditedDone] = useState(edited);
+
+  const inputRef = createRef();
+  const [message, setMessage] = useState(desc);
+  const [cursorPosition, setCursorPosition] = useState();
+  const [showEmojisForEditDesc, setShowEmojisForEditDesc] = useState(false);
+  
+  const [following, setFollowing] = useState([]);
+  const [showFriendList, setShowFriendList] = useState(false);
+  const [taggedFriend, setTaggedFriend] = useState(taggedFriends);
+
+  const [showLocations, setShowLocations] = useState(false);
+  const [query, setQuery] = useState("");
+  const [loc, setLoc] = useState(location);
+
+  const [descGreaterThan200, setDescGreaterThan200] = useState(message.length>200);
+
+  const [showParticularPost, setShowParticularPost] = useState(false);
+
+  const inputRef2 = createRef();
+  const [commentedText, setCommentedText] = useState("");
+  const [cursorPosition2, setCursorPosition2] = useState();
+  const [showEmojisForComment, setShowEmojisForComment] = useState(false)
+
+  const [replyIconClicked, setReplyIconClicked] = useState(false);
+  const [particularCommentId, setParticularCommentId] = useState("");
+
+  const [editIconClicked, setEditIconClicked] = useState(false);
+  const [editDone, setEditDone] = useState(false);
+
+  const [nestedCommentLength, setNestedCommentLength] = useState(0);
+
+  // console.log(totalComment);
+
 
   useEffect(()=>{
     setIsLiked(likes.includes(currentUser._id));
@@ -45,6 +84,23 @@ const Timeline = ({post, socket}) => {
     }
     fetchUser();
   },[userId]);
+
+  useEffect(()=>{
+    const fetchFollowings = async() =>{
+      const res = await axios.get("users/"+currentUser._id);
+      const arr = res.data.followings
+      setFollowing(arr);
+    }
+    fetchFollowings();
+  },[currentUser._id]);
+
+  const handleDescChange = (e)=>{
+    setMessage(e.target.value);
+  }
+
+  const handleCommentChange = (e)=>{
+    setCommentedText(e.target.value);
+  }
 
   const notificationHandler = (type)=>{
     if(currentUser._id !== user._id){
@@ -73,7 +129,7 @@ const Timeline = ({post, socket}) => {
         setClr("#417af5");
       
       if(isDisLiked){
-        setDisLik(dislik-1);
+        setDisLik(disLik-1);
         setClr2("rgb(108, 104, 104)");
         setIsDisLiked(false);
         await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id});
@@ -88,7 +144,7 @@ const Timeline = ({post, socket}) => {
     try{
       await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id})
 
-      setDisLik(isDisLiked ? dislik-1 : dislik+1);
+      setDisLik(isDisLiked ? disLik-1 : disLik+1);
       setIsDisLiked(!isDisLiked);
       
       if(isDisLiked)
@@ -110,26 +166,30 @@ const Timeline = ({post, socket}) => {
 
   const commentHandler = async(e)=>{
     e.preventDefault();
+    setShowEmojisForComment(false);
 
-    if(comment_text.current.value){
+    if(commentedText){
       const newComment = {
+        commentId: Math.random().toString(),
         dp: currentUser.profilePicture,
         name: currentUser.fname + " " + currentUser.lname,
-        comment: comment_text.current.value,
+        id: currentUser._id,
+        comment: commentedText,
+        commentLikes: [],
+        nestedComments: [],
         date: new Date()
       }
 
       try{
         await axios.put("posts/"+ _id +"/comment", newComment);
-        // window.location.reload();
-        setComment(comment+1);
-        comment_text.current.value= "";
+        setNumberOfComments(numberOfComments+1);
+        setCommentedText("");
         
         notificationHandler("commented");
       }
       catch(err){}
 
-      comments.push(newComment);
+      setTotalComment((prev)=>[...prev, newComment]);
       setShowComment(true);
     }
   }
@@ -137,6 +197,72 @@ const Timeline = ({post, socket}) => {
   const showCommentHandler = () =>{
     if(comments.length!==0)
       setShowComment(!showComment);
+    
+    if(showComment)
+      setReplyIconClicked(false)
+  }
+
+  const replyCommentHandler = (id, name) =>{
+    setReplyIconClicked(true);
+    const ref = inputRef2.current;
+    ref.focus();
+    setParticularCommentId(id);
+    setCommentedText("@" + name + " ");
+  }
+  
+  const replySubmitHandler = async(e) =>{
+    e.preventDefault();
+    setShowEmojisForComment(false);
+
+    if(commentedText){
+      const newNestedComment = {
+        nestedCommentId: Math.random().toString(),
+        nestedDp: currentUser.profilePicture,
+        nestedName: currentUser.fname + " " + currentUser.lname,
+        nestedId: currentUser._id,
+        nestedComment: commentedText,
+        nestedCommentLikes: [],
+        date: new Date()
+      }
+
+      try{
+        await axios.put("posts/"+ _id +"/comment/"+ particularCommentId + "/reply", newNestedComment);
+        setCommentedText("");
+        
+        notificationHandler("commented");
+
+        setNestedCommentLength(nestedCommentLength + 1);
+        setReplyIconClicked(false);
+      }
+      catch(err){}
+    }
+  }
+
+  const editCommentHandler = (id, comment) =>{
+    setEditIconClicked(true);
+    const ref = inputRef2.current;
+    ref.focus();
+    setParticularCommentId(id);
+    setCommentedText(comment);
+  }
+
+  const editCommentSubmitHandler = async(e) =>{
+    e.preventDefault();
+    setShowEmojisForComment(false);
+
+    if(commentedText){
+      try{
+        await axios.put("posts/"+ _id +"/comment/"+ particularCommentId + "/edit", {updatedComment: commentedText});
+        setCommentedText("");
+        
+        notificationHandler("commented");
+
+        setEditIconClicked(false);
+      }
+      catch(err){}
+
+      setEditDone(!editDone);
+    }
   }
 
   const deletePostHandler = async()=>{
@@ -160,30 +286,57 @@ const Timeline = ({post, socket}) => {
   const updateBtnHandler = async()=>{
     const updatedPost = {
       userId: currentUser._id,
-      desc: editedDesc.current.value,
+      desc: message,
+      location: loc,
+      taggedFriends: taggedFriend,
+      edited : desc!==message,
     }
 
     try{
       await axios.put("/posts/"+_id, updatedPost)
       // window.location.reload();
       setEdit(false);
-      setUpdatedDesc(editedDesc.current.value);
+      setShowEmojisForEditDesc(false);
+      setShowFriendList(false);
+      setTaggedFriend(taggedFriend);
+      if(desc!==message)
+        setEditedDone(true);
     }
     catch(err){}
+  }
+
+  const cancelBtnHandler = ()=>{
+    setEdit(false);
+    setShowEmojisForEditDesc(false);
+    setShowFriendList(false);
+    setShowLocations(false);
+    setMessage(desc);
+    setTaggedFriend(taggedFriends);
+    setLoc(location);
   }
 
   const reportPostHandler = ()=>{
     setShow3Dots(!show3Dots)
   }
 
-  // console.log(desc)
+  const blurrScreenHandler = ()=>{
+    setShowParticularPost(!showParticularPost);
 
-  const reverseOrderComment = [...comments].reverse();       // last commented shown first
+    if(!showParticularPost){
+      document.body.style.overflow = "hidden";
+      document.body.scrollIntoView();
+    }
+    else
+      document.body.style.overflow = "auto";
+
+    
+  }
+
+  const reverseOrderComment = [...totalComment].reverse();       // last commented shown first
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const name = user.fname + ' ' + user.lname;
   const DP = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
-
   return (
     <div className='timeline-post'>
       <div className="timeline-post-wrapper">
@@ -198,31 +351,54 @@ const Timeline = ({post, socket}) => {
                 <img src={DP} alt="" className="post-profile-img" />
               </Link>
             }
+
             <span className="post-username-date">
-              {user._id===currentUser._id?
+              {user._id===currentUser._id ?
                 <Link to={`/admin/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
                   <div className="post-username"> {name} </div>
-                </Link>:
+                </Link> :
                 <Link to={`/user/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
                   <div className="post-username"> {name} </div>
                 </Link>
               }
+
               <div className="post-date-location">
                 <div className='post-date'>{format(createdAt)}</div>
-                {location &&
+                {edit ?
+                  (loc &&(
+                    <div className='location-post-container-edited'>
+                      <div className='dot-edited'>.</div>
+                      <i class="fa-solid fa-location-dot location-post-icon"></i>
+                      <div className='location-post-name'>{loc}</div>
+                      <div className='location-post-cross'><i class="fa-solid fa-xmark" onClick={()=>setLoc("")}></i></div>
+                    </div>
+                  ))
+                  :
+                  (loc &&(
+                    <>
+                      <div className='dot'>.</div>
+                      <i class="fa-solid fa-location-dot"></i>
+                      <p className='location-name'>{loc}</p>
+                    </>
+                  ))
+                }
+
+                {editedDone &&
                   <>
                     <div className='dot'>.</div>
-                    <i class="fa-solid fa-location-dot"></i>
-                    <p className='location-name'>{location}</p>
+                    <div className='edited-done'>edited</div>
                   </>
                 }
+
               </div>
             </span>
           </div>
+          
           <div className="post-top-dots" onClick={()=>{setShow3Dots(!show3Dots)}}>
             <i className="fa-solid fa-ellipsis"></i>
           </div>
-          {currentUser._id===post.userId ?
+
+          {currentUser._id===userId ?
             ( show3Dots && (
               <div className="post-3-dots-functionality">
                 <div className="post-3-dots-functionality-wrapper">
@@ -245,30 +421,59 @@ const Timeline = ({post, socket}) => {
             ))
           }
         </div>
-        {edit 
-          ? <div className="edit-post">
-              <textarea type="text" className="post-input-edit" placeholder={"Start a post..."} defaultValue={updatedDesc} ref={editedDesc} />
-              <div className="edit-btn">
-                <button type="submit" className="update-btn" onClick={updateBtnHandler}>Update</button>
-                <button type="submit" className="cancel-btn" onClick={()=>{setEdit(false)}}>Cancel</button>
+
+        {edit ?
+          <div className="edit-post">
+            <textarea type="text" className="post-input-edit" placeholder={"Start a post..."} value={message} onChange={handleDescChange} ref={inputRef}/>
+            <div className="edit-btn">
+              <button type="submit" className="update-btn" onClick={updateBtnHandler}>Update</button>
+              <button type="submit" className="cancel-btn" onClick={cancelBtnHandler}>Cancel</button>
+              <div className='icons-after-edit'>
+                <div className='edit-emoji'><i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForEditDesc(!showEmojisForEditDesc); setShowLocations(false); setShowFriendList(false)}}></i></div>
+                <div className='edit-tag'><i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList); setShowEmojisForEditDesc(false); setShowLocations(false)}}></i></div>
+                <div className='edit-location'><i class="fa-solid fa-location-dot" onClick={()=>{setShowLocations(!showLocations); setShowFriendList(false); setShowEmojisForEditDesc(false)}}></i></div>
               </div>
             </div>
-          : <div className="post-caption"> {updatedDesc} </div>
+          </div> :
+          (descGreaterThan200 && img ?
+            <div className="post-caption">
+              {message.substr(0,200)}
+              <span className='read-more' onClick={()=>{setDescGreaterThan200(false)}}>... read more</span>
+            </div> :
+            <div className="post-caption"> {message} </div>
+          )
         }
-        <div className='tagged-friend-container'>
-          {taggedFriends.map((friend)=>(
-                <div className='tagged-friend'>@{friend}</div>
+
+        {edit ?
+          <div className='location-post-container'>
+            {taggedFriend.map((friend)=>(
+              <TaggedFriend
+                key={Math.random()}
+                friend={friend}
+                setTaggedFriends={setTaggedFriend}
+                taggedFriends={taggedFriend}
+              />
             ))}
-        </div>
-        {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} />}
+          </div> :
+          <div className='tagged-friend-container'>
+            {taggedFriend.map((friend)=>(
+              <Link to={`/user/${friend.id}`} style={{textDecoration: 'none'}}>
+                <div className='tagged-friend'>@{friend.name}</div>
+              </Link>
+            ))}
+          </div>
+        }
+
+        {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} onClick={blurrScreenHandler} />}
+
         <div className="post-reaction-count">
           <div className="like-dislike-count">
             <i className="fa-solid fa-thumbs-up solid-thumbs-up"></i>
             <span className="count">{lik}</span>
             <i className="fa-solid fa-thumbs-down solid-thumbs-down"></i>
-            <span className="count">{dislik}</span>
+            <span className="count">{disLik}</span>
           </div>
-          <div className="comment-count">{comment} comment</div>
+          <div className="comment-count">{numberOfComments} comment</div>
         </div>
         <hr className='post-hr'/>
         <div className="post-reaction-icon">
@@ -286,21 +491,155 @@ const Timeline = ({post, socket}) => {
           </div>
         </div>
         <hr className='post-hr'/>
+
         { showComment && (
           <div className="comment-div">
             {reverseOrderComment.map((data)=>(
-                <Comment key={data} cmnt={data} />
+                <Comment
+                  key={data.commentId}
+                  commentId={data.commentId}
+                  user={user}
+                  currentUser={currentUser}
+                  numberOfComments={numberOfComments}
+                  setNumberOfComments={setNumberOfComments}
+                  setTotalComment={setTotalComment}
+                  replyCommentHandler={replyCommentHandler}
+                  nestedCommentLength={nestedCommentLength}
+                  editCommentHandler={editCommentHandler}
+                  editDone={editDone}
+                  _id={_id}
+                />
             ))}
           </div>
         )}
-        <form className="comment-section" onSubmit={commentHandler}>
+        
+        <form className="comment-section">
           <img className='comment-profile-img' src={PF+currentUser.profilePicture} alt="" />
-          <input type="text" className="comment-input" placeholder='Write a comment...' ref={comment_text} />
-          <div className="send-icon">
-            <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
+          <textarea type="text" className="comment-input" placeholder='Write a comment...' value={commentedText} onChange={handleCommentChange} ref={inputRef2} />
+          <div className="emoji-icon">
+            <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForComment(!showEmojisForComment)}}></i>
           </div>
+          <div className="tag-icon">
+            <i class="fa-solid fa-tags"></i>
+          </div>
+
+          {showComment ?
+            ((replyIconClicked || editIconClicked) ?
+              (replyIconClicked ?
+                <div className="send-icon">
+                  <i className="fa-solid fa-paper-plane" onClick={replySubmitHandler}></i>
+                </div> :
+                <div className="send-icon">
+                  <i className="fa-solid fa-paper-plane" onClick={editCommentSubmitHandler}></i>
+                </div>
+              ) : 
+              <div className="send-icon">
+                <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
+              </div>
+            ) :
+            <div className="send-icon">
+              <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
+            </div>
+          }
+
         </form>
       </div>
+
+      {showEmojisForEditDesc &&
+        <EmojiContainer
+          inputRef={inputRef}
+          setMessage={setMessage}
+          message={message}
+          setCursorPosition={setCursorPosition}
+          cursorPosition={cursorPosition}
+        />
+      }
+
+      {showEmojisForComment &&
+        <EmojiContainer
+          inputRef={inputRef2}
+          setMessage={setCommentedText}
+          message={commentedText}
+          setCursorPosition={setCursorPosition2}
+          cursorPosition={cursorPosition2}
+        />
+      }
+
+      {showLocations && <div className='location-div'>
+        <div className='location-search-filter'>
+          <input type="text" className='location-search-input' name="" placeholder='Search Location' onChange={(e)=>setQuery(e.target.value)} />
+        </div>
+        <ul className="locations-list">
+          {locationsList.sort().filter((x)=>x.toLowerCase().includes(query)).map((location)=>(
+            <Location
+              key={location}
+              location={location}
+              setShowLocations={setShowLocations}
+              setLocation={setLoc}
+              // setShowLocationPostContainer={setShowLocationPostContainer}
+              setQuery={setQuery}
+            />
+          ))}
+        </ul>
+      </div>}
+
+      {showFriendList && <div className="friend-list-container">
+        <div className='location-search-filter'>
+            <input type="text" className='location-search-input' name="" placeholder='Search Friend' onChange={(e)=>setQuery(e.target.value)} />
+        </div>
+        <ul className="friend-list">
+            {following.filter((data)=>data.name.toLowerCase().includes(query)).map((friend)=>(
+                <FriendList
+                  key={friend.id}
+                  friend={friend}
+                  setTaggedFriends={setTaggedFriend}
+                  setQuery={setQuery}
+                />
+            ))}
+        </ul>
+      </div>}
+
+      {showParticularPost && <div className='blurr-div'>
+        <ClickedPost
+          user={user}
+          currentUser={currentUser}
+          DP={DP}
+          name={name}
+          _id={_id}
+          createdAt={createdAt} 
+          location={location}
+          edited={edited}
+          desc={desc}
+          taggedFriends={taggedFriends}
+          img={img}
+
+          likes={lik}
+          setLike={setLik}
+          isLik={isLiked}
+          setIsLik={setIsLiked}
+
+          dislikes={disLik}
+          setDisLike={setDisLik}
+          isDisLik={isDisLiked}
+          setIsDisLik={setIsDisLiked}
+
+          color1={clr}
+          setColor={setClr}
+          color2={clr2}
+          setColor2={setClr2}
+
+          setTotalComment={setTotalComment}
+          totalComment={totalComment}
+          setNumberOfComments={setNumberOfComments}
+          setShowParticularPost={setShowParticularPost}
+          replyCommentHandler={replyCommentHandler}
+          nestedCommentLength={nestedCommentLength}
+          setNestedCommentLength={setNestedCommentLength}
+          showParticularPost={showParticularPost}
+          socket={socket}
+        />
+      </div>}
+
     </div>
   )
 }

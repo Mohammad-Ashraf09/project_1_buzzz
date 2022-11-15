@@ -1,12 +1,11 @@
 import axios from 'axios';
 import React, { useContext, useEffect, useRef, useState, createRef } from 'react';
 import { AuthContext } from '../../context/AuthContext';
-import EmojiInput from "../EmojiInput";
-import { EmojiStyle, SkinTones, Theme, Categories, EmojiClickData, Emoji, SuggestionMode } from "emoji-picker-react";
 import Location from '../Location';
 import { locationsList } from '../../locationList';
 import FriendList from '../FriendList';
 import TaggedFriend from '../TaggedFriend';
+import EmojiContainer from '../emoji/EmojiContainer';
 
 
 const CreateNewPost = () => {
@@ -14,13 +13,10 @@ const CreateNewPost = () => {
   const [file, setFile] = useState(null);
   const [preview, setPreview] = useState()
   const {user} = useContext(AuthContext);
-  // const desc = useRef();
   const inputRef = createRef();
   const [message, setMessage] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
   const [cursorPosition, setCursorPosition] = useState();
-  const [selectedEmoji, setSelectedEmoji] = useState("");
-  // const [emojiList, setEmojiList] = useState([]);
   const [showLocations, setShowLocations] = useState(false);
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
@@ -30,31 +26,7 @@ const CreateNewPost = () => {
   const [showFriendList, setShowFriendList] = useState(false);
   const [taggedFriends, setTaggedFriends] = useState([]);
   const [showTaggedFriendsPostContainer, setShowTaggedFriendsPostContainer] = useState(false)
-
-  const handleChange = (e)=>{
-    setMessage(e.target.value);
-  }
   
-  const onClick = (emojiData: EmojiClickData) => {
-    setSelectedEmoji(emojiData.unified);
-    
-    const ref = inputRef.current;
-    ref.focus();
-    const start = message.substring(0, ref.selectionStart);
-    const end = message.substring(ref.selectionStart);
-    const text = start + emojiData.emoji + end;
-    setMessage(text);
-    setCursorPosition(start.length + emojiData.emoji.length);
-  }
-  
-  useEffect(()=>{
-    inputRef.current.selectionEnd = cursorPosition;
-  }, [cursorPosition]);
-
-
-  // useEffect(()=>{
-  //     setEmojiList(prev => [...prev, selectedEmoji]);
-  // },[selectedEmoji]);
 
   useEffect(()=>{              // this useEffect is for preview the file before uploading it
     if(!file){
@@ -75,6 +47,10 @@ const CreateNewPost = () => {
     }
     fetchFollowings();
   },[user._id]);
+
+  const handleChange = (e)=>{
+    setMessage(e.target.value);
+  }
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const profile = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
@@ -128,9 +104,9 @@ const CreateNewPost = () => {
               <i className="fa-solid fa-photo-film"></i>
               <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg' onChange={(e)=>setFile(e.target.files[0])}/>
             </label>
-            <i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
-            <i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList)}}></i>
-            <i class="fa-solid fa-location-dot" onClick={()=>{setShowLocations(!showLocations)}}></i>
+            <i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis); setShowLocations(false); setShowFriendList(false)}}></i>
+            <i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList); setShowEmojis(false); setShowLocations(false)}}></i>
+            <i class="fa-solid fa-location-dot" onClick={()=>{setShowLocations(!showLocations); setShowFriendList(false); setShowEmojis(false)}}></i>
 
             <div className="btn">
               <button type="submit">Post</button>
@@ -164,18 +140,15 @@ const CreateNewPost = () => {
         </div>
       </form>
 
-      {/*------------------------------------------------------------------------------------------------- 
-        <h2>Emoji Picker React 4 Demo</h2>
-        <div className="show-emoji">
-            Your selected Emoji is:
-            {emojiList.map((emoji)=>(
-                <Emoji unified={emoji} emojiStyle={EmojiStyle.APPLE} size={22} />
-            ))}
-
-        </div> */}
-      <div className='emoji-container'>
-        {showEmojis && <EmojiInput onClick={onClick} selectedEmoji={selectedEmoji}/>}
-      </div>
+      {showEmojis &&
+        <EmojiContainer
+          inputRef={inputRef}
+          setMessage={setMessage}
+          message={message}
+          setCursorPosition={setCursorPosition}
+          cursorPosition={cursorPosition}
+        />
+      }
 
       {showLocations && <div className='location-div'>
         <div className='location-search-filter'>
