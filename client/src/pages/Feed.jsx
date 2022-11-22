@@ -11,12 +11,10 @@ import axios from 'axios';
 import { AuthContext } from '../context/AuthContext';
 import {io} from "socket.io-client";
 
-
 const Feed = () => {
-
+  const {user} = useContext(AuthContext);
   const [posts, setPosts] = useState([]);
   const [socket, setSocket] = useState(null);
-  const {user} = useContext(AuthContext);
 
   useEffect(()=>{
     const fetchPosts = async() =>{
@@ -24,19 +22,16 @@ const Feed = () => {
       setPosts(res.data.sort((post1, post2)=>{
         return new Date(post2.createdAt) - new Date(post1.createdAt);
       }));
-      //console.log(res.data)
     }
     fetchPosts();
   },[user._id]);
 
   useEffect(()=>{
     setSocket(io("ws://localhost:8100"));
-    //console.log(socket);
   },[]);
 
   useEffect(()=>{
-    socket?.emit("addUser2", user._id);
-    // socket?.emit("addUser3", user._id);
+    socket?.emit("addUser1", user._id);
   },[socket, user._id])
 
   //console.log(socket);
@@ -53,8 +48,14 @@ const Feed = () => {
           <CreateNewPost/>
           {/* create 1 new component of name Posts.jsx and call it inside Timeline.jsx and implement map there and only pass here <Timeline socket={socket} /> */}
           <div className="timeline-post-area">
-            {posts.map((data)=>(
-              <Timeline key={data._id} post={data} socket={socket} />
+            {posts.map((post)=>(
+              <Timeline
+                key={post._id}
+                post={post}
+                isLik={post.likes.includes(user._id)}
+                isDisLik={post.dislikes.includes(user._id)}
+                socket={socket}
+              />
             ))}
           </div>
         </div>

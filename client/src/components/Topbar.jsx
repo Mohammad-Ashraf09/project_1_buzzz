@@ -1,18 +1,29 @@
+import axios from 'axios';
 import React, { useContext, useEffect, useState } from 'react';
 import {Link} from "react-router-dom";
 import {AuthContext} from "../context/AuthContext"
+import Notification from './Notification';
 
 const Topbar = ({socket}) => {
-
-    const [notification, setNotification] = useState([]);
-    const [open, setOpen] = useState(false);
     const {user} = useContext(AuthContext);
+    const [notification, setNotification] = useState([]);
+    const [noOfNotifications, setNoOfNotifications] = useState([]);
+    const [noOfNotifications2, setNoOfNotifications2] = useState([]);
+    const [open, setOpen] = useState(false);
+    const [renderNotification, setRenderNotification] = useState(false);
+
     const {fname, lname, profilePicture, _id} = user;
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const logo = PF+"images/logo144.png";
     const dp = profilePicture ? PF+profilePicture : PF+"default-dp.png";
     const name = fname +" "+ lname;
+
+    const reverseOrderNotification = [...notification].reverse();
+
+    const newNotifications = reverseOrderNotification.slice(0, noOfNotifications2.length);
+    const oldNotifications = reverseOrderNotification.slice(noOfNotifications2.length, reverseOrderNotification.length);
+
 
     const logoutHandler = () =>{
         const logout = window.confirm("Are you sure, you want to logout?");
@@ -24,28 +35,49 @@ const Topbar = ({socket}) => {
 
     useEffect(()=>{
         socket?.on("getNotification", (data)=>{
-            // console.log(data);
-            setNotification((prev)=>[...prev, data]);
+            setNoOfNotifications((prev)=>[...prev, data]);
+            setNoOfNotifications2((prev)=>[...prev, data]);
         });
     },[socket]);
-    
-    //console.log(notification);
 
-    const displayNotification = ({name, avatar, type})=>{
-        return(
-            <div className='notification'>
-                <img src={PF+avatar} alt="" className="notification-avatar"/>
-                {type!=="commented" 
-                    ? <div className='notification-text' >{`${name} ${type} your post`}</div>
-                    : <div className='notification-text' >{`${name} ${type} on your post`}</div>
+    useEffect(()=>{
+        if(open){
+            const fetchNotifications = async()=>{
+                try{
+                    const res = await axios.get("notifications/"+_id);
+                    setNotification(res.data)
                 }
-            </div>
-        )
-    }
+                catch(err){}
+            }
+            fetchNotifications();
+        }
+    },[open, renderNotification]);
 
-    const markReadBtnHandler = ()=>{
-        setNotification([]);
-        setOpen(false);
+    useEffect(()=>{
+        const fetchNotifications = async()=>{
+            try{
+                const res = await axios.get("notifications/noOfNotifications/" + _id);
+                setNoOfNotifications(res.data?.notifications);
+                setNoOfNotifications2(res.data?.notifications);
+            }
+            catch(err){}
+        }
+        fetchNotifications();
+    },[]);
+
+    const notificationIconClickHandler = async()=>{
+        setOpen(!open);
+        setNoOfNotifications([]);
+
+        if(open)
+            setNoOfNotifications2([]);
+        
+        if(noOfNotifications.length){
+            try{
+                await axios.put("notifications/noOfNotifications/empty/" + _id);
+            }
+            catch(err){}
+        }
     }
 
     let x;
@@ -69,35 +101,58 @@ const Topbar = ({socket}) => {
                     <div className="topbar-username">{name}</div>
                 </Link>
             </div>
+
             <div className="topbar-icons">
-            {/* /messenger */}
                 <Link to={x} style={{textDecoration: 'none', color: 'black'}}>
                     <div className="topbar-icon">
                         <i className="fa-brands fa-facebook-messenger"></i>
                         <span className="topbar-icon-badge">1</span>
                     </div>
                 </Link>
-                <div className="topbar-icon" onClick={()=>setOpen(!open)}>
+                <div className="topbar-icon" onClick={notificationIconClickHandler}>
                     <i className="fa-solid fa-bell"></i>
-                    {notification.length > 0 && <span className="topbar-icon-badge">{notification.length}</span>}
+                    {noOfNotifications?.length>0 && <span className="topbar-icon-badge">{noOfNotifications.length}</span>}
                 </div>
             </div>
-            {/* <Link to="/login" style={{ textDecoration: "none" }}> */}
-                <div className="logout-icon" onClick={logoutHandler}>
-                    <i className="fa-solid fa-arrow-right-from-bracket"></i>
-                    {/* <i class="fa-solid fa-power-off"></i> */}
-                </div>
-            {/* </Link> */}
+            <div className="logout-icon" onClick={logoutHandler}>
+                <i className="fa-solid fa-arrow-right-from-bracket"></i>
+            </div>
         </div>
         
         {open && (
             <div className="notification-div">
-                {notification.map((n)=>displayNotification(n))}
-                
-                {notification.length
-                    ? <button className='markReadBtn' onClick={markReadBtnHandler}>Mark as read</button>
-                    : <div className="noNotification">No Notification</div>
-                }
+                {newNotifications.map((notification)=>(
+                    <Notification
+                        key={notification._id}
+                        _id={notification._id}
+                        name={notification.name}
+                        avatar={notification.avatar}
+                        type={notification.type}
+                        time={notification.createdAt}
+                        postId={notification.postId}
+                        senderId={notification.senderId}
+                        currentUser={user}
+                        background={"background-dark"}
+                        renderNotification={renderNotification}
+                        setRenderNotification={setRenderNotification}
+                    />
+                ))}
+                {oldNotifications.map((notification)=>(
+                    <Notification
+                        key={notification._id}
+                        _id={notification._id}
+                        name={notification.name}
+                        avatar={notification.avatar}
+                        type={notification.type}
+                        time={notification.createdAt}
+                        postId={notification.postId}
+                        senderId={notification.senderId}
+                        currentUser={user}
+                        background={"background-normal"}
+                        renderNotification={renderNotification}
+                        setRenderNotification={setRenderNotification}
+                    />
+                ))}
             </div>
         )}
     </div>

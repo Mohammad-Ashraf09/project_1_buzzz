@@ -9,6 +9,7 @@ const authRoute = require("./router/Auth");
 const postRoute = require("./router/Posts");
 const conversationRoute = require("./router/Conversations");
 const messageRoute = require("./router/Messages");
+const notificationRoute = require("./router/Notifications");
 const multer = require("multer");
 const path = require("path");
 // const MongoClient = require("mongodb").MongoClient;
@@ -57,6 +58,7 @@ app.use("/api/users", userRoute);
 app.use("/api/posts", postRoute);
 app.use("/api/conversations", conversationRoute);
 app.use("/api/messages", messageRoute);
+app.use("/api/notifications", notificationRoute);
 
 
 // get all the users from social collection name of database

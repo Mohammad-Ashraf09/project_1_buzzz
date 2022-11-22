@@ -40,7 +40,7 @@ const Messenger = () => {
   }, [arrivalMessage, currentChat]);
   
   useEffect(()=>{
-    socket?.emit("addUser", user._id);
+    socket?.emit("addUser2", user._id);
     // socket.current.on("getUsers", users=>{
     //   console.log(users);                      // jobhi user massenger open karega wo users me aa jayega as array with there id and socketId
     // })

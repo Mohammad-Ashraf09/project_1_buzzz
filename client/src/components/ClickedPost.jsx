@@ -188,11 +188,12 @@ const ClickedPost = ({
         }
     }
 
-    const replyCommentHandlerForParticularPost = (id) =>{
+    const replyCommentHandlerForParticularPost = (id, name) =>{
         setReplyIconClicked(true);
         const ref = inputRef.current;
         ref.focus();
         setParticularCommentId(id);
+        setCommentedText("@" + name + " ");
     }
 
     const replySubmitHandler = async(e) =>{
@@ -303,7 +304,7 @@ const ClickedPost = ({
                 <div className="post-caption"> {desc} </div>
 
                 <div className='tagged-friend-container'>
-                    {taggedFriends.map((friend)=>(
+                    {taggedFriends?.map((friend)=>(
                     <Link to={`/user/${friend.id}`} style={{textDecoration: 'none'}}>
                         <div className='tagged-friend'>@{friend.name}</div>
                     </Link>

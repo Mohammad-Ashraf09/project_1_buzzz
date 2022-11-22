@@ -11,7 +11,7 @@ import Location from '../Location';
 import TaggedFriend from '../TaggedFriend';
 import Comment from "./Comment";
 
-const Timeline = ({post, socket}) => {
+const Timeline = ({post, isLik, isDisLik, socket}) => {
 
   const {_id, userId, createdAt, updatedAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
   // console.log(comments);
@@ -19,11 +19,11 @@ const Timeline = ({post, socket}) => {
   const [totalComment, setTotalComment] = useState(comments);
   const [numberOfComments, setNumberOfComments] = useState(comments.length);
   const [lik, setLik] = useState(likes.length);
-  const [isLiked, setIsLiked] = useState(false);
-  const [clr, setClr] = useState("rgb(108, 104, 104)");
+  const [isLiked, setIsLiked] = useState(isLik);
+  const [clr, setClr] = useState("");
   const [disLik, setDisLik] = useState(dislikes.length);
-  const [isDisLiked, setIsDisLiked] = useState(false);
-  const [clr2, setClr2] = useState("rgb(108, 104, 104)");
+  const [isDisLiked, setIsDisLiked] = useState(isDisLik);
+  const [clr2, setClr2] = useState("");
   const [user, setUser] = useState({});                 // jis user ne post dali hai wo hai ye
   const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
   const [showComment, setShowComment] = useState(false);
@@ -62,25 +62,33 @@ const Timeline = ({post, socket}) => {
 
   const [nestedCommentLength, setNestedCommentLength] = useState(0);
 
+  const [activeUsers, setActiveUsers] = useState([]);
+
   // console.log(totalComment);
 
+  // fetching all active users from socket server
+  useEffect(()=>{
+    socket.emit("sendUser", currentUser._id);
+    socket?.on("getUser", (data)=>{
+      setActiveUsers(data);
+    });
+  },[socket]);
 
   useEffect(()=>{
-    setIsLiked(likes.includes(currentUser._id));
-    setIsDisLiked(dislikes.includes(currentUser._id));
-  }, [currentUser._id, likes]);
-
-  useEffect(()=>{          // i made this no dependency useEffect only to show initial colors of like and dislike. 
-    setClr(isLiked ? "#417af5" : "rgb(108, 104, 104)");
-    setClr2(isDisLiked ? "rgba(252, 5, 5,0.8)" : "rgb(108, 104, 104)");
-    console.log("rendered...")
-  });     // no dependecy, i know it is not good, due to this page re-render for unnecessary 
+    const fetchFollowings = async() =>{
+      const res = await axios.get("users/"+currentUser._id);
+      const arr = res.data.followings
+      setFollowing(arr);
+    }
+    fetchFollowings();
+  },[currentUser._id]);
 
   useEffect(()=>{
     const fetchUser = async() =>{
       const res = await axios.get(`users/${userId}`);
       setUser(res.data);
-      //console.log(res.data)
+      setClr(isLik ? "#417af5" : "rgb(108, 104, 104)");
+      setClr2(isDisLik ? "rgba(252, 5, 5,0.8)" : "rgb(108, 104, 104)");
     }
     fetchUser();
   },[userId]);
@@ -102,20 +110,41 @@ const Timeline = ({post, socket}) => {
     setCommentedText(e.target.value);
   }
 
-  const notificationHandler = (type)=>{
+  const notificationHandler = async(type)=>{
     if(currentUser._id !== user._id){
-      socket.emit("sendNotification", {
+      const notification = {
         senderId : currentUser._id,
         name : currentUser.fname + " " + currentUser.lname,
         avatar : currentUser.profilePicture,
         receiverId : user._id,
+        postId: _id,
         type,
-      });
+      }
+      
+      try{
+        await axios.post("notifications/", notification);
+      }
+      catch(err){}
+      
+      const isPresent = activeUsers.filter((user)=> user.userId === userId);
+      // console.log("isPresent....",isPresent);
+      if(isPresent.length){
+        // console.log("hi.....")
+        socket.emit("sendNotification", notification);
+      }
+      else{
+        const aa = async()=>{
+          // console.log("bye.....")
+          try{
+            await axios.put("notifications/noOfNotifications/"+ user._id);
+          }
+          catch(err){}
+        }
+        aa();
+      }
     }
-    // console.log(user);
   };
 
-  
   const likeHandler = async() =>{
     try{
       await axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
@@ -124,13 +153,13 @@ const Timeline = ({post, socket}) => {
       setIsLiked(!isLiked)
       
       if(isLiked)
-        setClr("rgb(108, 104, 104)");
+        setClr("rgb(108, 104, 104)");    //grey
       else
-        setClr("#417af5");
+        setClr("#417af5");               //blue
       
       if(isDisLiked){
         setDisLik(disLik-1);
-        setClr2("rgb(108, 104, 104)");
+        setClr2("rgb(108, 104, 104)");   //grey
         setIsDisLiked(false);
         await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id});
       }
@@ -148,18 +177,18 @@ const Timeline = ({post, socket}) => {
       setIsDisLiked(!isDisLiked);
       
       if(isDisLiked)
-        setClr2("rgba(252, 5, 5,0.8)");
+        setClr2("rgb(108, 104, 104)");     //grey
       else
-        setClr2("rgb(108, 104, 104)");
+        setClr2("rgba(252, 5, 5,0.8)");    //red
       
       if(isLiked){
         setLik(lik-1);
-        setClr("rgb(108, 104, 104)");
+        setClr("rgb(108, 104, 104)");      //grey
         setIsLiked(false);
         await axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
       }
 
-      notificationHandler("disliked");
+      notificationHandler("disliked")
     }
     catch(err){}
   }
@@ -229,7 +258,7 @@ const Timeline = ({post, socket}) => {
         await axios.put("posts/"+ _id +"/comment/"+ particularCommentId + "/reply", newNestedComment);
         setCommentedText("");
         
-        notificationHandler("commented");
+        notificationHandler("replied");
 
         setNestedCommentLength(nestedCommentLength + 1);
         setReplyIconClicked(false);
@@ -328,8 +357,6 @@ const Timeline = ({post, socket}) => {
     }
     else
       document.body.style.overflow = "auto";
-
-    
   }
 
   const reverseOrderComment = [...totalComment].reverse();       // last commented shown first
@@ -632,10 +659,10 @@ const Timeline = ({post, socket}) => {
           totalComment={totalComment}
           setNumberOfComments={setNumberOfComments}
           setShowParticularPost={setShowParticularPost}
+          showParticularPost={showParticularPost}
           replyCommentHandler={replyCommentHandler}
           nestedCommentLength={nestedCommentLength}
           setNestedCommentLength={setNestedCommentLength}
-          showParticularPost={showParticularPost}
           socket={socket}
         />
       </div>}

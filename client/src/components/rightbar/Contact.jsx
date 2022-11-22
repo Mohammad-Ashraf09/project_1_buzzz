@@ -4,7 +4,6 @@ import {AuthContext} from "../../context/AuthContext"
 import ContactPerson from './ContactPerson';
 
 const Contact = ({socket}) => {
-    
     const [clr, setClr] = useState("#000");
     const [following, setFollowing] = useState([]);
     const {user} = useContext(AuthContext);
@@ -28,7 +27,7 @@ const Contact = ({socket}) => {
     },[user._id]);
 
     useEffect(()=>{
-        socket?.on("getUsers2", (data)=>{
+        socket?.on("getUsers1", (data)=>{
             setOnlineUsers(data);
         });
     },[socket, onlineUsers]);

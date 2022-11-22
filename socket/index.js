@@ -6,19 +6,23 @@ const io = new Server({
     },
 });
 
-// for messanger
-let users = [];
-const addUser = (userId, socketId)=>{
-    !users.some(user=>user.userId === userId) && users.push({userId, socketId});
+// for notification
+let users1 = [];
+const addUser1 = (userId, socketId)=>{
+    !users1.some(user=>user.userId === userId) && users1.push({userId, socketId});
 }
-const removeUser = (socketId)=>{
-    users = users.filter((user) => user.socketId !== socketId);
+const removeUser1 = (socketId)=>{
+    users1 = users1.filter((user) => user.socketId !== socketId);
 }
-const getUser = (userId)=>{
-    return users.find((user)=> user.userId === userId);
+const getUser1 = (userId)=>{
+    return users1.find((user)=> user.userId === userId);
+}
+const getUser = ()=>{
+    return users1;
 }
 
-//for notification
+
+//for messanger
 let users2 = [];
 const addUser2 = (userId, socketId)=>{
     !users2.some(user=>user.userId === userId) && users2.push({userId, socketId});
@@ -30,49 +34,25 @@ const getUser2 = (userId)=>{
     return users2.find((user)=> user.userId === userId);
 }
 
-//for online friends
-// let users3 = [];
-// const addUser3 = (userId)=>{
-//     !users3.some(user=>user.userId === userId) && users3.push(userId);
-// }
-// const removeUser3 = (socketId)=>{
-//     users3 = users3.filter((user) => user.socketId !== socketId);
-// }
 
 io.on("connection", (socket)=>{
-    // when a user comming messenger page or connect
-    socket.on("addUser", userId=>{
-        addUser(userId, socket.id);
-        io.emit("getUsers", users);
-        console.log("someone has connected...");
-    });
-    
-
-    // send message / receive message
-    socket.on("sendMessage", ({senderId, receiverId, text})=>{
-        const user = getUser(receiverId);
-        io.to(user.socketId).emit("getMessage", {
-            senderId,
-            text,
-        });
+    // when a user login/comming to home page
+    socket.on("addUser1", (userId)=>{
+        addUser1(userId, socket.id);
+        io.emit("getUsers1", users1);
+        console.log(userId + ", " + socket.id + " - Home");
     });
 
-
-    socket.on("addUser2", (userId)=>{
-        addUser2(userId, socket.id);
-        console.log(userId);
-        console.log(socket.id);
-        io.emit("getUsers2", users2);
-        // console.log("someone has connected...");
+    // get all users
+    socket.on("sendUser", (id)=>{
+        const x = getUser1(id)
+        const user = getUser();
+        io.to(x?.socketId).emit("getUser", user);
     });
 
     // notification
     socket.on("sendNotification", ({senderId, name, avatar, receiverId, type})=>{
-        // console.log(senderId);
-        // console.log(receiverId);
-        // console.log(type);
-        const user = getUser2(receiverId);
-        console.log(user)
+        const user = getUser1(receiverId);
         io.to(user?.socketId).emit("getNotification", {
             senderId,
             name,
@@ -81,23 +61,26 @@ io.on("connection", (socket)=>{
         });
     });
 
-    // socket.on("addUser3", (userId)=>{
-    //     addUser3(userId);
-    //     io.emit("getUsers3", users3);
-    //     // console.log("someone has connected...");
-    // });
+    // when a user comming messenger page or connect
+    socket.on("addUser2", userId=>{
+        addUser2(userId, socket.id);
+        io.emit("getUsers2", users2);
+        console.log(userId + ", " + socket.id + " - Messenger");
+    });
+    
+    // send message/receive message
+    socket.on("sendMessage", ({senderId, receiverId, text})=>{
+        const user2 = getUser2(receiverId);
+        io.to(user2.socketId).emit("getMessage", {
+            senderId,
+            text,
+        });
+    });
 
-    // socket.on("disconnect", ()=>{
-    //     removeUser(socket.id);
-    // });
     socket.on("disconnect", ()=>{
-        removeUser2(socket.id);
+        removeUser1(socket.id);
         console.log("disconnected...", socket.id);
     });
-    // socket.on("disconnect", ()=>{
-    //     removeUser3(socket.id);
-    //     console.log("disconnected...", socket.id);
-    // });
 });
 
 io.listen(8100);
