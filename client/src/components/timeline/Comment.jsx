@@ -107,10 +107,10 @@ const Comment = ({
                 </div>
 
                 {showParticularPost ?
-                    <div className='caption-icon' onClick={()=>replyCommentHandlerForParticularPost(commentId, particularComment.name)}>
+                    <div className='caption-icon' onClick={()=>replyCommentHandlerForParticularPost(commentId, particularComment.name, particularComment.id)}>
                         <i class="fa-solid fa-reply"></i>
                     </div> :
-                    <div className='caption-icon' onClick={()=>replyCommentHandler(commentId, particularComment.name)}>
+                    <div className='caption-icon' onClick={()=>replyCommentHandler(commentId, particularComment.name, particularComment.id)}>
                         <i class="fa-solid fa-reply"></i>
                     </div>
                 }

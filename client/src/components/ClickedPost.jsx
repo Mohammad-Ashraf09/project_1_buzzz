@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom'
 import { format } from 'timeago.js';
 import EmojiContainer from './emoji/EmojiContainer';
 import Comment from './timeline/Comment';
+import WhoLikedDisliked from './WhoLikedDisliked';
 
 const ClickedPost = ({
     user,
@@ -18,11 +19,13 @@ const ClickedPost = ({
     taggedFriends,
     img,
 
+    likeArray,
     likes,
     setLike,
     isLik,
     setIsLik,
 
+    dislikeArray,
     dislikes,
     setDisLike,
     isDisLik,
@@ -63,6 +66,12 @@ const ClickedPost = ({
 
     const [editIconClicked, setEditIconClicked] = useState(false);
     const [editDone, setEditDone] = useState(false);
+
+    const [showWhoLiked, setShowWhoLiked] = useState(false);
+    const [showWhoDisLiked, setShowWhoDisLiked] = useState(false);
+
+    const [replyToName, setReplyToName] = useState("");
+    const [replyToId, setReplyToId] = useState("");
 
 
     const notificationHandler = (type)=>{
@@ -188,12 +197,15 @@ const ClickedPost = ({
         }
     }
 
-    const replyCommentHandlerForParticularPost = (id, name) =>{
+    const replyCommentHandlerForParticularPost = (id, name, nameId) =>{
         setReplyIconClicked(true);
         const ref = inputRef.current;
         ref.focus();
         setParticularCommentId(id);
         setCommentedText("@" + name + " ");
+
+        setReplyToName(name);
+        setReplyToId(nameId);
     }
 
     const replySubmitHandler = async(e) =>{
@@ -201,26 +213,29 @@ const ClickedPost = ({
         setShowEmojisForComment(false);
     
         if(commentedText){
-          const newNestedComment = {
-            nestedCommentId: Math.random().toString(),
-            nestedDp: currentUser.profilePicture,
-            nestedName: currentUser.fname + " " + currentUser.lname,
-            nestedId: currentUser._id,
-            nestedComment: commentedText,
-            nestedCommentLikes: [],
-            date: new Date()
-          }
-    
-          try{
-            await axios.put("posts/"+ _id +"/comment/"+ particularCommentId + "/reply", newNestedComment);
-            setCommentedText("");
-            
-            notificationHandler("commented");
-    
-            setNestedCommentLength(nestedCommentLength + 1);
-            setReplyIconClicked(false);
-          }
-          catch(err){}
+            let text = commentedText;
+            text = text.replace('@'+replyToName, '@'+replyToId);
+
+            const newNestedComment = {
+                nestedCommentId: Math.random().toString(),
+                nestedDp: currentUser.profilePicture,
+                nestedName: currentUser.fname + " " + currentUser.lname,
+                nestedId: currentUser._id,
+                nestedComment: text,
+                nestedCommentLikes: [],
+                date: new Date()
+            }
+        
+            try{
+                await axios.put("posts/"+ _id +"/comment/"+ particularCommentId + "/reply", newNestedComment);
+                setCommentedText("");
+                
+                notificationHandler("commented");
+        
+                setNestedCommentLength(nestedCommentLength + 1);
+                setReplyIconClicked(false);
+            }
+            catch(err){}
         }
     }
 
@@ -315,12 +330,38 @@ const ClickedPost = ({
 
                 <div className="post-reaction-count">
                     <div className="like-dislike-count">
-                        <i className="fa-solid fa-thumbs-up solid-thumbs-up"></i>
+                        <i className="fa-solid fa-thumbs-up solid-thumbs-up" onClick={()=>{setShowWhoLiked(!showWhoLiked); setShowWhoDisLiked(false)}}></i>
                         <span className="count">{lik}</span>
-                        <i className="fa-solid fa-thumbs-down solid-thumbs-down"></i>
+                        <i className="fa-solid fa-thumbs-down solid-thumbs-down" onClick={()=>{setShowWhoDisLiked(!showWhoDisLiked); setShowWhoLiked(false)}}></i>
                         <span className="count">{dislik}</span>
                     </div>
-                    <div className="comment-count">{numberOfCommentsForThisComponent} comment</div>
+                    {numberOfCommentsForThisComponent > 1 ?
+                        <div className="comment-count">{numberOfCommentsForThisComponent} comments</div>
+                        :
+                        <div className="comment-count">{numberOfCommentsForThisComponent} comment</div>
+                    }
+
+                    {(showWhoLiked && likeArray.length>0) && (
+                        <div className="liked-disliked-div">
+                            {likeArray.map((userId)=>(
+                                <WhoLikedDisliked
+                                    key={userId}
+                                    userId={userId}
+                                />
+                            ))}
+                        </div>
+                    )}
+
+                    {(showWhoDisLiked && dislikeArray.length>0) && (
+                        <div className="liked-disliked-div">
+                            {dislikeArray.map((userId)=>(
+                                <WhoLikedDisliked
+                                key={userId}
+                                userId={userId}
+                                />
+                            ))}
+                        </div>
+                    )}
                 </div>
                 <hr className='post-hr'/>
                 <div className="post-reaction-icon">

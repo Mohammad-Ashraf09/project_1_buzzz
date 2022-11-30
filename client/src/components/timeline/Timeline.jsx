@@ -9,12 +9,13 @@ import EmojiContainer from '../emoji/EmojiContainer';
 import FriendList from '../FriendList';
 import Location from '../Location';
 import TaggedFriend from '../TaggedFriend';
+import WhoLikedDisliked from '../WhoLikedDisliked';
 import Comment from "./Comment";
 
 const Timeline = ({post, isLik, isDisLik, socket}) => {
 
   const {_id, userId, createdAt, updatedAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
-  // console.log(comments);
+  // console.log(likes);
 
   const [totalComment, setTotalComment] = useState(comments);
   const [numberOfComments, setNumberOfComments] = useState(comments.length);
@@ -63,6 +64,12 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
   const [nestedCommentLength, setNestedCommentLength] = useState(0);
 
   const [activeUsers, setActiveUsers] = useState([]);
+
+  const [showWhoLiked, setShowWhoLiked] = useState(false);
+  const [showWhoDisLiked, setShowWhoDisLiked] = useState(false);
+
+  const [replyToName, setReplyToName] = useState("");
+  const [replyToId, setReplyToId] = useState("");
 
   // console.log(totalComment);
 
@@ -231,12 +238,15 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
       setReplyIconClicked(false)
   }
 
-  const replyCommentHandler = (id, name) =>{
+  const replyCommentHandler = (id, name, nameId) =>{
     setReplyIconClicked(true);
     const ref = inputRef2.current;
     ref.focus();
     setParticularCommentId(id);
     setCommentedText("@" + name + " ");
+
+    setReplyToName(name);
+    setReplyToId(nameId);
   }
   
   const replySubmitHandler = async(e) =>{
@@ -244,12 +254,15 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
     setShowEmojisForComment(false);
 
     if(commentedText){
+      let text = commentedText;
+      text = text.replace('@'+replyToName, '@'+replyToId);
+
       const newNestedComment = {
         nestedCommentId: Math.random().toString(),
         nestedDp: currentUser.profilePicture,
         nestedName: currentUser.fname + " " + currentUser.lname,
         nestedId: currentUser._id,
-        nestedComment: commentedText,
+        nestedComment: text,
         nestedCommentLikes: [],
         date: new Date()
       }
@@ -495,12 +508,39 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
 
         <div className="post-reaction-count">
           <div className="like-dislike-count">
-            <i className="fa-solid fa-thumbs-up solid-thumbs-up"></i>
+            <i className="fa-solid fa-thumbs-up solid-thumbs-up" onClick={()=>{setShowWhoLiked(!showWhoLiked); setShowWhoDisLiked(false)}}></i>
             <span className="count">{lik}</span>
-            <i className="fa-solid fa-thumbs-down solid-thumbs-down"></i>
+            <i className="fa-solid fa-thumbs-down solid-thumbs-down" onClick={()=>{setShowWhoDisLiked(!showWhoDisLiked); setShowWhoLiked(false)}}></i>
             <span className="count">{disLik}</span>
           </div>
-          <div className="comment-count">{numberOfComments} comment</div>
+          {numberOfComments > 1 ?
+            <div className="comment-count">{numberOfComments} comments</div>
+            :
+            <div className="comment-count">{numberOfComments} comment</div>
+          }
+          
+          {(showWhoLiked && likes.length>0) && (
+            <div className="liked-disliked-div">
+              {likes.map((userId)=>(
+                  <WhoLikedDisliked
+                    key={userId}
+                    userId={userId}
+                  />
+              ))}
+            </div>
+          )}
+
+          {(showWhoDisLiked && dislikes.length>0) && (
+            <div className="liked-disliked-div">
+              {dislikes.map((userId)=>(
+                  <WhoLikedDisliked
+                  key={userId}
+                  userId={userId}
+                  />
+              ))}
+            </div>
+          )}
+
         </div>
         <hr className='post-hr'/>
         <div className="post-reaction-icon">
@@ -640,11 +680,13 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
           taggedFriends={taggedFriends}
           img={img}
 
+          likeArray={likes}
           likes={lik}
           setLike={setLik}
           isLik={isLiked}
           setIsLik={setIsLiked}
 
+          dislikeArray={dislikes}
           dislikes={disLik}
           setDisLike={setDisLik}
           isDisLik={isDisLiked}

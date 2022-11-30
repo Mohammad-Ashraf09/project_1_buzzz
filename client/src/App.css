@@ -1329,6 +1329,7 @@ hr{
     justify-content: space-between;
     margin-top: 10px;
     margin-bottom: 10px;
+    position: relative;
 }
 .like-dislike-count i{
     margin-right: 4px;
@@ -1370,6 +1371,43 @@ hr{
     cursor: pointer;
 }
 .post-reaction-icon span{
+    font-weight: 500;
+    cursor: pointer;
+}
+.liked-disliked-div{
+    background-color: rgba(211, 207, 207, 0.8);
+    padding: 8px ;
+    border-radius: 8px;
+    position: absolute;
+    top: -46vh;
+    left: 0.5vw;
+    height: 40vh;
+    width: 12vw;
+    overflow: auto;
+}
+.liked-disliked-div::-webkit-scrollbar{
+    display: none;
+}
+.liked-disliked-item{
+    display: flex;
+    align-items: center;
+    padding: 6px 0 3px 4px;
+    border-radius: 6px;
+}
+.liked-disliked-item:hover{
+    background-color: #03bfbc;
+}
+.liked-disliked-img{
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+.liked-disliked-item span{
+    margin-left: 10px;
+    color: black;
+    font-size: 12px;
     font-weight: 500;
     cursor: pointer;
 }
@@ -1527,6 +1565,10 @@ hr{
     padding: 8px 10px 12px 10px;
     border-radius: 8px;
     white-space: pre-line;     /* for rendering the 'Enter' white space on browser */
+}
+.nested-comment-tag{
+    color: #417af5;
+    cursor: pointer;
 }
 .nested-comment-caption-icon{
     display: flex;
