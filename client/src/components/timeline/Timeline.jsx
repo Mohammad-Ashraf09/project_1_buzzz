@@ -8,6 +8,7 @@ import ClickedPost from '../ClickedPost';
 import EmojiContainer from '../emoji/EmojiContainer';
 import FriendList from '../FriendList';
 import Location from '../Location';
+import PostImage from '../PostImage';
 import TaggedFriend from '../TaggedFriend';
 import WhoLikedDisliked from '../WhoLikedDisliked';
 import Comment from "./Comment";
@@ -475,7 +476,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
               </div>
             </div>
           </div> :
-          (descGreaterThan200 && img ?
+          (descGreaterThan200 && img.length ?
             <div className="post-caption">
               {message.substr(0,200)}
               <span className='read-more' onClick={()=>{setDescGreaterThan200(false)}}>... read more</span>
@@ -504,7 +505,9 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
           </div>
         }
 
-        {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} onClick={blurrScreenHandler} />}
+        {img.length && <div className='preview'>
+          <PostImage images={img} blurrScreenHandler={blurrScreenHandler}/>
+        </div>}
 
         <div className="post-reaction-count">
           <div className="like-dislike-count">

@@ -963,22 +963,73 @@ hr{
     margin-right: 6px;
     cursor: pointer;
 }
-.share-img-container{
+.preview{
+    width: 100%;
+    height: 400px;
+    margin-top: 12px;
+}
+.preview-clicked-post{
+    width: 100%;
+    height: 320px;
+    margin-top: 12px;
+}
+.preview-img-container{
+    height: 100%;
     position: relative;
 }
-.share-img{
-    margin-top: 15px;
-    border-radius: 6px;
-    height: 380px;
-    width: 100%;
-    object-fit: cover;
+.img-count{
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    background-color: rgba(150, 150, 150, 0.6);
+    padding: 0 10px;
+    border-radius: 25px;
+    font-size: 13px;
+    cursor: text;
 }
 .fa-square-xmark{
-    position:absolute;
-    top: 22px;
-    right: 8px;
+    position: absolute;
+    top: 6px;
+    right: 6px;
     cursor: pointer;
     color: #03bfbc;
+}
+.left-arrow{
+    position: absolute;
+    top: 45%;
+    left: 10px;
+    height: 36px;
+    cursor: pointer;
+    display: none;
+}
+.right-arrow{
+    position: absolute;
+    top: 45%;
+    right: 10px;
+    height: 36px;
+    cursor: pointer;
+    display: none;
+}
+.left-arrow:hover, .right-arrow:hover{
+    transform: scale(1.1);
+}
+.preview-img{
+    /* height: 97%; */
+    width: 100%;
+    border-radius: 6px;
+    background-position: center;
+    background-size: cover;
+    cursor: grab;
+    /* object-fit: cover; */
+}
+.preview-img-dots-container{
+    display: flex;
+    justify-content: center;
+}
+.preview-img-dots{
+    margin: -10px 10px 20px 0;
+    font-size: 40px;
+    cursor: pointer;
 }
 /* ------------------------- dynamic classes of Emoji-Picker */
 .EmojiPickerReact{
@@ -1316,13 +1367,29 @@ hr{
     background-color: rgba(232, 232, 232, 0.9);
     cursor: pointer;
 }
-.post-img{
-    width: 100%;
-    height: 50%;
-    object-fit: cover;
-    margin-top: 10px;
-    border-radius: 6px;
-    cursor: grab;
+.post-img-container{
+    height: 100%;
+    position: relative;
+}
+.post-img-count{
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    background-color: rgba(150, 150, 150, 0.6);
+    padding: 0 10px;
+    border-radius: 25px;
+    font-size: 13px;
+    cursor: text;
+    display: none;
+}
+.post-img-container:hover > .left-arrow{
+    display: block;
+}
+.post-img-container:hover > .right-arrow{
+    display: block;
+}
+.post-img-container:hover > .post-img-count{
+    display: block;
 }
 .post-reaction-count{
     display: flex;
@@ -2387,10 +2454,6 @@ hr{
     .btn button{
         font-weight: 500;
     }
-    .share-img{
-        margin-top: 10px;
-        height: 220px;
-    }
     .timeline-post-area{
         height: 100vh;
         margin: 2rem 1rem;
@@ -2406,9 +2469,6 @@ hr{
     }
     .post-input-edit{
         padding: 10px;
-    }
-    .post-img{
-        height: 200px;
     }
     .post-reaction-icon i{
         margin-right: 6px;
@@ -2601,10 +2661,6 @@ hr{
     .btn button{
         font-weight: 500;
     }
-    .share-img{
-        margin-top: 10px;
-        height: 220px;
-    }
     .timeline-post-area{
         height: 100vh;
         margin: 2rem 1rem;
@@ -2620,9 +2676,6 @@ hr{
     }
     .post-input-edit{
         padding: 10px;
-    }
-    .post-img{
-        height: 220px;
     }
     .post-reaction-icon i{
         margin-right: 6px;
@@ -2816,10 +2869,6 @@ hr{
     .btn button{
         font-weight: 500;
     }
-    .share-img{
-        margin-top: 10px;
-        height: 300px;
-    }
     .timeline-post-area{
         height: 100vh;
         margin: 2rem 1rem;
@@ -2835,9 +2884,6 @@ hr{
     }
     .post-input-edit{
         padding: 10px;
-    }
-    .post-img{
-        height: 300px;
     }
     .post-reaction-icon i{
         margin-right: 6px;
@@ -3031,10 +3077,6 @@ hr{
     .btn button{
         font-weight: 500;
     }
-    .share-img{
-        margin-top: 10px;
-        height: 360px;
-    }
     .timeline-post-area{
         height: 100vh;
         margin: 2rem 1rem;
@@ -3050,9 +3092,6 @@ hr{
     }
     .post-input-edit{
         padding: 10px;
-    }
-    .post-img{
-        height: 360px;
     }
     .post-reaction-icon i{
         margin-right: 6px;
@@ -3355,9 +3394,6 @@ hr{
         font-size: 11px;
         font-weight: 500;
     }
-    .share-img{
-        height: 260px;
-    }
     
     .timeline-post-area{
         height: 100vh;
@@ -3377,9 +3413,6 @@ hr{
     }
     .post-date-location{
         font-size: 10px;
-    }
-    .post-img{
-        height: 250px;
     }
     .post-reaction-icon i{
         font-size: 14px;
@@ -3649,9 +3682,6 @@ hr{
         font-size: 11px;
         font-weight: 500;
     }
-    .share-img{
-        height: 300px;
-    }
     
     .timeline-post-area{
         height: 100vh;
@@ -3671,9 +3701,6 @@ hr{
     }
     .post-date-location{
         font-size: 10px;
-    }
-    .post-img{
-        height: 300px;
     }
     .post-reaction-icon i{
         font-size: 14px;

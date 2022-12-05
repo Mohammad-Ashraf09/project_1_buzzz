@@ -3,6 +3,7 @@ import React, { useState, useRef, createRef } from 'react'
 import { Link } from 'react-router-dom'
 import { format } from 'timeago.js';
 import EmojiContainer from './emoji/EmojiContainer';
+import PostImage from './PostImage';
 import Comment from './timeline/Comment';
 import WhoLikedDisliked from './WhoLikedDisliked';
 
@@ -326,7 +327,9 @@ const ClickedPost = ({
                     ))}
                 </div>
 
-                {img && <img src={PF+img} alt="" className="post-img" onDoubleClick={likeHandler} />}
+                {img.length && <div className='preview-clicked-post'>
+                    <PostImage images={img}/>
+                </div>}
 
                 <div className="post-reaction-count">
                     <div className="like-dislike-count">

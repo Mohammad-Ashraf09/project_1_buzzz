@@ -1,17 +1,16 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useRef, useState, createRef } from 'react';
+import React, { useContext, useEffect, useState, createRef } from 'react';
 import { AuthContext } from '../../context/AuthContext';
 import Location from '../Location';
 import { locationsList } from '../../locationList';
 import FriendList from '../FriendList';
 import TaggedFriend from '../TaggedFriend';
 import EmojiContainer from '../emoji/EmojiContainer';
-
+import PreviewImage from '../PreviewImage';
 
 const CreateNewPost = () => {
-
-  const [file, setFile] = useState(null);
-  const [preview, setPreview] = useState()
+  const [file, setFile] = useState([]);
+  const [preview, setPreview] = useState([]);
   const {user} = useContext(AuthContext);
   const inputRef = createRef();
   const [message, setMessage] = useState("");
@@ -25,25 +24,27 @@ const CreateNewPost = () => {
   const [following, setFollowing] = useState([]);
   const [showFriendList, setShowFriendList] = useState(false);
   const [taggedFriends, setTaggedFriends] = useState([]);
-  const [showTaggedFriendsPostContainer, setShowTaggedFriendsPostContainer] = useState(false)
+  const [showTaggedFriendsPostContainer, setShowTaggedFriendsPostContainer] = useState(false);
+  const [xyz, setXYZ] = useState(false);
+
   
+  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+  const profile = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
+  const name = user.fname;
 
   useEffect(()=>{              // this useEffect is for preview the file before uploading it
-    if(!file){
-        setPreview(undefined)
-        return
+    if(file?.[0] && xyz){
+      const len = preview.length
+      const objectUrl = URL.createObjectURL(file?.[len])
+      setPreview((prev)=>[...prev, objectUrl])
+      // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
     }
-    const objectUrl = URL.createObjectURL(file)
-    setPreview(objectUrl)
-    return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
-
   },[file]);
 
   useEffect(()=>{
     const fetchFollowings = async() =>{
       const res = await axios.get("users/"+user._id);
-      const arr = res.data.followings
-      setFollowing(arr);
+      setFollowing(res.data.followings);
     }
     fetchFollowings();
   },[user._id]);
@@ -52,30 +53,33 @@ const CreateNewPost = () => {
     setMessage(e.target.value);
   }
 
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const profile = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
-  const name = user.fname;
-
   const submitHandler = async(e) =>{
     e.preventDefault();
     if(message || file){
       const newPost = {
         userId: user._id,
         desc: message,
+        img: [],
         location: showLocationPostContainer ? location : "",
         taggedFriends: showTaggedFriendsPostContainer ? taggedFriends : [],
       }
-      if(file){
-        const data = new FormData();
-        const fileName = Date.now() + file.name;
-        data.append("name", fileName)
-        data.append("file", file)
-        newPost.img = fileName;
-        try{
-          await axios.post("/upload", data)        // to upload photo into local storage
-        }catch(err){
-          console.log(err)
-        }
+
+      if(file.length){
+        file.map((image)=>{
+          const uploadFile = async() =>{
+            const data = new FormData();
+            const fileName = Date.now() + image.name;
+            data.append("name", fileName)
+            data.append("file", image)
+            newPost.img.push(fileName);
+            try{
+              await axios.post("/upload", data)        // to upload photo into local storage
+            }catch(err){
+              console.log(err)
+            }
+          }
+          uploadFile();
+        })
       }
   
       try{
@@ -91,18 +95,24 @@ const CreateNewPost = () => {
     }
   }
 
+  const fileHandler = (e) =>{
+    if(e.target.files[0]){
+      setXYZ(true);
+      setFile((prev)=>[...prev, e.target.files[0]]);
+    }
+  }
+
   return (
     <>
       <form className='timeline-search' onSubmit={submitHandler}>
         <div className="timeline-search-wrapper">
           <img className='post-user-img' src={profile} alt="" />
-          {/* <textarea type="text" className="post-input" placeholder={"Hello " + name + ", Start a post..."} ref={desc} /> */}
           <textarea type="text" className="post-input" placeholder={"Hello " + name + ", Start a post..."} value={message} onChange={handleChange} ref={inputRef} />
           <div className="y">
 
             <label htmlFor="file">
               <i className="fa-solid fa-photo-film"></i>
-              <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg' onChange={(e)=>setFile(e.target.files[0])}/>
+              <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg' onChange={file.length!==10 && fileHandler}/>
             </label>
             <i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis); setShowLocations(false); setShowFriendList(false)}}></i>
             <i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList); setShowEmojis(false); setShowLocations(false)}}></i>
@@ -134,10 +144,9 @@ const CreateNewPost = () => {
           </div>
         }
 
-        <div className="share-img-container">
-          {file && <img className="share-img" src={preview} alt="" />}
-          {file && <i class="fa-solid fa-square-xmark" onClick={()=>setFile(null)} ></i>}
-        </div>
+        {preview.length>0 && <div className='preview'>
+          <PreviewImage preview={preview} setPreview={setPreview} file={file} setFile={setFile} setXYZ={setXYZ}/>
+        </div>}
       </form>
 
       {showEmojis &&
@@ -190,4 +199,4 @@ const CreateNewPost = () => {
   )
 }
 
-export default CreateNewPost
+export default CreateNewPost;
