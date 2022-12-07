@@ -112,7 +112,7 @@ const CreateNewPost = () => {
 
             <label htmlFor="file">
               <i className="fa-solid fa-photo-film"></i>
-              <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg' onChange={file.length!==10 && fileHandler}/>
+              <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file.length!==10 && fileHandler}/>
             </label>
             <i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis); setShowLocations(false); setShowFriendList(false)}}></i>
             <i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList); setShowEmojis(false); setShowLocations(false)}}></i>

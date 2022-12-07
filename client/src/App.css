@@ -993,6 +993,7 @@ hr{
     right: 6px;
     cursor: pointer;
     color: #03bfbc;
+    z-index: 1;
 }
 .left-arrow{
     position: absolute;
@@ -1001,6 +1002,7 @@ hr{
     height: 36px;
     cursor: pointer;
     display: none;
+    z-index: 1;
 }
 .right-arrow{
     position: absolute;
@@ -1009,6 +1011,7 @@ hr{
     height: 36px;
     cursor: pointer;
     display: none;
+    z-index: 1;
 }
 .left-arrow:hover, .right-arrow:hover{
     transform: scale(1.1);

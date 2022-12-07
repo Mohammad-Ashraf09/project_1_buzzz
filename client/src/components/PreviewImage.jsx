@@ -1,5 +1,6 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
+import ReactPlayer from 'react-player';
 
 const PreviewImage = ({preview, setPreview, file, setFile, setXYZ}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -73,7 +74,20 @@ const PreviewImage = ({preview, setPreview, file, setFile, setXYZ}) => {
             <i class="fa-solid fa-square-xmark" onClick={cancelImageClickHandler} ></i>
             <img src={leftArrow} alt="" className="left-arrow" style={{display: `${!isVisibleLeftArrow ? "none" : "block"}`}} onClick={goToPrevious} />
             <img src={rightArrow} alt="" className="right-arrow" style={{display: `${!isVisibleRightArrow ? "none" : "block"}`}} onClick={goToNext} />
-            <div className="preview-img" style={{backgroundImage: `url(${preview[currentIndex]})`, height: `${preview.length>1 ? "97%" : "100%"}`}} ></div>
+
+            {(file[currentIndex].name.includes(".mp4") || file[currentIndex].name.includes(".MOV")) ?
+                <ReactPlayer
+                    url={preview[currentIndex]}
+                    muted={true}
+                    playing={true}
+                    controls
+                    // height="380px"
+                    // width="670px"
+                />
+                :
+                <div className="preview-img" style={{backgroundImage: `url(${preview[currentIndex]})`, height: `${preview.length>1 ? "97%" : "100%"}`}} ></div>
+            }
+
             {preview.length>1 && <div className='preview-img-dots-container'>
                 {preview.map((prev, prevIndex)=>(
                     <div
