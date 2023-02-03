@@ -1,6 +1,5 @@
 import React, {useState, useRef, useEffect } from 'react';
 import ReactPlayer from 'react-player';
-import { Waypoint } from 'react-waypoint';
 
 const PostImage = ({images, blurrScreenHandler, clicked}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
@@ -18,11 +17,10 @@ const PostImage = ({images, blurrScreenHandler, clicked}) => {
         if(currentIndex!==images?.length-1)
             setCurrentIndex(currentIndex+1);
     }
-    console.log(images)
 
     return (
         <div className='post-img-container'>
-            <div className='post-img-count'>{images?.length>1 && currentIndex+1}</div>
+            {images?.length>1 && <div className='post-img-count'>{currentIndex+1}/{images?.length}</div>}
             {images?.length>1 && <img src={leftArrow} alt="" className="left-arrow" onClick={goToPrevious} />}
             {images?.length>1 && <img src={rightArrow} alt="" className="right-arrow" onClick={goToNext} />}
 
@@ -49,7 +47,7 @@ const PostImage = ({images, blurrScreenHandler, clicked}) => {
                     <div
                         key={prevIndex}
                         className='preview-img-dots'
-                        style={{color: `${prevIndex===currentIndex ? "black" : "rgb(154, 147, 147)"}`}}
+                        style={{color: `${prevIndex===currentIndex ? "#03bfbc" : "rgb(154, 147, 147)"}`}}
                         onClick={()=>setCurrentIndex(prevIndex)}
                         > &#x2022;
                         {/* &#x2022; code is code of dot circle symbol */}

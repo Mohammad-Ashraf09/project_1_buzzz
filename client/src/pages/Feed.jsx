@@ -60,7 +60,7 @@ const Feed = () => {
           </div>
         </div>
         <div className="rightbar">
-          <Contact socket={socket} />
+          <Contact user={user} socket={socket} />
           <Suggestion socket={socket} />
         </div>
       </div>

@@ -7,7 +7,7 @@ const WhoLikedDisliked = ({userId}) => {
 
   useEffect(()=>{
     const fetchUser = async() =>{
-      const res = await axios.get(`users/${userId}`);
+      const res = await axios.get(`/users/${userId}`);
       setUser(res.data);
     }
     fetchUser();

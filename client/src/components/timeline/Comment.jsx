@@ -2,6 +2,7 @@ import { format } from 'timeago.js';
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import NestedComment from './NestedComment';
+import { Link } from 'react-router-dom';
 
 // user --> jisne post dali hai
 // currentUser --> jisne login kiya hua hai
@@ -28,10 +29,11 @@ const Comment = ({
     const [isLiked, setIsLiked] = useState(false);
     const [clr, setClr] = useState("#000");
     const [nestedComments, setNestedComments] = useState([]);
+    const [hover, setHover] = useState(false);
     
     useEffect(()=>{
         const fetchParticularComment = async() =>{
-            const res = await axios.get("posts/"+ _id +"/comment/"+ commentId);
+            const res = await axios.get("/posts/"+ _id +"/comment/"+ commentId);
 
             setParticularComment(res.data);
             setIsLiked(res.data?.commentLikes.includes(currentUser._id));
@@ -44,7 +46,7 @@ const Comment = ({
 
     const likeCommentHandler = async() =>{
         try{
-            await axios.put("posts/"+ _id +"/comment/"+ particularComment?.commentId + "/like", {userId: currentUser._id});
+            await axios.put("/posts/"+ _id +"/comment/"+ particularComment?.commentId + "/like", {userId: currentUser._id});
 
             setNoOfLikes(isLiked ? noOfLikes-1 : noOfLikes+1);
             setIsLiked(!isLiked);
@@ -65,7 +67,7 @@ const Comment = ({
             const remove = window.confirm("Are you sure, you want to remove this comment?");
             if(remove){
                 console.log(particularComment.commentId)
-                await axios.put("posts/"+ _id +"/comment/"+ particularComment?.commentId);
+                await axios.put("/posts/"+ _id +"/comment/"+ particularComment?.commentId);
                 console.log(particularComment.commentId)
                 setNumberOfComments(numberOfComments-1);
                 console.log(particularComment.commentId)
@@ -85,12 +87,16 @@ const Comment = ({
     const DP = particularComment?.dp ? PF+particularComment?.dp : PF+"default-dp.png";
 
     return (
-        <>
+        <div onMouseOver={()=>setHover(true)} onMouseOut={()=>setHover(false)}>
             <div className="comment-list">
                 <div className="comment-top-left">
-                    <img src={DP} alt="" className="comment-list-profile-img" />
+                    <Link to={`/user/${particularComment.id}`} style={{textDecoration: 'none', color:'black'}}>
+                        <img src={DP} alt="" className="comment-list-profile-img" />
+                    </Link>
                     <span className="comment-username-date">
-                        <div className="comment-username"> {particularComment?.name} </div>
+                        <Link to={`/user/${particularComment.id}`} style={{textDecoration: 'none', color:'black'}}>
+                            <div className="comment-username"> {particularComment?.name} </div>
+                        </Link>
                         <div className="comment-date"> {format(particularComment?.date)} </div>
                     </span>
                 </div>
@@ -107,29 +113,29 @@ const Comment = ({
                 </div>
 
                 {showParticularPost ?
-                    <div className='caption-icon' onClick={()=>replyCommentHandlerForParticularPost(commentId, particularComment.name, particularComment.id)}>
+                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandlerForParticularPost(commentId, particularComment.name, particularComment.id)}>
                         <i class="fa-solid fa-reply"></i>
                     </div> :
-                    <div className='caption-icon' onClick={()=>replyCommentHandler(commentId, particularComment.name, particularComment.id)}>
+                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandler(commentId, particularComment.name, particularComment.id)}>
                         <i class="fa-solid fa-reply"></i>
                     </div>
                 }
 
                 {showParticularPost ?
                     (currentUser._id===particularComment?.id &&
-                        <div className='caption-icon' onClick={()=>editCommentHandlerForParticularPost(commentId, particularComment.comment)}>
+                        <div className='caption-icon onHover'style={{display: hover && 'block'}} onClick={()=>editCommentHandlerForParticularPost(commentId, particularComment.comment)}>
                             <i class="fa-solid fa-pen"></i>
                         </div>
                     ) :
                     (currentUser._id===particularComment?.id &&
-                        <div className='caption-icon' onClick={()=>editCommentHandler(commentId, particularComment.comment)}>
+                        <div className='caption-icon onHover'style={{display: hover && 'block'}} onClick={()=>editCommentHandler(commentId, particularComment.comment)}>
                             <i class="fa-solid fa-pen"></i>
                         </div>
                     )
                 }
 
                 {(user._id===currentUser._id || particularComment?.id===currentUser._id) &&
-                    <div className='caption-icon trash' onClick={deleteCommentHandler}>
+                    <div className='caption-icon trash onHover'style={{display: hover && 'block'}} onClick={deleteCommentHandler}>
                         <i class="fa-solid fa-trash"></i>
                     </div>
                 }
@@ -146,7 +152,7 @@ const Comment = ({
                     nestedCommentLength={nestedCommentLength}
                 />
             ))}
-        </>
+        </div>
     )
 }
 

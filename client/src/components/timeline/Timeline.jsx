@@ -72,7 +72,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
   const [replyToName, setReplyToName] = useState("");
   const [replyToId, setReplyToId] = useState("");
 
-  // console.log(totalComment);
+  // console.log(currentUser);
 
   // fetching all active users from socket server
   useEffect(()=>{
@@ -383,25 +383,14 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
       <div className="timeline-post-wrapper">
         <div className="post-top-section">
           <div className="post-top-left">
-            {/* if user that is logged in is same as on which we are clicking for view his profile then show him admin profile page else simple user profile page */}
-            {user._id===currentUser._id?
-              <Link to={`/admin/${user._id}`}>
-                <img src={DP} alt="" className="post-profile-img" />
-              </Link>:
-              <Link to={`/user/${user._id}`}>
-                <img src={DP} alt="" className="post-profile-img" />
-              </Link>
-            }
+            <Link to={`/user/${user._id}`}>
+              <img src={DP} alt="" className="post-profile-img" />
+            </Link>
 
             <span className="post-username-date">
-              {user._id===currentUser._id ?
-                <Link to={`/admin/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
-                  <div className="post-username"> {name} </div>
-                </Link> :
-                <Link to={`/user/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
-                  <div className="post-username"> {name} </div>
-                </Link>
-              }
+              <Link to={`/user/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
+                <div className="post-username"> {name} </div>
+              </Link>
 
               <div className="post-date-location">
                 <div className='post-date'>{format(createdAt)}</div>
@@ -499,7 +488,11 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
           <div className='tagged-friend-container'>
             {taggedFriend.map((friend)=>(
               <Link to={`/user/${friend.id}`} style={{textDecoration: 'none'}}>
-                <div className='tagged-friend'>@{friend.name}</div>
+                {friend.id !== currentUser._id ? 
+                  <div className='tagged-friend'>@{friend.name}</div>
+                  :
+                  <div className='tagged-friend' style={{backgroundColor: 'blue', color: 'white'}}>@{friend.name}</div>
+                }
               </Link>
             ))}
           </div>

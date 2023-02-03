@@ -26,10 +26,12 @@ const Topbar = ({socket}) => {
 
 
     const logoutHandler = () =>{
+        console.log(window.location.href)
         const logout = window.confirm("Are you sure, you want to logout?");
         if(logout){
             localStorage.clear();
-            window.location.reload();
+            window.location.href='http://localhost:3000/'
+            // window.location.reload();
         }
     }
 
@@ -94,10 +96,10 @@ const Topbar = ({socket}) => {
         </div>
         <div className="topbar-right">
             <div className="topbar-user">
-                <Link to={`/admin/${_id}`} style={{textDecoration: 'none'}}>
+                <Link to={`/user/${_id}`} style={{textDecoration: 'none'}}>
                     <img src={dp} alt="" className="topbar-img" />
                 </Link>
-                <Link to={`/admin/${_id}`} style={{textDecoration: 'none', color: 'black'}}>
+                <Link to={`/user/${_id}`} style={{textDecoration: 'none', color: 'black'}}>
                     <div className="topbar-username">{name}</div>
                 </Link>
             </div>

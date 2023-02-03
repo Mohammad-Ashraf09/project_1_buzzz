@@ -27,7 +27,7 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
                     setTextAfterTag(nestedComment?.nestedComment.substr(i+25));
                 }
             }
-            const res = await axios.get(`users/${id}`);
+            const res = await axios.get(`/users/${id}`);
             setTagName("@" + res.data.fname + " " + res.data.lname)
         }
         tagNameRefactor();
@@ -39,7 +39,7 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
     
     useEffect(()=>{
         const fetchParticularNestedComment = async() =>{
-            const res = await axios.get("posts/"+ postId +"/comment/"+ commentId + "/reply/" + nestedComment.nestedCommentId);
+            const res = await axios.get("/posts/"+ postId +"/comment/"+ commentId + "/reply/" + nestedComment.nestedCommentId);
             // console.log(res.data)
 
             setParticularNestedComment(res.data);
@@ -88,9 +88,13 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
         <>
             <div className="nested-comment-list">
                 <div className="comment-top-left">
-                    <img src={DP} alt="" className="nested-comment-list-profile-img" />
+                    <Link to={`/user/${particularNestedComment.nestedId}`} style={{textDecoration: 'none', color:'black'}}>
+                        <img src={DP} alt="" className="nested-comment-list-profile-img" />
+                    </Link>
                     <span className="nested-comment-username-date">
-                        <div className="nested-comment-username"> {nestedComment?.nestedName} </div>
+                        <Link to={`/user/${particularNestedComment.nestedId}`} style={{textDecoration: 'none', color:'black'}}>
+                            <div className="nested-comment-username"> {nestedComment?.nestedName} </div>
+                        </Link>
                         <div className="nested-comment-date"> {format(nestedComment?.date)} </div>
                     </span>
                 </div>
@@ -99,16 +103,12 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
                 {tagId ?
                     <>
                         {textBeforeTag}
-                        {tagId===currentUser._id ?
-                            <Link to={`/admin/${tagId}`} style={{textDecoration: 'none', color:'black'}}>
-                                <span className='nested-comment-tag'>{tagName}</span>
-                            </Link> :
-                            <Link to={`/user/${tagId}`} style={{textDecoration: 'none', color:'black'}}>
-                                <span className='nested-comment-tag'>{tagName}</span>
-                            </Link>
-                        }
+                        <Link to={`/user/${tagId}`} style={{textDecoration: 'none', color:'black'}}>
+                            <span className='nested-comment-tag'>{tagName}</span>
+                        </Link>
                         <span>{textAfterTag}</span>
-                    </> :
+                    </>
+                    :
                     <>{nestedComment?.nestedComment}</>
                 }
             </div>

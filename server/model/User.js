@@ -39,47 +39,36 @@ const UserSchema = new mongoose.Schema(
       type: Array,
       default: [],
     },
-    followingName: {
-      type: Array,
-      default: [],
-    },
     totalPosts:{
       type: Number,
       default: 0
     },
-    desc: {
+    bio: {
       type: String,
       max: 50,
       default: "",
     },
-    designation:{
-      type:String,
-      max: 15,
-      default: "",
-    },
     phone:{
-      type: Number,
+      type: String,
       required: true,
       unique: true,
       min: 10
     },
     DOB:{
-      type: Date,
-      // default: new Date()
+      type: String,
+      min: 10,
+      max: 10
     },
     city: {
       type: String,
       max: 50,
       default: "",
     },
-    from: {
+    place: {
       type: String,
       max: 50,
       default: "",
     },
-    zip:{
-      type: Number,
-    }
   },
   { timestamps: true }
 );

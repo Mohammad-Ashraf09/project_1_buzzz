@@ -104,6 +104,17 @@ router.get("/timeline/:userId", async (req, res) => {
   }
 });
 
+//get particular user posts
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.userId);
+    const userPosts = await Post.find({ userId: user._id });
+    res.status(200).json(userPosts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 //add comment
 router.put("/:id/comment", async(req, res)=>{
   try {

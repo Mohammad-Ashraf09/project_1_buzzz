@@ -50,16 +50,16 @@ const Suggestion = ({socket}) => {
 
   return (
     <div className='suggestion'>
-        <div className="suggestion-wrapper">
-            <div className="z">
-                <div style={{color: clr}} className="contact-title">Suggestions</div>
-                <div onMouseOver={changeColorWhite} onMouseOut={changeColorBlack} className="search-box">
-                    <input type="text" className='search-txt' name="" placeholder='Search Suggestions' onChange={(e)=>setQuery(e.target.value)} />
-                    <a href="#" className='search-btn'>
-                        <i className="fa-solid fa-magnifying-glass"></i>
-                    </a>
-                </div>
+        <div className="z">
+            <div style={{color: clr}} className="contact-title">Suggestions</div>
+            <div onMouseOver={changeColorWhite} onMouseOut={changeColorBlack} className="search-box">
+                <input type="text" className='search-txt' name="" placeholder='Search Suggestions' onChange={(e)=>setQuery(e.target.value)} />
+                <a href="#" className='search-btn'>
+                    <i className="fa-solid fa-magnifying-glass"></i>
+                </a>
             </div>
+        </div>
+        <div className="suggestion-wrapper">
             <ul className="suggestion-list">
                 {allUsers.filter((x)=>x.fname.toLowerCase().includes(query)).map((data)=>(
                     <Sugg key={data._id} users={data} myFollowings={following} onlineUsers={onlineUsers} />

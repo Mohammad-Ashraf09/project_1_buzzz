@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { EmojiStyle, SkinTones, Theme, Categories, EmojiClickData, Emoji, SuggestionMode } from "emoji-picker-react";
 import EmojiInput from './EmojiInput'
 
-const EmojiContainer = ({inputRef, setMessage, message, setCursorPosition, cursorPosition}) => {
+const EmojiContainer = ({inputRef, setMessage, message, setCursorPosition, cursorPosition, bioFrom}) => {
     // const [emojiList, setEmojiList] = useState([]);
     const [selectedEmoji, setSelectedEmoji] = useState("");
 
@@ -10,11 +10,20 @@ const EmojiContainer = ({inputRef, setMessage, message, setCursorPosition, curso
         setSelectedEmoji(emojiData.unified);
         const ref = inputRef.current;
         ref.focus();
-        const start = message.substring(0, ref.selectionStart);
-        const end = message.substring(ref.selectionStart);
-        const text = start + emojiData.emoji + end;
-        setMessage(text);
-        setCursorPosition(start.length + emojiData.emoji.length);
+        if(bioFrom){
+            const start = message.bio.substring(0, ref.selectionStart);
+            const end = message.bio.substring(ref.selectionStart);
+            const text = start + emojiData.emoji + end;
+            setMessage({...message, bio:text});
+            setCursorPosition(start.length + emojiData.emoji.length);
+        }
+        else{
+            const start = message.substring(0, ref.selectionStart);
+            const end = message.substring(ref.selectionStart);
+            const text = start + emojiData.emoji + end;
+            setMessage(text);
+            setCursorPosition(start.length + emojiData.emoji.length);
+        }
     }
 
     useEffect(()=>{
@@ -42,7 +51,7 @@ const EmojiContainer = ({inputRef, setMessage, message, setCursorPosition, curso
         //     </div>
         // </>
 
-        <div className='emoji-container'>
+        <div className={bioFrom ? 'bio-emoji-container' : 'emoji-container'}>
             <EmojiInput onClick={onClick} selectedEmoji={selectedEmoji}/>
         </div>
     )
