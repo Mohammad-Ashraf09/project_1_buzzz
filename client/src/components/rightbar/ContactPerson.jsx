@@ -1,22 +1,31 @@
-import React from 'react'
+import axios from 'axios';
+import React, { useEffect, useState } from 'react'
 import { Link } from 'react-router-dom';
 
-const ContactPerson = ({onlineUsers, follow}) => {
+const ContactPerson = ({onlineUsers, userId}) => {
+  const [user, setUser] = useState({});
 
-  // const {fname, lname, profilePicture, _id} = friend;
-    
+  useEffect(()=>{
+    const fetchUser = async() =>{
+      const res = await axios.get(`/users/${userId}`);
+      setUser(res.data);
+    }
+    fetchUser();
+  },[userId]);
+
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const DP = follow.dp ? PF+follow.dp : PF+'default-dp.png';
+  const name = user.fname + ' ' + user.lname;
+  const DP = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
 
   return (
     <>
         <li className="contact-list-item">
-            <Link to={`/user/${follow.id}`}>
+            <Link to={`/user/${userId}`}>
               <img src={DP} alt="" className="contact-img" />
-              {onlineUsers.some(data=>data.userId === follow.id) && <span className="contact-badge"></span>}
+              {onlineUsers.some(data=>data.userId === userId) && <span className="contact-badge"></span>}
             </Link>
-            <Link to={`/user/${follow.id}`} style={{textDecoration: 'none'}}>
-              <span className="contact-name">{follow.name}</span>
+            <Link to={`/user/${userId}`} style={{textDecoration: 'none'}}>
+              <span className="contact-name">{name}</span>
             </Link>
         </li>
     </>

@@ -16,10 +16,10 @@ const SuggestionPerson = ({users, onlineUsers}) => {
   const followHandler = async () =>{
     try{
       if(followed){
-        await axios.put("/users/"+ users._id + "/unfollow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
+        await axios.put("/users/"+ users._id + "/unfollow", {userId: currentUser._id})
       }
       else{
-        await axios.put("/users/"+ users._id + "/follow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
+        await axios.put("/users/"+ users._id + "/follow", {userId: currentUser._id})
       }
     }
     catch(err){

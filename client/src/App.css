@@ -19,9 +19,12 @@ body{
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500);
 
 .signup-container{
-    height: 100vh;
+    height: 671px;
     background-color: #03bfbc;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .signup-box {
   width: 65%;
@@ -30,25 +33,18 @@ body{
   border-radius: 8px;
   box-shadow: 4px 4px 10px var(--shadow-color);
   display: flex;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  margin-top: 1.5rem;
 }
 .left {
   box-sizing: border-box;
   padding: 40px;
-  width: 45%;
+  width: 49.80%;
   height: 100%;
   position: relative;
 }
 .left h1 {
   font-family: 'Roboto', sans-serif;
   margin: 0 0 20px 0;
-  font-size: 30px;
   color: var(--theme-color);
-  font-weight: normal;
 }
 .left input[type="text"], .left input[type="email"], .left input[type="password"] {
   display: block;
@@ -90,15 +86,16 @@ body{
 }
 .gender-radio label {
     display: inline-block;
-    background-color: white;
+    width: 60px;
     padding: 10px 10px;
-    font-family: sans-serif, Arial;
+    background-color: white;
     font-size: 15px;
-    border: 1px solid black;
-    border-radius: 4px;
+    font-weight: 500;
+    text-align: center;
+    border-radius: 25px;
     margin-left: 5px;
-    border: none;
     cursor: pointer;
+    text-transform: uppercase;
 }
 .gender-radio input[type="radio"]:checked + label {
     background-color: var(--theme-color);
@@ -109,7 +106,7 @@ body{
     display: flex;
     align-items: center;
 }
-#agreement{
+.agreement{
     height: 14px;
     width: 14px;
 }
@@ -119,8 +116,13 @@ body{
 .agreement-div a{
     color: var(--theme-color);
 }
+.bottom{
+    display: flex;
+    justify-content: space-between;
+    align-items: end;
+    margin-top: 24px;
+}
 .register-btn {
-  margin-top: 28px;
   padding: 15px 35px;
   background-color: var(--theme-color);
   border: none;
@@ -140,35 +142,71 @@ body{
 .register-btn:disabled {
     background-color: var(--grey-light);
     box-shadow: none;
-}
-.register-btn:disabled:hover {
-    background-color: var(--grey-light);
-    box-shadow: none;
-    opacity: 0.8;
     cursor:not-allowed;
+    opacity: 1;
+}
+.existing-member{
+    color: var(--theme-color);
+    font-size: 13px;
+}
+.vertical-line{
+    width: 0.4%;
+    height: 80%;
+    margin-top: 60px;
+    background-color: var(--theme-color);
+    border-radius: 2px;
 }
 .right {
     box-sizing: border-box;
-    width: 55%;
+    width: 49.80%;
     height: 100%;
+    padding: 60px 40px 40px 40px;
 }
-.banner-img{
-    height: 80%;
+.profile-picture{
+    height: 260px;
+    width: 260px;
+    border-radius: 50%;
+    margin-left: 65px;
+}
+.dummy-profile-div-male{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+.dummy-profile-div-female{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 10px;
+}
+.dummy-profile-picture{
+    height: 60px;
+    width: 60px;
+    border-radius: 50%;
+    cursor: pointer;
+}
+.choose-dp-div{
     width: 100%;
-    border-top-right-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
-#existing-member{
-    position: absolute;
-    bottom: 12%;
-    right: 20%;
-    color: var(--theme-color);
-    font-size: 15px;
+.-or{
+    padding: 8px;
+    font-size: 12px;
+    border-radius: 50%;
+    background-color: rgb(194, 191, 191);
+    cursor: default;
 }
-#existing-member-hidden{
+.choose-remove-dp{
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+}
+.choose-from-gallery{
+    font-size: 12px;
     color: var(--theme-color);
-    font-size: 13px;
-    margin-left: 18%;
-    display: none;
+    text-decoration: underline;
+    cursor: pointer;
 }
 .error-msg{
     font-size: 11px;
@@ -2001,8 +2039,7 @@ hr{
 }
 .label{
     display: inline-block;
-    width: 100px;
-    margin-right: 40px;
+    width: 140px;
 }
 .edit-profile input[type="text"],
 .edit-profile input[type="email"]{
@@ -2090,6 +2127,17 @@ hr{
     color: var(--grey-dark);
     cursor: pointer;
 }
+.bio-character-count{
+    position: absolute;
+    z-index: 5;
+    font-size: 12px;
+    right: 35px;
+    bottom: 6px;
+    padding: 4px 8px;
+    border-radius: 25px;
+    background-color: var(--grey-xl-light);
+    color: var(--grey-dark);
+}
 .btns-div{
     display: flex;
     flex: 3;
@@ -2098,14 +2146,21 @@ hr{
     justify-content: space-around;
 }
 .edit-btns{
-    padding: 10px 20px;
-    border: 2px solid var(--grey-xl-light);
+    padding: 8px 20px;
+    width: 60px;
+    text-align: center;
     border-radius: 25px;
-    font-size: 15px;
+    color: #fff;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
     cursor: pointer;
+    box-shadow: 4px 4px 10px var(--theme-shadow);
+    opacity: 0.8;
 }
 .edit-btns:hover{
-    transform: scale(1.03);
+    opacity: 1;
+    transition: 0.2s ease;
 }
 .cancell-btn{
     background-color: rgb(216, 2, 2);
@@ -2113,6 +2168,7 @@ hr{
 }
 .reset-btn{
     background-color: rgb(241, 245, 10);
+    color: black;
 }
 .save-btn{
     background-color: rgb(2, 216, 9);
@@ -2315,12 +2371,6 @@ hr{
     margin: -12px 0px 8px 140px;
     display: none;
 }
-input:invalid[focused="true"]{
-    border-bottom: 1px solid red;
-}
-input:invalid[focused="true"] ~ .edit-profile-error-msg{
-    display: block;
-}
 .username-exist-error-msg{
     font-size: 11px;
     color: red;
@@ -2342,7 +2392,110 @@ input:invalid[focused="true"] ~ .edit-profile-error-msg{
     60% { transform: translate(-8px) ; }
     80% { transform: translate(3px) ; }
     100% { transform: translate(0px) ; }
-  }
+}
+
+.password-change-container{
+    height: 300px;
+    width: 500px;
+    padding: 12px;
+    background-color: white;
+    border-radius: 8px;
+}
+.cross-div{
+    display: flex;
+    justify-content: space-between;
+}
+.change-password-heading{
+    margin: 0;
+    color: #03bfbc;
+}
+.successful-message{
+    font-size: 12px;
+    font-weight: 500;
+    color: green;
+    display: flex;
+    align-items: center;
+    margin-top: -4px;
+    margin-right: 50px;
+}
+.tick-mark{
+    height: 30px;
+    width: 30px;
+}
+.password-div{
+    height: calc(100% - 40px);
+    margin-top: 10px;
+    padding: 15px 20px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    background-color: var(--grey-xl-light);
+}
+.password-label{
+    width: 160px;
+}
+.change-password-form input[type="password"]{
+    padding: 0 8px;
+    width: 280px;
+    height: 32px;
+    margin-bottom: 30px;
+    border: none;
+    border-bottom: 2px solid #AAA;
+    font-weight: 400;
+    font-size: 15px;
+    transition: 0.2s ease;
+}
+.password-error{
+    margin: -28px 0px 15px 160px;
+}
+.change-password-btns{
+    display: flex;
+    justify-content: space-around;
+}
+.margin-left{
+    margin-left: 100px;
+    background-color: rgb(216, 2, 2);
+}
+.margin-right{
+    margin-right: 100px;
+    background-color: rgb(2, 216, 9);
+}
+.loader-btn{
+    width: 100px;
+    margin-right: 100px;
+    background-color: rgba(2, 216, 9, 0.5);
+    box-shadow: 4px 4px 10px var(--theme-shadow);
+    border-radius: 25px;
+    cursor: not-allowed;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.loader{
+    height: 32px;
+    width: 32px;
+}
+.input-password{
+    position: relative;
+}
+.tick{
+    position: absolute;
+    right: 8px;
+    top: 8px;
+    height: 18px;
+    width: 18px;
+}
+.tickkk{
+    display: none;
+}
+input:invalid[focused="true"]{
+    border-bottom: 1px solid red;
+}
+input:invalid[focused="true"] ~ .edit-profile-error-msg{
+    display: block;
+}
+input:valid[focused="true"] ~ .tickkk{
+    display: block;
+}
 
 /*########################################### Messenger page #############################################*/
 
@@ -2657,9 +2810,6 @@ input:invalid[focused="true"] ~ .edit-profile-error-msg{
     .right {
         display: none;
     }
-    #existing-member-hidden{
-        display: inline-block;
-    }
 
     /* -------------------------Sign in page -------------------- */
     .login-container{
@@ -2865,9 +3015,6 @@ input:invalid[focused="true"] ~ .edit-profile-error-msg{
     .right {
         display: none;
     }
-    #existing-member-hidden{
-        display: inline-block;
-    }
 
     /* -------------------------Sign in page -------------------- */
     .login-container{
@@ -3072,10 +3219,6 @@ input:invalid[focused="true"] ~ .edit-profile-error-msg{
     .right {
         display: none;
     }
-    #existing-member-hidden{
-        display: inline-block;
-        margin-left: 10%;
-    }
 
     /* -------------------------Sign in page -------------------- */
     .login-container{
@@ -3279,10 +3422,6 @@ input:invalid[focused="true"] ~ .edit-profile-error-msg{
     }
     .right {
         display: none;
-    }
-    #existing-member-hidden{
-        display: inline-block;
-        margin-left: 10%;
     }
 
     /* -------------------------Sign in page -------------------- */

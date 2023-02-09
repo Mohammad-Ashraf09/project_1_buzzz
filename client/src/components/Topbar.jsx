@@ -21,8 +21,8 @@ const Topbar = ({socket}) => {
 
     const reverseOrderNotification = [...notification].reverse();
 
-    const newNotifications = reverseOrderNotification.slice(0, noOfNotifications2.length);
-    const oldNotifications = reverseOrderNotification.slice(noOfNotifications2.length, reverseOrderNotification.length);
+    const newNotifications = reverseOrderNotification.slice(0, noOfNotifications2?.length);
+    const oldNotifications = reverseOrderNotification.slice(noOfNotifications2?.length, reverseOrderNotification?.length);
 
 
     const logoutHandler = () =>{

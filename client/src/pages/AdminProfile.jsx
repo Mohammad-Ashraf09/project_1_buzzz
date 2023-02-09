@@ -1,6 +1,7 @@
 import axios from 'axios';
 import React, { createRef, useContext, useEffect, useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom';
+import ChangePassword from '../components/ChangePassword';
 import EmojiContainer from '../components/emoji/EmojiContainer';
 import Topbar from '../components/Topbar';
 import { AuthContext } from '../context/AuthContext';
@@ -10,7 +11,7 @@ const AdminProfile = () => {
   const [user, setUser] = useState({});
   const[formdata, setFormdata] = useState({});
   const navigate = useNavigate();
-  const {username, bio, fname, lname, gender, DOB, email, phone, place, city, profilePicture, coverPicture} = user;
+  const {username, bio, fname, lname, gender, DOB, email, phone, place, city, profilePicture, coverPicture, password} = user;
   const [editCover, setEditCover] = useState(false);
   const [editDP, setEditDP] = useState(false);
 
@@ -31,6 +32,7 @@ const AdminProfile = () => {
   const [showEmojis, setShowEmojis] = useState(false);
   const inputRef = createRef();
   const [cursorPosition, setCursorPosition] = useState();
+  const [showParticularPost, setShowParticularPost] = useState(false);
   
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const camera = PF + "images/blue-cam.png";
@@ -280,6 +282,17 @@ const AdminProfile = () => {
     }
   },[isShakeEffect3]);
 
+  const blurrScreenHandler = ()=>{
+    setShowParticularPost(!showParticularPost);
+
+    if(!showParticularPost){
+      document.body.style.overflow = "hidden";
+      document.body.scrollIntoView();
+    }
+    else
+      document.body.style.overflow = "auto";
+  }
+
   return (
     <>
       <Topbar/>
@@ -312,7 +325,7 @@ const AdminProfile = () => {
           </div>
 
           <div className='details-div'>
-            <div className='change-password'>change password</div>
+            <div className='change-password' onClick={blurrScreenHandler}>change password</div>
 
             <div className='details-div-wrapper'>
               <div className='username-div'>
@@ -485,13 +498,14 @@ const AdminProfile = () => {
                   <div className="bio-emoji-icon">
                     <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
                   </div>
+                  <div className="bio-character-count">{formdata?.bio?.length}/100</div>
                 </div>
                 <div className='btns-div'>
                   <Link to={`/user/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
-                    <button className='edit-btns cancell-btn'>Calcel</button>
+                    <div className='edit-btns cancell-btn'>calcel</div>
                   </Link>
-                  <button className='edit-btns reset-btn' onClick={resetClickHandler}>Reset</button>
-                  <button className='edit-btns save-btn' onClick={saveHandler} >Save</button>
+                  <div className='edit-btns reset-btn' onClick={resetClickHandler}>reset</div>
+                  <div className="edit-btns save-btn" onClick={saveHandler}>save</div>
                 </div>
               </div>
               {noOfLineError && <div id='no-of-line' className='no-of-lines-error-msg'>Only 4 lines allowed</div>}
@@ -508,6 +522,12 @@ const AdminProfile = () => {
           cursorPosition={cursorPosition}
           bioFrom={true}
         />
+      }
+
+      {showParticularPost &&
+        <div className='blurr-div'>
+            <ChangePassword setShowParticularPost={setShowParticularPost} password={currentUser.password} id={currentUser._id}/>
+        </div>
       }
     </>
   )

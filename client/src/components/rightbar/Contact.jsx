@@ -1,12 +1,10 @@
 import axios from 'axios';
-import React, { useState, useEffect, useContext } from 'react';
-import {AuthContext} from "../../context/AuthContext"
+import React, { useState, useEffect } from 'react';
 import ContactPerson from './ContactPerson';
 
 const Contact = ({user, isUserProfile, socket}) => {
     const [clr, setClr] = useState("#000");
     const [following, setFollowing] = useState([]);
-    // const {user} = useContext(AuthContext);
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [query, setQuery] = useState("");
 
@@ -19,9 +17,23 @@ const Contact = ({user, isUserProfile, socket}) => {
 
     useEffect(()=>{
         const fetchFollowings = async() =>{
-          const res = await axios.get("/users/"+user?._id);
-          const arr = res.data.followings                    // array of objects de raha hai ye
-          setFollowing(arr);
+            const res = await axios.get("/users/"+user?._id);
+
+            setFollowing([]);
+            if(res.data.followings.length){
+                res.data.followings.map((item)=>{
+                    const fetchFollowingsData = async() =>{
+                        const response = await axios.get("/users/"+item);
+                        const obj={};
+                        obj.id = response.data._id;
+                        obj.name = response.data.fname + " " + response.data.lname;
+                        setFollowing((prev)=>[...prev, obj]);
+                    }
+                    fetchFollowingsData();
+                })
+            }
+            else
+                setFollowing([]);
         }
         fetchFollowings();
     },[user?._id]);
@@ -31,28 +43,27 @@ const Contact = ({user, isUserProfile, socket}) => {
             setOnlineUsers(data);
         });
     },[socket, onlineUsers]);
-    //console.log(onlineUsers);
       
-  return (
-    <div className={isUserProfile ? "user-profile-contact" : "contact" }>
-        <div className={isUserProfile ? "user-profile-z" : "z" }>
-            <div style={{color: clr}} className="contact-title">Contacts</div>
-            <div onMouseOver={changeColorWhite} onMouseOut={changeColorBlack} className="search-box">
-                <input type="text" className={isUserProfile ? "user-profile-search-txt" : "search-txt" } name="" placeholder='Search Contacts' onChange={(e)=>setQuery(e.target.value)} />
-                <a href="#" className={isUserProfile ? "user-profile-search-btn" : "search-btn" }>
-                    <i className="fa-solid fa-magnifying-glass"></i>
-                </a>
+    return (
+        <div className={isUserProfile ? "user-profile-contact" : "contact" }>
+            <div className={isUserProfile ? "user-profile-z" : "z" }>
+                <div style={{color: clr}} className="contact-title">Contacts</div>
+                <div onMouseOver={changeColorWhite} onMouseOut={changeColorBlack} className="search-box">
+                    <input type="text" className={isUserProfile ? "user-profile-search-txt" : "search-txt" } name="" placeholder='Search Contacts' onChange={(e)=>setQuery(e.target.value)} />
+                    <a href="#" className={isUserProfile ? "user-profile-search-btn" : "search-btn" }>
+                        <i className="fa-solid fa-magnifying-glass"></i>
+                    </a>
+                </div>
+            </div>
+            <div className={isUserProfile ? "user-profile-contact-wrapper" : "contact-wrapper" }>
+                <ul className="contact-list">
+                    {following.filter((x)=>x.name?.toLowerCase().includes(query)).map((data)=>(
+                        <ContactPerson key={data.id} userId={data.id} onlineUsers={onlineUsers} />
+                    ))}
+                </ul>
             </div>
         </div>
-        <div className={isUserProfile ? "user-profile-contact-wrapper" : "contact-wrapper" }>
-            <ul className="contact-list">
-                {following.filter((x)=>x.name?.toLowerCase().includes(query)).map((data)=>(
-                    <ContactPerson key={data.id} follow={data} onlineUsers={onlineUsers} />
-                ))}
-            </ul>
-        </div>
-    </div>
-  )
+    )
 }
 
 export default Contact;
