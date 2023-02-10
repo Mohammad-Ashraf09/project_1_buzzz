@@ -234,7 +234,7 @@ const UserProfile = () => {
                 }
 
                 {userId===currentUser?._id ?
-                  <Link to={`/admin/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
+                  <Link to={`/edit/user/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
                     <button className="add-remove-friend-btn" > Edit Profile </button>
                   </Link>
                   :

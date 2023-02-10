@@ -28,7 +28,7 @@ body{
 }
 .signup-box {
   width: 65%;
-  height: 85%;
+  /* height: 85%; */
   background: rgb(244, 240, 240);
   border-radius: 8px;
   box-shadow: 4px 4px 10px var(--shadow-color);
@@ -151,7 +151,7 @@ body{
 }
 .vertical-line{
     width: 0.4%;
-    height: 80%;
+    height: 470px;
     margin-top: 60px;
     background-color: var(--theme-color);
     border-radius: 2px;
@@ -167,6 +167,7 @@ body{
     width: 260px;
     border-radius: 50%;
     margin-left: 65px;
+    object-fit: cover;
 }
 .dummy-profile-div-male{
     display: flex;

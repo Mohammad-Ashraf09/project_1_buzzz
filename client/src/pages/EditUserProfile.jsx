@@ -6,7 +6,7 @@ import EmojiContainer from '../components/emoji/EmojiContainer';
 import Topbar from '../components/Topbar';
 import { AuthContext } from '../context/AuthContext';
 
-const AdminProfile = () => {
+const EditUserProfile = () => {
   const {user:currentUser} = useContext(AuthContext);
   const [user, setUser] = useState({});
   const[formdata, setFormdata] = useState({});
@@ -533,4 +533,4 @@ const AdminProfile = () => {
   )
 }
 
-export default AdminProfile;
+export default EditUserProfile;

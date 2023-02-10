@@ -2,7 +2,7 @@ import "./App.css";
 import React, { useContext } from 'react';
 import {BrowserRouter, Routes, Route, Navigate} from 'react-router-dom'
 import { AuthContext } from './context/AuthContext';
-import AdminProfile from './pages/AdminProfile';
+import EditUserProfile from './pages/EditUserProfile';
 import Feed from "./pages/Feed";
 import Login from "./pages/Login";
 import Signup from './pages/Signup';
@@ -22,7 +22,7 @@ const App = () => {
         <Route path='/register' element={ user ? <Navigate to="/" /> : <Signup/>}/>
         <Route path='/messenger' element={ !user ? <Navigate to="/" /> : <Messenger/>}/>
         <Route path='/user/:id' element={<UserProfile/>}/>
-        <Route path='/admin/:id' element={<AdminProfile/>}/>
+        <Route path='/edit/user/:id' element={<EditUserProfile/>}/>
         <Route path='/conversations' element={<ConversationsForMobile/>}/>
       </Routes>
     </BrowserRouter>

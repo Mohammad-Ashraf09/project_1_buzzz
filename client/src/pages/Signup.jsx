@@ -1,5 +1,5 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FormInput from '../components/FormInput';
 import TopbarForLogin from '../components/TopbarForLogin';
@@ -7,18 +7,18 @@ import TopbarForLogin from '../components/TopbarForLogin';
 const Signup = () => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const banner = PF+"default-dp.png";
-    const dummy01 = PF+"sample-dp-01.jpg";
-    const dummy02 = PF+"sample-dp-02.jpg";
-    const dummy03 = PF+"sample-dp-03.jpg";
-    const dummy04 = PF+"sample-dp-04.jpg";
-    const dummy05 = PF+"sample-dp-05.jpg";
-    const dummy06 = PF+"sample-dp-06.jpg";
-    const dummy07 = PF+"sample-dp-07.jpg";
-    const dummy08 = PF+"sample-dp-08.jpg";
-    const dummy09 = PF+"sample-dp-09.jpg";
-    const dummy10 = PF+"sample-dp-10.png";
-    const dummy11 = PF+"sample-dp-11.jpg";
-    const dummy12 = PF+"sample-dp-12.jpg";
+    const dummy01 = PF+"dummy-dp-01.png";
+    const dummy02 = PF+"dummy-dp-02.png";
+    const dummy03 = PF+"dummy-dp-03.png";
+    const dummy04 = PF+"dummy-dp-04.png";
+    const dummy05 = PF+"dummy-dp-05.png";
+    const dummy06 = PF+"dummy-dp-06.png";
+    const dummy07 = PF+"dummy-dp-07.png";
+    const dummy08 = PF+"dummy-dp-08.png";
+    const dummy09 = PF+"dummy-dp-09.png";
+    const dummy10 = PF+"dummy-dp-10.png";
+    const dummy11 = PF+"dummy-dp-11.png";
+    const dummy12 = PF+"dummy-dp-12.png";
 
     const [disable, setDisable] = useState(true);
     const [currentDP, setCurrentDP] = useState(banner);

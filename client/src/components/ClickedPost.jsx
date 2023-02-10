@@ -277,7 +277,7 @@ const ClickedPost = ({
                 <div className="post-top-section">
                     <div className="post-top-left">
                         {user._id===currentUser._id ?
-                            <Link to={`/admin/${user._id}`}>
+                            <Link to={`/edit/user/${user._id}`}>
                                 <img src={DP} alt="" className="post-profile-img" />
                             </Link> :
                             <Link to={`/user/${user._id}`}>
@@ -287,7 +287,7 @@ const ClickedPost = ({
 
                         <span className="post-username-date">
                             {user._id===currentUser._id ?
-                                <Link to={`/admin/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
+                                <Link to={`/edit/user/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
                                     <div className="post-username"> {name} </div>
                                 </Link> :
                                 <Link to={`/user/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
