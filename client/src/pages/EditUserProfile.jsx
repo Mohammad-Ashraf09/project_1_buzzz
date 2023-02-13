@@ -9,6 +9,7 @@ import { AuthContext } from '../context/AuthContext';
 const EditUserProfile = () => {
   const {user:currentUser} = useContext(AuthContext);
   const [user, setUser] = useState({});
+  const [allUsers, setAllUsers] = useState([]);
   const[formdata, setFormdata] = useState({});
   const navigate = useNavigate();
   const {username, bio, fname, lname, gender, DOB, email, phone, place, city, profilePicture, coverPicture, password} = user;
@@ -43,6 +44,7 @@ const EditUserProfile = () => {
     const fetchAllUsers = async() =>{
       const res = await axios.get("/users/");
       const allUsers = res.data
+      setAllUsers(allUsers);
       const usernameArray = allUsers.map(item => item.username)
       setUsernames(usernameArray);
     }
@@ -240,6 +242,20 @@ const EditUserProfile = () => {
         }
       }
       catch(err){}
+
+      if(updatedData.fname || updatedData.lname || updatedData.profilePicture){
+        const data = {
+          id: user._id,
+          name: formdata.fname + " " + formdata.lname,
+          dp: updatedData.profilePicture ? updatedData.profilePicture : formdata.profilePicture,
+        };
+
+        try{
+          await axios.put("/users/"+user._id+"/following", data);
+        }catch(err){
+          console.log(err)
+        }
+      }
     }
   }
 
@@ -373,8 +389,8 @@ const EditUserProfile = () => {
                     type="text"
                     name='lname'
                     value={formdata.lname}
-                    pattern='^[a-zA-Z ]{3,20}$'
-                    required={true}
+                    pattern='^[a-zA-Z ]{1,20}$'
+                    // required={true}
                     onBlur={()=>setFocused(true)}
                     focused={focused.toString()}
                     onChange={handleChange}
@@ -466,7 +482,7 @@ const EditUserProfile = () => {
                     name='place'
                     value={formdata.place}
                     pattern='^[a-zA-Z0-9-_/, ]{3,30}$'
-                    required={true}
+                    // required={true}
                     onBlur={()=>setFocused(true)}
                     focused={focused.toString()}
                     onChange={handleChange}
@@ -482,7 +498,7 @@ const EditUserProfile = () => {
                     name='city'
                     value={formdata.city}
                     pattern='^[a-zA-Z0-9-_/ ]{3,30}$'
-                    required={true}
+                    // required={true}
                     onBlur={()=>setFocused(true)}
                     focused={focused.toString()}
                     onChange={handleChange}

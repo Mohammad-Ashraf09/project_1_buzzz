@@ -4,7 +4,6 @@ import { Link } from 'react-router-dom';
 import { AuthContext } from '../../context/AuthContext';
 
 const SuggestionPerson = ({users, onlineUsers}) => {
-
   const [followed, setFollowed] = useState(false);
   const {user:currentUser} = useContext(AuthContext);
 
@@ -12,14 +11,13 @@ const SuggestionPerson = ({users, onlineUsers}) => {
     setFollowed(currentUser.followings.some(e=>e.id===users._id))
   },[currentUser, users._id]);
 
-
   const followHandler = async () =>{
     try{
       if(followed){
-        await axios.put("/users/"+ users._id + "/unfollow", {userId: currentUser._id})
+        await axios.put("/users/"+ users._id + "/unfollow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
       }
       else{
-        await axios.put("/users/"+ users._id + "/follow", {userId: currentUser._id})
+        await axios.put("/users/"+ users._id + "/follow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
       }
     }
     catch(err){
@@ -28,11 +26,8 @@ const SuggestionPerson = ({users, onlineUsers}) => {
     setFollowed(!followed);
   }
 
-  //console.log(users)
   const {fname, lname, profilePicture, _id} = users;
-    
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
   const dp = profilePicture ? PF+profilePicture : PF+'default-dp.png';
   const name = fname +' '+ lname;
 

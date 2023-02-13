@@ -17,26 +17,11 @@ const Contact = ({user, isUserProfile, socket}) => {
 
     useEffect(()=>{
         const fetchFollowings = async() =>{
-            const res = await axios.get("/users/"+user?._id);
-
-            setFollowing([]);
-            if(res.data.followings.length){
-                res.data.followings.map((item)=>{
-                    const fetchFollowingsData = async() =>{
-                        const response = await axios.get("/users/"+item);
-                        const obj={};
-                        obj.id = response.data._id;
-                        obj.name = response.data.fname + " " + response.data.lname;
-                        setFollowing((prev)=>[...prev, obj]);
-                    }
-                    fetchFollowingsData();
-                })
-            }
-            else
-                setFollowing([]);
+          const res = await axios.get("/users/"+user._id);
+          setFollowing(res.data.followings);
         }
         fetchFollowings();
-    },[user?._id]);
+    },[user._id]);
 
     useEffect(()=>{
         socket?.on("getUsers1", (data)=>{
@@ -57,8 +42,8 @@ const Contact = ({user, isUserProfile, socket}) => {
             </div>
             <div className={isUserProfile ? "user-profile-contact-wrapper" : "contact-wrapper" }>
                 <ul className="contact-list">
-                    {following.filter((x)=>x.name?.toLowerCase().includes(query)).map((data)=>(
-                        <ContactPerson key={data.id} userId={data.id} onlineUsers={onlineUsers} />
+                    {following.filter((x)=>x.name?.toLowerCase().includes(query)).map((friend)=>(
+                        <ContactPerson key={friend.id} friend={friend} onlineUsers={onlineUsers} />
                     ))}
                 </ul>
             </div>
