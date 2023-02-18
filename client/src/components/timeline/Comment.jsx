@@ -2,7 +2,7 @@ import { format } from 'timeago.js';
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 import NestedComment from './NestedComment';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // user --> jisne post dali hai
 // currentUser --> jisne login kiya hua hai
@@ -23,13 +23,14 @@ const Comment = ({
     editCommentHandlerForParticularPost,
     _id
 }) => {
-
     const [particularComment, setParticularComment] = useState({});
+    const [commentUser, setCommentUser] = useState({});
     const [noOfLikes, setNoOfLikes] = useState(null);
     const [isLiked, setIsLiked] = useState(false);
     const [clr, setClr] = useState("#000");
     const [nestedComments, setNestedComments] = useState([]);
     const [hover, setHover] = useState(false);
+    const navigate = useNavigate();
     
     useEffect(()=>{
         const fetchParticularComment = async() =>{
@@ -43,6 +44,14 @@ const Comment = ({
         }
         fetchParticularComment();
     },[numberOfComments, nestedCommentLength, editDone]);
+
+    useEffect(()=>{
+        const fetchUser = async() =>{
+            const res = await axios.get(`/users/${particularComment?.id}`);
+            setCommentUser(res.data);
+          }
+          fetchUser();
+    },[particularComment]);
 
     const likeCommentHandler = async() =>{
         try{
@@ -83,20 +92,22 @@ const Comment = ({
         catch(err){}
     }
 
+    const clickHandler = async() =>{
+        document.body.style.overflow = "auto";
+        navigate(`/user/${particularComment.id}`);
+    }
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = particularComment?.dp ? PF+particularComment?.dp : PF+"default-dp.png";
+    const DP = commentUser?.profilePicture ? PF+commentUser?.profilePicture : PF+"default-dp.png";
+    const name = commentUser?.fname + " " + commentUser?.lname;
 
     return (
         <div onMouseOver={()=>setHover(true)} onMouseOut={()=>setHover(false)}>
             <div className="comment-list">
                 <div className="comment-top-left">
-                    <Link to={`/user/${particularComment.id}`} style={{textDecoration: 'none', color:'black'}}>
-                        <img src={DP} alt="" className="comment-list-profile-img" />
-                    </Link>
+                    <img src={DP} alt="" className="comment-list-profile-img" onClick={clickHandler}/>
                     <span className="comment-username-date">
-                        <Link to={`/user/${particularComment.id}`} style={{textDecoration: 'none', color:'black'}}>
-                            <div className="comment-username"> {particularComment?.name} </div>
-                        </Link>
+                        <div className="comment-username"  onClick={clickHandler}> {name} </div>
                         <div className="comment-date"> {format(particularComment?.date)} </div>
                     </span>
                 </div>

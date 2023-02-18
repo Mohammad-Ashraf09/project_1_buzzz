@@ -1,39 +1,23 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {Link} from "react-router-dom";
-import {AuthContext} from "../context/AuthContext"
 import Notification from './Notification';
 
-const Topbar = ({socket}) => {
-    const {user} = useContext(AuthContext);
+const Topbar = ({user, socket}) => {
     const [notification, setNotification] = useState([]);
     const [noOfNotifications, setNoOfNotifications] = useState([]);
     const [noOfNotifications2, setNoOfNotifications2] = useState([]);
     const [open, setOpen] = useState(false);
     const [renderNotification, setRenderNotification] = useState(false);
 
-    const {fname, lname, profilePicture, _id} = user;
-
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const logo = PF+"images/logo144.png";
-    const dp = profilePicture ? PF+profilePicture : PF+"default-dp.png";
-    const name = fname +" "+ lname;
+    const dp = user?.profilePicture ? PF+user?.profilePicture : PF+"default-dp.png";
+    const name = user?.fname +" "+ user?.lname;
 
     const reverseOrderNotification = [...notification].reverse();
-
     const newNotifications = reverseOrderNotification.slice(0, noOfNotifications2?.length);
     const oldNotifications = reverseOrderNotification.slice(noOfNotifications2?.length, reverseOrderNotification?.length);
-
-
-    const logoutHandler = () =>{
-        console.log(window.location.href)
-        const logout = window.confirm("Are you sure, you want to logout?");
-        if(logout){
-            localStorage.clear();
-            window.location.href='http://localhost:3000/'
-            // window.location.reload();
-        }
-    }
 
     useEffect(()=>{
         socket?.on("getNotification", (data)=>{
@@ -46,7 +30,7 @@ const Topbar = ({socket}) => {
         if(open){
             const fetchNotifications = async()=>{
                 try{
-                    const res = await axios.get("notifications/"+_id);
+                    const res = await axios.get("notifications/"+user?._id);
                     setNotification(res.data)
                 }
                 catch(err){}
@@ -58,7 +42,7 @@ const Topbar = ({socket}) => {
     useEffect(()=>{
         const fetchNotifications = async()=>{
             try{
-                const res = await axios.get("notifications/noOfNotifications/" + _id);
+                const res = await axios.get("notifications/noOfNotifications/" + user?._id);
                 setNoOfNotifications(res.data?.notifications);
                 setNoOfNotifications2(res.data?.notifications);
             }
@@ -76,9 +60,19 @@ const Topbar = ({socket}) => {
         
         if(noOfNotifications.length){
             try{
-                await axios.put("notifications/noOfNotifications/empty/" + _id);
+                await axios.put("notifications/noOfNotifications/empty/" + user?._id);
             }
             catch(err){}
+        }
+    }
+
+    const logoutHandler = () =>{
+        console.log(window.location.href)
+        const logout = window.confirm("Are you sure, you want to logout?");
+        if(logout){
+            localStorage.clear();
+            window.location.href='http://localhost:3000/'
+            // window.location.reload();
         }
     }
 
@@ -96,10 +90,10 @@ const Topbar = ({socket}) => {
         </div>
         <div className="topbar-right">
             <div className="topbar-user">
-                <Link to={`/user/${_id}`} style={{textDecoration: 'none'}}>
+                <Link to={`/user/${user?._id}`} style={{textDecoration: 'none'}}>
                     <img src={dp} alt="" className="topbar-img" />
                 </Link>
-                <Link to={`/user/${_id}`} style={{textDecoration: 'none', color: 'black'}}>
+                <Link to={`/user/${user?._id}`} style={{textDecoration: 'none', color: 'black'}}>
                     <div className="topbar-username">{name}</div>
                 </Link>
             </div>

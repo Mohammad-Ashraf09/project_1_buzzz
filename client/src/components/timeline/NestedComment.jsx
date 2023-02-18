@@ -1,12 +1,13 @@
 import { format } from 'timeago.js';
 import React, { useEffect, useState } from 'react'
 import axios from 'axios';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 // user --> jisne post dali hai
 // currentUser --> jisne login kiya hua hai
 const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nestedCommentLength}) => {
     const [particularNestedComment, setParticularNestedComment] = useState({});
+    const [nestedCommentUser, setNestedCommentUser] = useState({});
     const [noOfLikes, setNoOfLikes] = useState(null);
     const [isLiked, setIsLiked] = useState(false);
     const [clr, setClr] = useState("#000");
@@ -15,6 +16,7 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
     const [tagName, setTagName] = useState("");
     const [textAfterTag, setTextAfterTag] = useState("");
     const [tagId, setTagId] = useState("");
+    const navigate = useNavigate();
 
     useEffect(()=>{
         const tagNameRefactor = async() =>{
@@ -32,10 +34,6 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
         }
         tagNameRefactor();
     },[]);
-    // console.log(textBeforeTag);
-    // console.log(tagName);
-    // console.log(textAfterTag);
-    // console.log(tagId);
     
     useEffect(()=>{
         const fetchParticularNestedComment = async() =>{
@@ -49,6 +47,14 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
         }
         fetchParticularNestedComment();
     },[]);
+
+    useEffect(()=>{
+        const fetchUser = async() =>{
+            const res = await axios.get(`/users/${particularNestedComment?.nestedId}`);
+            setNestedCommentUser(res.data);
+          }
+          fetchUser();
+    },[particularNestedComment]);
 
     const likeCommentHandler = async() =>{
         try{
@@ -81,20 +87,25 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
         catch(err){}
     }
 
+    const clickHandler = async(type) =>{
+        document.body.style.overflow = "auto";
+        if(type==='1')
+            navigate(`/user/${particularNestedComment.nestedId}`);
+        else
+            navigate(`/user/${tagId}`);
+    }
+
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = nestedComment?.nestedDp ? PF+nestedComment?.nestedDp : PF+"default-dp.png";
+    const DP = nestedCommentUser?.profilePicture ? PF+nestedCommentUser.profilePicture : PF+"default-dp.png";
+    const name = nestedCommentUser?.fname + " " + nestedCommentUser?.lname;
 
     return (
         <>
             <div className="nested-comment-list">
                 <div className="comment-top-left">
-                    <Link to={`/user/${particularNestedComment.nestedId}`} style={{textDecoration: 'none', color:'black'}}>
-                        <img src={DP} alt="" className="nested-comment-list-profile-img" />
-                    </Link>
+                    <img src={DP} alt="" className="nested-comment-list-profile-img" onClick={()=>clickHandler('1')}/>
                     <span className="nested-comment-username-date">
-                        <Link to={`/user/${particularNestedComment.nestedId}`} style={{textDecoration: 'none', color:'black'}}>
-                            <div className="nested-comment-username"> {nestedComment?.nestedName} </div>
-                        </Link>
+                        <div className="nested-comment-username" onClick={()=>clickHandler('1')}> {name} </div>
                         <div className="nested-comment-date"> {format(nestedComment?.date)} </div>
                     </span>
                 </div>
@@ -103,9 +114,7 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
                 {tagId ?
                     <>
                         {textBeforeTag}
-                        <Link to={`/user/${tagId}`} style={{textDecoration: 'none', color:'black'}}>
-                            <span className='nested-comment-tag'>{tagName}</span>
-                        </Link>
+                        <span className='nested-comment-tag'  onClick={()=>clickHandler('2')}>{tagName}</span>
                         <span>{textAfterTag}</span>
                     </>
                     :

@@ -11,7 +11,8 @@ import PreviewImage from '../PreviewImage';
 const CreateNewPost = () => {
   const [file, setFile] = useState([]);
   const [preview, setPreview] = useState([]);
-  const {user} = useContext(AuthContext);
+  const {user:currentUser} = useContext(AuthContext);
+  const [user, setUser] = useState({});
   const inputRef = createRef();
   const [message, setMessage] = useState("");
   const [showEmojis, setShowEmojis] = useState(false);
@@ -20,17 +21,31 @@ const CreateNewPost = () => {
   const [query, setQuery] = useState("");
   const [location, setLocation] = useState("");
   const [showLocationPostContainer, setShowLocationPostContainer] = useState(false)
-
   const [following, setFollowing] = useState([]);
   const [showFriendList, setShowFriendList] = useState(false);
   const [taggedFriends, setTaggedFriends] = useState([]);
   const [showTaggedFriendsPostContainer, setShowTaggedFriendsPostContainer] = useState(false);
   const [xyz, setXYZ] = useState(false);
 
-  
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const profile = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
-  const name = user.fname;
+  const profile = user?.profilePicture ? PF+user.profilePicture : PF+"default-dp.png";
+  const name = user?.fname;
+
+  useEffect(()=>{
+    const fetchUser = async() =>{
+      const res = await axios.get(`/users/${currentUser._id}`);
+      setUser(res.data);
+    }
+    fetchUser();
+  },[currentUser._id]);
+
+  useEffect(()=>{
+    const fetchFollowings = async() =>{
+      const res = await axios.get("users/"+currentUser._id);
+      setFollowing(res.data.followings);
+    }
+    fetchFollowings();
+  },[currentUser._id]);
 
   useEffect(()=>{              // this useEffect is for preview the file before uploading it
     if(file?.[0] && xyz){
@@ -41,14 +56,6 @@ const CreateNewPost = () => {
     }
   },[file]);
 
-  useEffect(()=>{
-    const fetchFollowings = async() =>{
-      const res = await axios.get("users/"+user._id);
-      setFollowing(res.data.followings);
-    }
-    fetchFollowings();
-  },[user._id]);
-
   const handleChange = (e)=>{
     setMessage(e.target.value);
   }
@@ -57,7 +64,7 @@ const CreateNewPost = () => {
     e.preventDefault();
     if(message || file){
       const newPost = {
-        userId: user._id,
+        userId: currentUser._id,
         desc: message,
         img: [],
         location: showLocationPostContainer ? location : "",
@@ -89,7 +96,7 @@ const CreateNewPost = () => {
       catch(err){}
   
       try{
-        await axios.put("users/"+user._id, {userId: user._id, totalPosts: user.totalPosts+1});    // to update the total post count by 1
+        await axios.put("users/"+currentUser._id, {userId: currentUser._id, totalPosts: user.totalPosts+1});    // to update the total post count by 1
       }
       catch(err){}
     }

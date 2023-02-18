@@ -14,9 +14,11 @@ import WhoLikedDisliked from '../WhoLikedDisliked';
 import Comment from "./Comment";
 
 const Timeline = ({post, isLik, isDisLik, socket}) => {
-
   const {_id, userId, createdAt, updatedAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
-  // console.log(likes);
+
+  const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
+  const [user, setUser] = useState({});
+  const [postUser, setPostUser] = useState({});                 // jis user ne post dali hai wo hai ye
 
   const [totalComment, setTotalComment] = useState(comments);
   const [numberOfComments, setNumberOfComments] = useState(comments.length);
@@ -26,12 +28,9 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
   const [disLik, setDisLik] = useState(dislikes.length);
   const [isDisLiked, setIsDisLiked] = useState(isDisLik);
   const [clr2, setClr2] = useState("");
-  const [user, setUser] = useState({});                 // jis user ne post dali hai wo hai ye
-  const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
   const [showComment, setShowComment] = useState(false);
   const [show3Dots, setShow3Dots] = useState(false);
   const [edit, setEdit] = useState(false);
-
   const [editedDone, setEditedDone] = useState(edited);
 
   const inputRef = createRef();
@@ -72,7 +71,33 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
   const [replyToName, setReplyToName] = useState("");
   const [replyToId, setReplyToId] = useState("");
 
-  // console.log(currentUser);
+
+  useEffect(()=>{
+    const fetchUser = async() =>{
+      const res = await axios.get(`/users/${currentUser._id}`);
+      setUser(res.data);
+    }
+    fetchUser();
+  },[currentUser._id]);
+
+  useEffect(()=>{
+    const fetchFollowings = async() =>{
+      const res = await axios.get("users/"+currentUser._id);
+      const arr = res.data.followings
+      setFollowing(arr);
+    }
+    fetchFollowings();
+  },[currentUser._id]);
+
+  useEffect(()=>{
+    const fetchPostUser = async() =>{
+      const res = await axios.get(`users/${userId}`);
+      setPostUser(res.data);
+      setClr(isLik ? "#417af5" : "rgb(108, 104, 104)");
+      setClr2(isDisLik ? "rgba(252, 5, 5,0.8)" : "rgb(108, 104, 104)");
+    }
+    fetchPostUser();
+  },[userId]);
 
   // fetching all active users from socket server
   useEffect(()=>{
@@ -81,34 +106,6 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
       setActiveUsers(data);
     });
   },[socket]);
-
-  useEffect(()=>{
-    const fetchFollowings = async() =>{
-      const res = await axios.get("users/"+currentUser._id);
-      const arr = res.data.followings
-      setFollowing(arr);
-    }
-    fetchFollowings();
-  },[currentUser._id]);
-
-  useEffect(()=>{
-    const fetchUser = async() =>{
-      const res = await axios.get(`users/${userId}`);
-      setUser(res.data);
-      setClr(isLik ? "#417af5" : "rgb(108, 104, 104)");
-      setClr2(isDisLik ? "rgba(252, 5, 5,0.8)" : "rgb(108, 104, 104)");
-    }
-    fetchUser();
-  },[userId]);
-
-  useEffect(()=>{
-    const fetchFollowings = async() =>{
-      const res = await axios.get("users/"+currentUser._id);
-      const arr = res.data.followings
-      setFollowing(arr);
-    }
-    fetchFollowings();
-  },[currentUser._id]);
 
   const handleDescChange = (e)=>{
     setMessage(e.target.value);
@@ -119,12 +116,12 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
   }
 
   const notificationHandler = async(type)=>{
-    if(currentUser._id !== user._id){
+    if(currentUser._id !== postUser?._id){
       const notification = {
-        senderId : currentUser._id,
-        name : currentUser.fname + " " + currentUser.lname,
-        avatar : currentUser.profilePicture,
-        receiverId : user._id,
+        senderId : user?._id,
+        name : user?.fname + " " + user?.lname,
+        avatar : user?.profilePicture,
+        receiverId : postUser?._id,
         postId: _id,
         type,
       }
@@ -144,7 +141,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
         const aa = async()=>{
           // console.log("bye.....")
           try{
-            await axios.put("notifications/noOfNotifications/"+ user._id);
+            await axios.put("notifications/noOfNotifications/"+ postUser?._id);
           }
           catch(err){}
         }
@@ -208,9 +205,9 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
     if(commentedText){
       const newComment = {
         commentId: Math.random().toString(),
-        dp: currentUser.profilePicture,
-        name: currentUser.fname + " " + currentUser.lname,
-        id: currentUser._id,
+        // dp: user?.profilePicture,
+        // name: user?.fname + " " + user?.lname,
+        id: user?._id,
         comment: commentedText,
         commentLikes: [],
         nestedComments: [],
@@ -260,9 +257,9 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
 
       const newNestedComment = {
         nestedCommentId: Math.random().toString(),
-        nestedDp: currentUser.profilePicture,
-        nestedName: currentUser.fname + " " + currentUser.lname,
-        nestedId: currentUser._id,
+        // nestedDp: user?.profilePicture,
+        // nestedName: user?.fname + " " + user?.lname,
+        nestedId: user?._id,
         nestedComment: text,
         nestedCommentLikes: [],
         date: new Date()
@@ -313,7 +310,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
       const remove = window.confirm("Are you sure, you want to remove this post?");
       if(remove){
         await axios.delete("posts/"+ _id);
-        await axios.put("users/"+currentUser._id, {userId: currentUser._id, totalPosts: currentUser.totalPosts-1});
+        await axios.put("users/"+currentUser._id, {userId: currentUser._id, totalPosts: user?.totalPosts-1});
         window.location.reload();
       }
     }
@@ -376,19 +373,19 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
   const reverseOrderComment = [...totalComment].reverse();       // last commented shown first
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const name = user.fname + ' ' + user.lname;
-  const DP = user.profilePicture ? PF + user.profilePicture : PF + "default-dp.png";
+  const name = postUser?.fname + ' ' + postUser?.lname;
+  const DP = postUser?.profilePicture ? PF + postUser.profilePicture : PF + "default-dp.png";
   return (
     <div className='timeline-post'>
       <div className="timeline-post-wrapper">
         <div className="post-top-section">
           <div className="post-top-left">
-            <Link to={`/user/${user._id}`}>
+            <Link to={`/user/${postUser?._id}`}>
               <img src={DP} alt="" className="post-profile-img" />
             </Link>
 
             <span className="post-username-date">
-              <Link to={`/user/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
+              <Link to={`/user/${postUser?._id}`} style={{textDecoration: 'none', color:'black'}}>
                 <div className="post-username"> {name} </div>
               </Link>
 
@@ -561,7 +558,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
                 <Comment
                   key={data.commentId}
                   commentId={data.commentId}
-                  user={user}
+                  user={postUser}
                   currentUser={currentUser}
                   numberOfComments={numberOfComments}
                   setNumberOfComments={setNumberOfComments}
@@ -577,7 +574,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
         )}
         
         <form className="comment-section">
-          <img className='comment-profile-img' src={PF+currentUser.profilePicture} alt="" />
+          <img className='comment-profile-img' src={PF+user?.profilePicture} alt="" />
           <textarea type="text" className="comment-input" placeholder='Write a comment...' value={commentedText} onChange={handleCommentChange} ref={inputRef2} />
           <div className="emoji-icon">
             <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForComment(!showEmojisForComment)}}></i>
@@ -664,7 +661,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
 
       {showParticularPost && <div className='blurr-div'>
         <ClickedPost
-          user={user}
+          user={postUser}
           currentUser={currentUser}
           DP={DP}
           name={name}

@@ -9,7 +9,6 @@ import { AuthContext } from '../context/AuthContext';
 const EditUserProfile = () => {
   const {user:currentUser} = useContext(AuthContext);
   const [user, setUser] = useState({});
-  const [allUsers, setAllUsers] = useState([]);
   const[formdata, setFormdata] = useState({});
   const navigate = useNavigate();
   const {username, bio, fname, lname, gender, DOB, email, phone, place, city, profilePicture, coverPicture, password} = user;
@@ -44,7 +43,6 @@ const EditUserProfile = () => {
     const fetchAllUsers = async() =>{
       const res = await axios.get("/users/");
       const allUsers = res.data
-      setAllUsers(allUsers);
       const usernameArray = allUsers.map(item => item.username)
       setUsernames(usernameArray);
     }
@@ -311,7 +309,7 @@ const EditUserProfile = () => {
 
   return (
     <>
-      <Topbar/>
+      <Topbar user={user}/>
 
       <form className="edit-profile" >
         <div className='edit-profile-wrapper'>

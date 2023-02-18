@@ -1,20 +1,6 @@
-import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react'
 import {Link} from "react-router-dom";
-import {AuthContext} from "../../context/AuthContext"
 
-const SmallProfile = () => {
-    const {user:currentUser} = useContext(AuthContext);
-    const [user, setUser] = useState({});
-
-    useEffect(()=>{
-        const fetchUser = async() =>{
-            const res = await axios.get(`/users/${currentUser._id}`);
-            setUser(res.data);
-        }
-        fetchUser();
-    },[]);
-
+const SmallProfile = ({user}) => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const profile = user?.profilePicture ? PF+user.profilePicture : PF+"default-dp.png";
     const cover = user?.coverPicture ? PF+user.coverPicture : PF+"default-cover.jpg";
@@ -22,7 +8,7 @@ const SmallProfile = () => {
 
     return (
         <div className='small-profile'>
-            <Link to={`/user/${currentUser._id}`} style={{textDecoration: 'none'}}>
+            <Link to={`/user/${user?._id}`} style={{textDecoration: 'none'}}>
                 <div className="small-profile-cover">
                     <img src={cover} alt="" className="cover-img" />
                     <img src={profile} alt="" className="user-img" />

@@ -12,59 +12,67 @@ import { AuthContext } from '../context/AuthContext';
 import {io} from "socket.io-client";
 
 const Feed = () => {
-  const {user} = useContext(AuthContext);
+  const {user:currentUser} = useContext(AuthContext);
+  const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [socket, setSocket] = useState(null);
 
   useEffect(()=>{
+    const fetchUser = async() =>{
+      const res = await axios.get(`/users/${currentUser._id}`);
+      setUser(res.data);
+    }
+    fetchUser();
+  },[currentUser._id]);
+
+  useEffect(()=>{
     const fetchPosts = async() =>{
-      const res = await axios.get("posts/timeline/"+user._id);
+      const res = await axios.get("posts/timeline/"+currentUser._id);
       setPosts(res.data.sort((post1, post2)=>{
         return new Date(post2.createdAt) - new Date(post1.createdAt);
       }));
     }
     fetchPosts();
-  },[user._id]);
+  },[currentUser._id]);
 
   useEffect(()=>{
     setSocket(io("ws://localhost:8100"));
   },[]);
 
   useEffect(()=>{
-    socket?.emit("addUser1", user._id);
-  },[socket, user._id])
-
-  //console.log(socket);
+    socket?.emit("addUser1", currentUser._id);
+  },[socket, currentUser._id])
 
   return (
     <>
-      <Topbar socket={socket} />
+      <Topbar user={user} socket={socket} />
       <div className="feed-container">
         <div className="leftbar">
-          <SmallProfile/>
+          <SmallProfile user={user}/>
           <Utility/>
         </div>
         <div className="timeline">
-          <CreateNewPost/>
+          <CreateNewPost currentUser={user}/>
           {/* create 1 new component of name Posts.jsx and call it inside Timeline.jsx and implement map there and only pass here <Timeline socket={socket} /> */}
           <div className="timeline-post-area">
             {posts.map((post)=>(
               <Timeline
                 key={post._id}
+                currentUser={user}
                 post={post}
-                isLik={post.likes.includes(user._id)}
-                isDisLik={post.dislikes.includes(user._id)}
+                isLik={post.likes.includes(currentUser._id)}
+                isDisLik={post.dislikes.includes(currentUser._id)}
                 socket={socket}
               />
             ))}
           </div>
         </div>
         <div className="rightbar">
-          <Contact user={user} socket={socket} />
-          <Suggestion socket={socket} />
+          <Contact user={currentUser} socket={socket}/>
+          <Suggestion socket={socket}/>
         </div>
       </div>
-      <Bottombar/>
+      <Bottombar user={user}/>
     </>
   )
 }

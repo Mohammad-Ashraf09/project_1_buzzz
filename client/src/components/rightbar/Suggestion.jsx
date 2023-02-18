@@ -4,11 +4,11 @@ import { AuthContext } from '../../context/AuthContext';
 import Sugg from './Sugg';
 
 const Suggestion = ({socket}) => {
+    const {user} = useContext(AuthContext);
     const [clr, setClr] = useState("#000");
     const [allUsers, setAllUsers] = useState([]);
     const [following, setFollowing] = useState([]);
     const [onlineUsers, setOnlineUsers] = useState([]);
-    const {user} = useContext(AuthContext);
     const [query, setQuery] = useState("");
 
     useEffect(()=>{

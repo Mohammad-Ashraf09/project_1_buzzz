@@ -124,7 +124,7 @@ const Messenger = () => {
 
   return (
     <>
-      <Topbar/>
+      <Topbar user={user}/>
       <div className='messenger'>
         <div className="messenger-leftbar">
           <div className="messenger-leftbar-wrapper">

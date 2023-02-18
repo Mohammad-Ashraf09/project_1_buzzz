@@ -202,7 +202,7 @@ const UserProfile = () => {
 
   return (
     <>
-      <Topbar />
+      <Topbar user={currentUser}/>
       <div className="user">
         <div className="user-friend-conatiner">
           <div className="user-container">

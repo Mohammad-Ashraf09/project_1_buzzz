@@ -173,8 +173,6 @@ const ClickedPost = ({
         if(commentedText){
             const newComment = {
                 commentId: Math.random().toString(),
-                dp: currentUser.profilePicture,
-                name: currentUser.fname + " " + currentUser.lname,
                 id: currentUser._id,
                 comment: commentedText,
                 commentLikes: [],
@@ -219,8 +217,6 @@ const ClickedPost = ({
 
             const newNestedComment = {
                 nestedCommentId: Math.random().toString(),
-                nestedDp: currentUser.profilePicture,
-                nestedName: currentUser.fname + " " + currentUser.lname,
                 nestedId: currentUser._id,
                 nestedComment: text,
                 nestedCommentLikes: [],

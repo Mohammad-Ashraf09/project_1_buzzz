@@ -24,7 +24,7 @@ const ConversationsForMobile = () => {
 
   return (
     <>
-        <Topbar/>
+        <Topbar user={user}/>
         <div className="conversation-div">
             {conversations.map((c)=>(
             <div  key={c._id} >
