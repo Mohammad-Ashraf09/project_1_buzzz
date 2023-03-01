@@ -11,6 +11,15 @@ const MessageSchema = new mongoose.Schema(
     text:{
         type: String,
     },
+    replyForId:{
+        type: String,
+    },
+    replyForText:{
+        type: String,
+    },
+    isSameDp:{
+        type: Boolean,
+    },
   },
   { timestamps: true }
 );

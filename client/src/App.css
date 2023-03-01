@@ -2501,26 +2501,34 @@ input:valid[focused="true"] ~ .tickkk{
 /*########################################### Messenger page #############################################*/
 
 .messenger{
-    height: calc(100vh - 50px);
+    height: 671px;
     display: flex;
     background-color: #03bfbc;
 }
-.messenger-leftbar{
+.messenger-left{
     flex: 3.2;
 }
-.messenger-chat-area{
+.messenger-center{
     flex: 5.6;
 }
-.messenger-rightbar{
+.messenger-right{
     flex: 3.2;
 }
-.messenger-leftbar-wrapper, .messenger-chat-area-wrapper, .messenger-rightbar-wrapper{
+.messenger-left-wrapper, .messenger-right-wrapper{
     padding: 20px 10px;
+    height: 100%;
+    box-sizing: border-box;
+}
+.messenger-center-wrapper{
+    padding: 0 10px;
+    height: 100%;
+    box-sizing: border-box;
 }
 
 /*--------------------- messenger leftside --------------------------*/
-.messenger-input{
+.messenger-search{
     width: 80%;
+    height: 4%;
     padding: 4px 10px;
     border: none;
     border-bottom: 2px solid gray;
@@ -2528,20 +2536,22 @@ input:valid[focused="true"] ~ .tickkk{
     color: black;
     font-size: 16px;
     margin-bottom: 15px;
+    box-sizing: border-box;
 }
-.messenger-input:focus{
+.messenger-search:focus{
     outline: none;
 }
-.messenger-input::placeholder{
+.messenger-search::placeholder{
     color: black;
 }
 .conversation-div{
     padding: 10px 0;
     width: 84%;
-    height: 78.5vh;
+    height: 94%;
     overflow: auto;
     border-radius: 8px;
     background-color: #0c9a97;
+    box-sizing: border-box;
 }
 .conversation-div::-webkit-scrollbar{
     width: 20px;
@@ -2565,13 +2575,27 @@ input:valid[focused="true"] ~ .tickkk{
     width: 90%;
     cursor: pointer;
     border-radius: 6px;
+    position: relative;
+}
+.clickedConver{
+    background-color: #05aaa7;
+}
+.dp-name{
+    width: 100%;
+    display: flex;
+    align-items: center;
+}
+.dp-badge{
+    position: relative;
+}
+.message-badge{
+    right: 15px;
 }
 .conversation:hover{
     background-color: #05aaa7;
     transition: all 0.4s ease;
 }
 .conversation-dp{
-    flex: 1;
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -2579,28 +2603,73 @@ input:valid[focused="true"] ~ .tickkk{
     margin-right: 20px;
 }
 .conversation-name{
-    flex: 8;
     font-weight: 500;
 }
-.delete-icon{
+.three-dot-icon{
     display: none;
+    position: absolute;
+    right: 4px;
+    top: 4px;
 }
-.conversation:hover > .delete-icon{
-    flex: 3;
+.conversation:hover > .three-dot-icon{
     display: flex;
     justify-content: center;
     align-items: center;
-    height: 40px;
-    color: rgb(164, 7, 7);
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    background-color: var(--bg-color);
+}
+.three-dot-functionality{
+    width: 80px;
+    height: auto;
+    border-radius: 4px;
+    position: absolute;
+    right: 4px;
+    top: 4px;
+    z-index: 53454;
+    background-color: rgb(243, 245, 243);
+    text-align: center;
+    box-shadow: 6px 6px 10px var(--shadow-color);
+}
+.three-dot-functionality-wrapper{
+    margin: 12px 0;
 }
 
 /*--------------------- messenger chat area --------------------------*/
-.chat-area-top{
-    margin: 20px 0 10px 0;
-    height: 72vh;
-    overflow: auto;
+.clear-chat{
+    height: 6%;
+    text-align: end;
+    padding-top: 12px;
+    padding-bottom: 5px;
+    position: relative;
+    box-sizing: border-box;
 }
-.chat-area-top::-webkit-scrollbar{
+.clear-chat-icon{
+    cursor: pointer;
+    color: rgb(245, 4, 4);
+}
+.clear-chat-text{
+    display: none;
+    font-size: 13px;
+    background-color: var(--bg-color);
+    position: absolute;
+    right: -25px;
+    bottom: -20px;
+    padding: 3px 6px;
+    border-radius: 4px;
+}
+.clear-chat-icon:hover + .clear-chat-text{
+    display: flex;
+    z-index: 5;
+}
+.chat-view-area{
+    margin-bottom: 10px;
+    height: calc(81% - 80px);
+    overflow: auto;
+    box-sizing: border-box;
+}
+.chat-view-area::-webkit-scrollbar{
     display: none;
 }
 .message{
@@ -2616,49 +2685,170 @@ input:valid[focused="true"] ~ .tickkk{
     height: 32px;
     border-radius: 50%;
     object-fit: cover;
-    margin-right: 10px;
+    margin-right: 6px;
+}
+.my-img{
+    margin-right: 0;
+    margin-left: 6px;
 }
 .message-text{
     margin: 0;
-    background-color: rgba(188, 187, 187, 0.7);
-    padding: 10px 18px;
-    border-radius: 20px;
+    padding: 8px 16px;
     max-width: 320px;
     overflow: auto;
-}    
+    position: relative;
+}
+.replied{
+    width: 280px;
+    padding: 8px;
+}
 .message-text::-webkit-scrollbar{
     display: none;
+}
+.replied-div{
+    display: flex;
+    width: 280px;
+    max-height: 80px;
+    overflow: hidden;
+    background-color: #78e5e3;
+    padding: 6px;
+    box-sizing: border-box;
+    border-radius: 6px;
+    margin-bottom: 4px;
+    cursor: pointer;
+}
+.replied-img{
+    height: 24px;
+    width: 24px;
+    border-radius: 50%;
+    object-fit: cover;
 }
 .msg-text{
     margin: 0;
     font-size: 14px;
     line-height: 18px;
+    white-space: pre-line;     /* for rendering the 'Enter' white space on browser */
+}
+.msg-text-margin-left{
+    margin-left: 6px;
+}
+.for-replied{
+    margin-left: 6px;
 }
 .message-time{
     text-align: end;
-    font-size: 12px;
+    font-size: 10px;
     color: var(--grey-dark);
-    margin-top: 5px;
+    cursor: default;
 }
-
+.message-functionality{
+    font-size: 10px;
+    height: 14px;
+    width: 14px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: var(--bg-color);
+    cursor: pointer;
+    position: absolute;
+    display: none;
+    transition: all 0.3s linear;
+}
+.message-functionality-my{
+    top: 2px;
+    right: 2px;
+}
+.message-functionality-other{
+    top: 2px;
+    left: 2px;
+}
+.message-text:hover > .message-functionality{
+    display: flex;
+}
+.message-functionality:hover{
+    width: 80px;
+    border-radius: 50px;
+}
+.delete-reply-div{
+    width: 80%;
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    font-size: 10px;
+}
+.functionality:hover{
+    transform: scale(1.2);
+}
 .message.my{
     align-items: flex-end;
 }
+.message.other .message-text{
+    border-top-right-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
+    background-color: rgba(188, 187, 187, 0.7);
+}
 .message.my .message-text{
+    border-top-left-radius: 16px;
+    border-bottom-right-radius: 16px;
+    border-bottom-left-radius: 16px;
     background-color: #0c9a97;
 }
 
-.chat-area-bottom{
+.reply-message-div{
+    height: 80px;
+    width: 91%;
+    /* border-radius: 8px; */
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
+    background-color: #51cac8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.reply-message{
+    height: 66px;
+    width: 98%;
+    border-radius: 6px;
+    background-color: #78e5e3;
+    padding: 8px 20px 8px 8px;
+    box-sizing: border-box;
+    overflow: hidden;
+    display: flex;
+    position: relative;
+}
+.reply-message-img{
+    height: 28px;
+    width: 28px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.reply-message-text{
+    margin-left: 6px;
+    color: rgb(73, 71, 71);
+    font-size: 13px;
+    white-space: pre-line;     /* for rendering the 'Enter' white space on browser */
+}
+.reply-message-cancel{
+    color: rgb(73, 71, 71);
+    font-size: 12px;
+    position: absolute;
+    top: 2px;
+    right: 4px;
+    cursor: pointer;
+}
+.input-chat{
     display: flex;
     align-items: center;
 }
-.chat-area-input{
+.type-message{
     background-color: var(--bg-color);
     width: 91%;
-    height: 80px;
     border: 2px solid rgba(218, 227, 218, 0);
     outline: none;
-    border-radius: 8px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
     padding: 10px 15px;
     margin-right: 10px;
     resize: none;
@@ -2666,10 +2856,10 @@ input:valid[focused="true"] ~ .tickkk{
     font-size: 15px;
     box-sizing: border-box;
 }
-.chat-area-input:focus{
+.type-message:focus{
     border: 2px solid #0c9a97;
 }
-.chat-area-input::-webkit-scrollbar{
+.type-message::-webkit-scrollbar{
     display: none;
 }
 .message-send-icon{
@@ -2715,11 +2905,12 @@ input:valid[focused="true"] ~ .tickkk{
     margin-left: 45px;
     padding: 10px 0;
     width: 84%;
-    height: 72vh;
+    height: 86.5%;
     overflow: auto;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     background-color: #0c9a97;
+    box-sizing: border-box;
 }
 .online-friend-div::-webkit-scrollbar{
     width: 20px;
@@ -3916,7 +4107,7 @@ input:valid[focused="true"] ~ .tickkk{
     .message-text{
         max-width: 200px;
     }
-    .chat-area-input{
+    .type-message{
         width: 87%;
     }
     .no-conversation-text{
@@ -4204,7 +4395,7 @@ input:valid[focused="true"] ~ .tickkk{
     .message-text{
         max-width: 200px;
     }
-    .chat-area-input{
+    .type-message{
         width: 87%;
     }
     .no-conversation-text{
