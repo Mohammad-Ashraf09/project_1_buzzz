@@ -5,6 +5,8 @@ const Conversation = require("../model/Conversation");
 router.post("/", async(req, res)=>{
     const newConversation = new Conversation({
         members: [req.body.senderId, req.body.receiverId],
+        // lastMsgText: "",                             // apply it mobile view
+        // lastMsgSenderId: "",
     });
 
     try{
@@ -27,6 +29,18 @@ router.get("/:userId", async(req, res)=>{
         res.status(500).json(err);
     }
 });
+
+// update conversation (last mag and sender id)
+// router.put("/update/:id", async(req, res)=>{                          // apply it mobile view
+//     try {
+//         await Conversation.findByIdAndUpdate(req.params.id, {
+//           $set: req.body,
+//         });
+//         res.status(200).json("Conversation has been updated");
+//     } catch (err) {
+//         return res.status(500).json(err);
+//     }
+// });
 
 //delete a member from list
 router.delete("/delete/:id", async (req, res) => {

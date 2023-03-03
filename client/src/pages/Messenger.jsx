@@ -22,6 +22,7 @@ const Messenger = () => {
   const [dp2, setDp2] = useState("");
   const [isReply, setIsReply] = useState(false);
   const [replyFor, setReplyFor] = useState({});
+  // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
 
   // console.log('conversations--------------', conversations)
   // console.log('currentChat--------------', currentChat)
@@ -120,6 +121,16 @@ const Messenger = () => {
       }catch(err){
         console.log(err);
       }
+
+      // try{                                 // apply it mobile view
+      //   await axios.put("/conversations/update/"+currentChat._id, {lastMsgText: newMessage, lastMsgSenderId: user._id,});
+      // }
+      // catch(err){
+      //   console.log(err);
+      // }
+
+      // setIsNewMsg(!isNewMsg);
+      // setCurrentChat({...currentChat, lastMsgText: newMessage});
     }
   };
 
@@ -174,9 +185,11 @@ const Messenger = () => {
                   conversation={c}
                   setConversations={setConversations}
                   setCurrentChat={setCurrentChat}
+                  // currentChat={currentChat}                          // apply it mobile view
                   currentUser={user}
                   setIsReply={setIsReply}
                   setReplyFor={setReplyFor}
+                  // isNewMsg={isNewMsg}                          // apply it mobile view
                 />
               ))}
             </div>

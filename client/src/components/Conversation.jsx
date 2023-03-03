@@ -1,9 +1,11 @@
-import axios from 'axios';
 import React, { useEffect, useState } from 'react'
+import axios from 'axios';
+// import { format } from 'timeago.js';                  // apply it mobile view
 
-const Conversation = ({index, conversation, setConversations, setCurrentChat, currentUser, setIsReply, setReplyFor}) => {
+const Conversation = ({index, conversation, setConversations, setCurrentChat, currentChat, currentUser, setIsReply, setReplyFor, isNewMsg}) => {
   const [show3Dots, setShow3Dots] = useState(false);
   const [user, setUser] = useState({});
+  // const [isNew, setIsNew] = useState("");              // apply it mobile view
 
   useEffect(()=>{
     const friendId = conversation.members.find(m=>m !== currentUser._id);
@@ -17,7 +19,16 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, cu
       }
     }
     getUser();
-  },[currentUser, conversation])
+
+    // if(currentChat?.members.includes(friendId))              // apply it mobile view
+    //   setIsNew(currentChat.lastMsgText);
+  },[currentUser, conversation]);
+
+  // useEffect(()=>{                                              // apply it mobile view
+  //   const friendId = conversation.members.find(m=>m !== currentUser._id);
+  //   if(currentChat?.members.includes(friendId))
+  //     setIsNew(currentChat.lastMsgText);
+  // },[isNewMsg]);
 
   const conversationClickHandler = () => {
     const collection = document.querySelectorAll('.conversation');
@@ -32,6 +43,7 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, cu
     setCurrentChat(conversation);
     setIsReply(false);
     setReplyFor({});
+    // setIsNew("");                       // apply it mobile view
   }
 
   const deleteHandler = async(e)=>{
@@ -68,7 +80,14 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, cu
           <img className='conversation-dp' src={DP} alt="" />
           <span className="topbar-icon-badge message-badge">1</span>
         </div>
-        <span className='conversation-name'>{name}</span>
+          <span className='conversation-name'>{name}</span>
+        {/* <div className='name-lastMsg-time'>                              // apply it mobile view
+          <div className='name-time'>
+            <div className='conversation-name'>{name}</div>
+            <div className='lastMsgTime'>{format(conversation?.updatedAt)}</div>
+          </div>
+          <div className='lastMsgText'>{isNew ? isNew : conversation?.lastMsgText}</div>
+        </div> */}
       </div>
 
       <div className="three-dot-icon" onClick={()=>{setShow3Dots(!show3Dots)}}>
