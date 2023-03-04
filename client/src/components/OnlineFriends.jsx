@@ -7,7 +7,7 @@ const OnlineFriends = ({onlineUsers, follow, user, conversations, setCurrentChat
   
   const clickHandler = async() =>{
     const collection = document.querySelectorAll('.conversation');     // this comes from Conversation.jsx
-    const isPresent = conversations.map((item)=>item.members.includes(follow.id));
+    const isPresent = conversations.map((item)=>item.IDs.includes(follow.id));
 
     if(isPresent.includes(true)){
       isPresent.map((item,idx)=>{
@@ -30,7 +30,12 @@ const OnlineFriends = ({onlineUsers, follow, user, conversations, setCurrentChat
         const addToConversation = window.confirm("Do you want to start Conversation with this user?");
         if(addToConversation){
           try{
-            await axios.post("/conversations/", {senderId: user._id, receiverId: follow.id});
+            await axios.post("/conversations/", {
+              senderId: user._id,
+              receiverId: follow.id,
+              senderData: {id: user._id, dp: user.profilePicture, name: user.fname+" "+user.lname},
+              receiverData: {id: follow.id, dp: follow.dp, name: follow.name}
+            });
             window.location.reload();
           }
           catch(err){

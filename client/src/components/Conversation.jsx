@@ -1,34 +1,8 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import axios from 'axios';
-// import { format } from 'timeago.js';                  // apply it mobile view
 
-const Conversation = ({index, conversation, setConversations, setCurrentChat, currentChat, currentUser, setIsReply, setReplyFor, isNewMsg}) => {
+const Conversation = ({index, conversation, setConversations, setCurrentChat, setIsReply, setReplyFor}) => {
   const [show3Dots, setShow3Dots] = useState(false);
-  const [user, setUser] = useState({});
-  // const [isNew, setIsNew] = useState("");              // apply it mobile view
-
-  useEffect(()=>{
-    const friendId = conversation.members.find(m=>m !== currentUser._id);
-
-    const getUser= async()=>{
-      try{
-        const res = await axios("/users/"+friendId);
-        setUser(res.data);
-      }catch(err){
-        console.log(err);
-      }
-    }
-    getUser();
-
-    // if(currentChat?.members.includes(friendId))              // apply it mobile view
-    //   setIsNew(currentChat.lastMsgText);
-  },[currentUser, conversation]);
-
-  // useEffect(()=>{                                              // apply it mobile view
-  //   const friendId = conversation.members.find(m=>m !== currentUser._id);
-  //   if(currentChat?.members.includes(friendId))
-  //     setIsNew(currentChat.lastMsgText);
-  // },[isNewMsg]);
 
   const conversationClickHandler = () => {
     const collection = document.querySelectorAll('.conversation');
@@ -43,7 +17,6 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, cu
     setCurrentChat(conversation);
     setIsReply(false);
     setReplyFor({});
-    // setIsNew("");                       // apply it mobile view
   }
 
   const deleteHandler = async(e)=>{
@@ -69,9 +42,8 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, cu
   }
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const name = user?.fname ? user.fname+" "+user.lname : "";
-  const DP = user?.profilePicture ? PF+user.profilePicture : PF+"default-dp.png";
-  // console.log(conversation)
+  const name = conversation ? conversation.members[0].name : "";
+  const DP = conversation ? PF+conversation.members[0].dp : PF+"default-dp.png";
 
   return (
     <div id={index} className='conversation'>
@@ -80,14 +52,7 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, cu
           <img className='conversation-dp' src={DP} alt="" />
           <span className="topbar-icon-badge message-badge">1</span>
         </div>
-          <span className='conversation-name'>{name}</span>
-        {/* <div className='name-lastMsg-time'>                              // apply it mobile view
-          <div className='name-time'>
-            <div className='conversation-name'>{name}</div>
-            <div className='lastMsgTime'>{format(conversation?.updatedAt)}</div>
-          </div>
-          <div className='lastMsgText'>{isNew ? isNew : conversation?.lastMsgText}</div>
-        </div> */}
+        <span className='conversation-name'>{name}</span>
       </div>
 
       <div className="three-dot-icon" onClick={()=>{setShow3Dots(!show3Dots)}}>

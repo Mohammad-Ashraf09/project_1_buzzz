@@ -19,6 +19,7 @@ const Messenger = () => {
   const [following, setFollowing] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [query, setQuery] = useState("");
+  const [query2, setQuery2] = useState("");
   const [dp2, setDp2] = useState("");
   const [isReply, setIsReply] = useState(false);
   const [replyFor, setReplyFor] = useState({});
@@ -46,7 +47,7 @@ const Messenger = () => {
   },[socket])
 
   useEffect(()=>{
-    arrivalMessage && currentChat?.members.includes(arrivalMessage.sender) && setMessages((prev)=> [...prev, arrivalMessage]);
+    arrivalMessage && currentChat?.IDs.includes(arrivalMessage.sender) && setMessages((prev)=> [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
   
   useEffect(()=>{
@@ -62,7 +63,17 @@ const Messenger = () => {
     const getConversations = async()=>{
       try{
         const res = await axios.get("/conversations/"+user._id);  // logged in user ke jitne bhi conversations hai sab return karega
-        setConversations(res.data);
+        const data = res.data.map((item)=>{
+          if(item.members[0].id===user._id){
+            item.members.splice(0,1);
+            return item;
+          }
+          else{
+            item.members.splice(1,1);
+            return item;
+          }
+        });
+        setConversations(data);
       }
       catch(err){
         console.log(err);
@@ -80,14 +91,7 @@ const Messenger = () => {
         }catch(err){
           console.log(err);
         }
-  
-        let otherUser = currentChat?.members.filter((id)=>id !== user._id);
-        try{
-          const res = await axios("/users/"+otherUser);
-          setDp2(res.data.profilePicture);
-        }catch(err){
-          console.log(err);
-        }
+        setDp2(currentChat?.members[0].dp);
       }
     };
     getMessages();
@@ -105,10 +109,9 @@ const Messenger = () => {
         isSameDp: replyFor.isSameDp,
       };
 
-      const receiverId = currentChat.members.find(member => member !== user._id);
       socket?.emit("sendMessage",{
         senderId : user._id,
-        receiverId,
+        receiverId: currentChat.members[0].id,
         text : newMessage,
       })
   
@@ -176,20 +179,17 @@ const Messenger = () => {
       <div className='messenger'>
         <div className="messenger-left">
           <div className="messenger-left-wrapper">
-            <input className='messenger-search' type="text" placeholder='Search for chat' />
+            <input className='messenger-search' type="text" placeholder='Search for chat' onChange={(e)=>setQuery2(e.target.value)}/>
             <div className="conversation-div">
-              {conversations.map((c, index)=>(
+              {conversations.filter((x)=>x.members[0].name?.toLowerCase().includes(query2)).map((c, index)=>(
                 <Conversation
                   key={c._id}
                   index={index}
                   conversation={c}
                   setConversations={setConversations}
                   setCurrentChat={setCurrentChat}
-                  // currentChat={currentChat}                          // apply it mobile view
-                  currentUser={user}
                   setIsReply={setIsReply}
                   setReplyFor={setReplyFor}
-                  // isNewMsg={isNewMsg}                          // apply it mobile view
                 />
               ))}
             </div>

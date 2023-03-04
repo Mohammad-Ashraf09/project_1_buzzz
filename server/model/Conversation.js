@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 
 const ConversationSchema = new mongoose.Schema(
   {
+    IDs:{
+        type: Array,
+    },
     members:{
         type: Array,
     },
