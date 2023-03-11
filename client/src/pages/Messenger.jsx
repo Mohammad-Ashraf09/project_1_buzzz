@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
+import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
 import Conversation from '../components/Conversation';
 import Message from '../components/Message';
 import OnlineFriends from '../components/OnlineFriends';
@@ -6,6 +6,8 @@ import Topbar from '../components/Topbar';
 import { AuthContext } from '../context/AuthContext';
 import axios from "axios";
 import {io} from "socket.io-client";
+import EmojiContainer from '../components/emoji/EmojiContainer';
+import PreviewMedia from '../components/PreviewMedia';
 
 const Messenger = () => {
   const [conversations, setConversations] = useState([]);
@@ -23,6 +25,12 @@ const Messenger = () => {
   const [dp2, setDp2] = useState("");
   const [isReply, setIsReply] = useState(false);
   const [replyFor, setReplyFor] = useState({});
+  const [showEmojis, setShowEmojis] = useState(false);
+  const inputRef = createRef();
+  const [cursorPosition, setCursorPosition] = useState();
+  const [file, setFile] = useState([]);
+  const [xyz, setXYZ] = useState(false);
+  const [preview, setPreview] = useState([]);
   // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
 
   // console.log('conversations--------------', conversations)
@@ -99,15 +107,34 @@ const Messenger = () => {
 
   const submitHandler = async(e)=>{
     e.preventDefault();
-    if(newMessage){
+    if(newMessage || file.length){
       const message={
         sender: user._id,
         text: newMessage,
+        media: [],
         conversationId: currentChat._id,
         replyForId: replyFor.id ? replyFor.id : "",
         replyForText: replyFor.text ? replyFor.text : "",
         isSameDp: replyFor.isSameDp,
       };
+
+      if(file.length){
+        file.map((image)=>{
+          const uploadFile = async() =>{
+            const data = new FormData();
+            const fileName = Date.now() + image.name;
+            data.append("name", fileName)
+            data.append("file", image)
+            message.media.push(fileName);
+            try{
+              await axios.post("/upload", data)        // to upload photo into local storage
+            }catch(err){
+              console.log(err)
+            }
+          }
+          uploadFile();
+        })
+      }
 
       socket?.emit("sendMessage",{
         senderId : user._id,
@@ -134,6 +161,9 @@ const Messenger = () => {
 
       // setIsNewMsg(!isNewMsg);
       // setCurrentChat({...currentChat, lastMsgText: newMessage});
+      setShowEmojis(false);
+      setPreview([]);
+      setFile([]);
     }
   };
 
@@ -156,6 +186,15 @@ const Messenger = () => {
     });
   },[socket, onlineUsers]);
 
+  useEffect(()=>{              // this useEffect is for preview the file before uploading it
+    if(file?.[0] && xyz){
+      const len = preview.length
+      const objectUrl = URL.createObjectURL(file?.[len])
+      setPreview((prev)=>[...prev, objectUrl])
+      // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
+    }
+  },[file]);
+
   const clearChatHandler = async() => {
     const confirm = window.confirm('Are You Sure, want to clear chat');
     if(confirm){
@@ -166,6 +205,13 @@ const Messenger = () => {
         console.log(err);
       }
       setMessages([]);
+    }
+  }
+
+  const fileHandler = (e) =>{
+    if(e.target.files[0]){
+      setXYZ(true);
+      setFile((prev)=>[...prev, e.target.files[0]]);
     }
   }
 
@@ -209,7 +255,7 @@ const Messenger = () => {
             {
               currentChat ?
               <>
-                <div className="chat-view-area" style={{height: !isReply ? '81%' : ''}}>
+                <div className="chat-view-area" style={{height: (isReply || preview?.length>0) ? '' : '81%'}}>
                   {messages.map((m)=>(
                     <div  key={m._id} ref={scrollRef}>
                       <Message
@@ -233,14 +279,43 @@ const Messenger = () => {
                       <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
                     </div>
                   </div>}
+
+                  {preview?.length>0 && <div className='reply-message-div media-div'>
+                    <div className='reply-message'>
+                      {preview.map((media, index)=>(
+                        <PreviewMedia
+                          key={index}
+                          idx={index}
+                          media={media}
+                          setPreview={setPreview}
+                          file={file}
+                          setFile={setFile}
+                          setXYZ={setXYZ}
+                        />
+                      ))}
+                    </div>
+                  </div>}
+
                   <div className='input-chat'>
                     <textarea
                       className='type-message'
                       onChange={(e) => setNewMessage(e.target.value)}
                       value={newMessage}
                       placeholder='Type your message here...'
-                      style={{borderRadius: !isReply ? '8px' : ''}}
+                      ref={inputRef}
+                      style={{borderRadius: (isReply || preview?.length>0) ? '' : '8px'}}
                     ></textarea>
+
+                    <div className="emoji-media-div">
+                      <label htmlFor="file">
+                        {/* <i className="fa-solid fa-paperclip icon"></i> */}
+                        <i className="fa-solid fa-photo-film icon"></i>
+                        <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file.length!==9 && fileHandler}/>
+                      </label>
+                      <div className="emoji-div">
+                        <i className="fa-regular fa-face-laugh icon" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
+                      </div>
+                    </div>
 
                     <div className="message-send-icon">
                       <i className="fa-solid fa-paper-plane" onClick={submitHandler} ></i>
@@ -276,6 +351,17 @@ const Messenger = () => {
         </div>
 
       </div>
+
+      {showEmojis &&
+        <EmojiContainer
+          inputRef={inputRef}
+          setMessage={setNewMessage}
+          message={newMessage}
+          setCursorPosition={setCursorPosition}
+          cursorPosition={cursorPosition}
+        />
+      }
+
     </>
   )
 }

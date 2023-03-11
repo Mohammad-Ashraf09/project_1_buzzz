@@ -2740,6 +2740,33 @@ input:valid[focused="true"] ~ .tickkk{
     border-radius: 50%;
     object-fit: cover;
 }
+.message-image{
+    width: 280px;
+    height: auto;
+    border-radius: 6px;
+    object-fit: cover;
+    cursor: pointer;
+}
+.message-image-two-three{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    font-weight: 400;
+    color: #fff;
+}
+.message-image-four{
+    height: 284px;
+}
+.message-image-four-half{
+    display: flex;
+    justify-content: space-between;
+    margin-top: 4px;
+}
+.image-two-in-line{
+    width: 138px;
+    height: 138px;
+}
 .msg-text{
     margin: 0;
     font-size: 14px;
@@ -2757,6 +2784,12 @@ input:valid[focused="true"] ~ .tickkk{
     font-size: 10px;
     color: var(--grey-dark);
     cursor: default;
+}
+.message-time-for-image{
+    color: #fff;
+    position: absolute;
+    right: 15px;
+    bottom: 15px;
 }
 .message-functionality{
     font-size: 10px;
@@ -2824,6 +2857,27 @@ input:valid[focused="true"] ~ .tickkk{
     justify-content: center;
     align-items: center;
 }
+.review-pic-div{
+    position: relative;
+}
+.review-pic{
+    height: 50px;
+    width: 50px;
+    object-fit: cover;
+    margin-right: 12px;
+}
+.review-pic-cancel-div{
+    position: absolute;
+    top: -6px;
+    right: 6px;
+    font-size: 9px;
+    background-color: red;
+    border: 2px solid #78e5e3;
+    padding: 1px 4px;
+    border-radius: 50%;
+    box-sizing: border-box;
+    cursor: pointer;
+}
 .reply-message{
     height: 66px;
     width: 98%;
@@ -2858,6 +2912,7 @@ input:valid[focused="true"] ~ .tickkk{
 .input-chat{
     display: flex;
     align-items: center;
+    position: relative;
 }
 .type-message{
     background-color: var(--bg-color);
@@ -2866,7 +2921,7 @@ input:valid[focused="true"] ~ .tickkk{
     outline: none;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
-    padding: 10px 15px;
+    padding: 10px 30px 10px 15px;
     margin-right: 10px;
     resize: none;
     font-family: 'Franklin Gothic Medium';
@@ -2878,6 +2933,18 @@ input:valid[focused="true"] ~ .tickkk{
 }
 .type-message::-webkit-scrollbar{
     display: none;
+}
+.emoji-media-div{
+    position: absolute;
+    top: 8px;
+    right: 65px;
+}
+.emoji-div{
+    margin-top: 4px;
+}
+.icon{
+    color: rgb(87, 87, 87);
+    cursor: pointer;
 }
 .message-send-icon{
     background-color: var(--bg-color);
@@ -2903,6 +2970,61 @@ input:valid[focused="true"] ~ .tickkk{
     font-weight: 700;
     color: rgb(119, 206, 201);
     cursor: default;
+}
+
+.clicked-media-container{
+    height: 600px;
+    width: 850px;
+    background-color: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+}
+.clicked-media-top{
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 10px;
+    padding: 8px;
+    box-sizing: border-box;
+}
+.clicked-media{
+    width: 94%;
+    height: 500px;
+}
+.clicked-img{
+    width: 100%;
+    border-radius: 6px;
+    background-position: center;
+    background-size: cover;
+    object-fit: cover;
+    position: relative;
+}
+.media-count{
+    position: absolute;
+    z-index: 5;
+    top: 64px;
+    right: 34px;
+    color: #fff;
+    background-color: rgba(150, 150, 150, 0.6);
+    padding: 0 10px;
+    border-radius: 25px;
+    font-size: 13px;
+    cursor: default;
+}
+.left-arrow-media{
+    left: 40px;
+}
+.right-arrow-media{
+    right: 40px;
+}
+.clicked-media:hover > .left-arrow{
+    display: block;
+}
+.clicked-media:hover > .right-arrow{
+    display: block;
 }
 
 /*--------------------- messenger rightside online friends--------------------------*/

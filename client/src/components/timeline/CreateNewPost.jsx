@@ -62,7 +62,7 @@ const CreateNewPost = () => {
 
   const submitHandler = async(e) =>{
     e.preventDefault();
-    if(message || file){
+    if(message || file.length){
       const newPost = {
         userId: currentUser._id,
         desc: message,
