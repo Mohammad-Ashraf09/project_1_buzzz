@@ -9,7 +9,7 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
   const [showMediaPopup, setShowMediaPopup] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
-  const {_id, conversationId, sender, text, media, replyForId, replyForText, isSameDp, createdAt} = message;
+  const {_id, conversationId, sender, text, media, replyForId, replyForText, replyForImage, isSameDp, createdAt} = message;
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const DP1 = PF+dp1;
@@ -45,6 +45,7 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
     setReplyFor({
       id: _id,
       text: text,
+      media: media,
       isSameDp: my,
     });
   };
@@ -65,9 +66,17 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
         <div className="message-top">
           {!my && <img src={DP2} alt="" className="message-img other-img" />}
           <div className={(replyForText || media.length) ? "message-text replied" : "message-text"}>
-            {replyForText && <div className='replied-div'>
+            {(replyForText || replyForImage) && <div className='replied-div'>
               <img className='replied-img' src={repliedDp} alt="" />
-              <span className="reply-message-text">{replyForText}</span>
+              {replyForText ?
+                <span className="reply-message-text">{replyForText}</span>
+                :
+                <>
+                  <i className="fa-solid fa-image reply-message-img-icon"></i>
+                  <span className="reply-message-text">Photo</span>
+                </>
+              }
+              {replyForImage ? <img className='reply-message-img-right reply-message-image-right' src={PF+replyForImage} alt="" /> : null}
             </div>}
 
             {media?.length ?

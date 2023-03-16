@@ -115,6 +115,7 @@ const Messenger = () => {
         conversationId: currentChat._id,
         replyForId: replyFor.id ? replyFor.id : "",
         replyForText: replyFor.text ? replyFor.text : "",
+        replyForImage: replyFor.media.length ? replyFor.media[0] : "",
         isSameDp: replyFor.isSameDp,
       };
 
@@ -255,7 +256,12 @@ const Messenger = () => {
             {
               currentChat ?
               <>
-                <div className="chat-view-area" style={{height: (isReply || preview?.length>0) ? '' : '81%'}}>
+                <div
+                  className="chat-view-area"
+                  style={{
+                    height: (isReply || preview?.length>0) ? (isReply && preview?.length>0 ? 'calc(81% - 160px)' : 'calc(81% - 80px)') : '81%'
+                  }}
+                >
                   {messages.map((m)=>(
                     <div  key={m._id} ref={scrollRef}>
                       <Message
@@ -276,25 +282,34 @@ const Messenger = () => {
                     <div className='reply-message'>
                       <img className='reply-message-img' src={DP} alt="" />
                       <span className='reply-message-text'>{text}</span>
+                      {replyFor?.media.length ? <img className='reply-message-img-right' src={PF+replyFor?.media[0]} alt="" /> : null}
                       <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
                     </div>
                   </div>}
 
-                  {preview?.length>0 && <div className='reply-message-div media-div'>
-                    <div className='reply-message'>
-                      {preview.map((media, index)=>(
-                        <PreviewMedia
-                          key={index}
-                          idx={index}
-                          media={media}
-                          setPreview={setPreview}
-                          file={file}
-                          setFile={setFile}
-                          setXYZ={setXYZ}
-                        />
-                      ))}
+                  {preview?.length>0 &&
+                    <div
+                      className='reply-message-div media-div'
+                      style={{
+                        borderTopLeftRadius: isReply ? '0px' : '',
+                        borderTopRightRadius: isReply ? '0px' : ''
+                      }}
+                    >
+                      <div className='reply-message'>
+                        {preview.map((media, index)=>(
+                          <PreviewMedia
+                            key={index}
+                            idx={index}
+                            media={media}
+                            setPreview={setPreview}
+                            file={file}
+                            setFile={setFile}
+                            setXYZ={setXYZ}
+                          />
+                        ))}
+                      </div>
                     </div>
-                  </div>}
+                  }
 
                   <div className='input-chat'>
                     <textarea
