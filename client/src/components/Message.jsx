@@ -40,12 +40,12 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
       setMessages((prev)=> prev.filter((item)=> item._id !== _id));
     }
   };
-  const replyMessageHandler = () => {
+  const replyMessageHandler = (index) => {
     setIsReply(true);
     setReplyFor({
       id: _id,
       text: text,
-      media: media,
+      media: media[index],
       isSameDp: my,
     });
   };
@@ -147,7 +147,7 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
             >
               {!hover && <i class="fa-solid fa-ellipsis-vertical"></i>}
               {hover &&<div className='delete-reply-div'>
-                <div className='functionality' onClick={replyMessageHandler}><i className="fa-solid fa-reply"></i></div>
+                <div className='functionality' onClick={()=>replyMessageHandler(0)}><i className="fa-solid fa-reply"></i></div>
                 <div> | </div>
                 <div className='functionality'><i className="fa-regular fa-face-laugh"></i></div>
                 {my && <>
@@ -163,7 +163,7 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
 
       {showMediaPopup &&
         <div className='blurr-div'>
-          <ClickedMedia setShowMediaPopup={setShowMediaPopup} media={media} imageIndex={imageIndex}/>
+          <ClickedMedia setShowMediaPopup={setShowMediaPopup} media={media} imageIndex={imageIndex} replyMessageHandler={replyMessageHandler}/>
         </div>
       }
     </>

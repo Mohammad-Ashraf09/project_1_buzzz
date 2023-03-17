@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 
-const ClickedMedia = ({setShowMediaPopup, media, imageIndex}) => {
+const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler}) => {
     const [currentIndex, setCurrentIndex] = useState(imageIndex);
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -20,6 +20,15 @@ const ClickedMedia = ({setShowMediaPopup, media, imageIndex}) => {
     return (
         <div className="clicked-media-container">
             <div className='clicked-media-top'>
+                <div
+                    className='functionality image-reply'
+                    onClick={()=>{
+                        replyMessageHandler(currentIndex);
+                        setShowMediaPopup(false);
+                        document.body.style.overflow = "auto"
+                    }}>
+                    <i className="fa-solid fa-reply"></i>
+                </div>
                 <div className="post-top-dots" onClick={()=> {setShowMediaPopup(false); document.body.style.overflow = "auto"}}>
                     <i class="fa-solid fa-xmark"></i>
                 </div>

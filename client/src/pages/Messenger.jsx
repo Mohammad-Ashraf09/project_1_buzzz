@@ -115,7 +115,7 @@ const Messenger = () => {
         conversationId: currentChat._id,
         replyForId: replyFor.id ? replyFor.id : "",
         replyForText: replyFor.text ? replyFor.text : "",
-        replyForImage: replyFor.media.length ? replyFor.media[0] : "",
+        replyForImage: replyFor.media.length ? replyFor.media : "",
         isSameDp: replyFor.isSameDp,
       };
 
@@ -282,7 +282,7 @@ const Messenger = () => {
                     <div className='reply-message'>
                       <img className='reply-message-img' src={DP} alt="" />
                       <span className='reply-message-text'>{text}</span>
-                      {replyFor?.media.length ? <img className='reply-message-img-right' src={PF+replyFor?.media[0]} alt="" /> : null}
+                      {replyFor?.media.length ? <img className='reply-message-img-right' src={PF+replyFor?.media} alt="" /> : null}
                       <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
                     </div>
                   </div>}
