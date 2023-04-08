@@ -124,10 +124,10 @@ const Comment = ({
                 </div>
 
                 {showParticularPost ?
-                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandlerForParticularPost(commentId, particularComment.name, particularComment.id)}>
+                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandlerForParticularPost(commentId, commentUser.fname+' '+commentUser.lname, particularComment.id)}>
                         <i class="fa-solid fa-reply"></i>
                     </div> :
-                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandler(commentId, particularComment.name, particularComment.id)}>
+                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandler(commentId, commentUser.fname+' '+commentUser.lname, particularComment.id)}>
                         <i class="fa-solid fa-reply"></i>
                     </div>
                 }

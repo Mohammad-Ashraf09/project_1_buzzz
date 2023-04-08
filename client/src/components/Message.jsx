@@ -4,7 +4,7 @@ import {format} from "timeago.js"
 import { AuthContext } from '../context/AuthContext';
 import ClickedMedia from './ClickedMedia';
 
-const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReplyFor}) => {
+const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReplyFor, noOfNewmessages, setNoOfNewmessages}) => {
   const [hover, setHover] = useState(false);
   const [showMediaPopup, setShowMediaPopup] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
@@ -65,7 +65,7 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
       <div className={my ? "message my" : "message other"}>
         <div className="message-top">
           {!my && <img src={DP2} alt="" className="message-img other-img" />}
-          <div className={(replyForText || media.length) ? "message-text replied" : "message-text"}>
+          <div className={(replyForText || media?.length) ? "message-text replied" : "message-text"}>
             {(replyForText || replyForImage) && <div className='replied-div'>
               <img className='replied-img' src={repliedDp} alt="" />
               {replyForText ?

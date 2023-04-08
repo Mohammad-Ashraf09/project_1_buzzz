@@ -1,8 +1,29 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios from 'axios';
 
-const Conversation = ({index, conversation, setConversations, setCurrentChat, setIsReply, setReplyFor}) => {
+const Conversation = ({
+  index,
+  conversation,
+  setConversations,
+  setCurrentChat,
+  currentChat,
+  setIsReply,
+  setReplyFor,
+  setMessageNotifications,
+  messageNotifications,
+  setNoOfNewmessages,
+}) => {
   const [show3Dots, setShow3Dots] = useState(false);
+  const [noOfNotifications, setNoOfNotifications] = useState(0)
+
+  useEffect(()=>{
+    if(!messageNotifications.includes(currentChat?.members[0].id)){
+      setNoOfNotifications((messageNotifications.filter((id)=>id===conversation?.members[0].id)).length)
+    }
+    else{
+      setMessageNotifications(messageNotifications.filter((id)=>id!==currentChat?.members[0].id))
+    }
+  },[messageNotifications]);
 
   const conversationClickHandler = () => {
     const collection = document.querySelectorAll('.conversation');
@@ -17,6 +38,8 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, se
     setCurrentChat(conversation);
     setIsReply(false);
     setReplyFor({});
+    setMessageNotifications(messageNotifications.filter((id)=>id!==conversation?.members[0].id));
+    setNoOfNewmessages(noOfNotifications);
   }
 
   const deleteHandler = async(e)=>{
@@ -50,7 +73,7 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, se
       <div className='dp-name' onClick={conversationClickHandler}>
         <div className='dp-badge'>
           <img className='conversation-dp' src={DP} alt="" />
-          <span className="topbar-icon-badge message-badge">1</span>
+          {noOfNotifications ? <span className="topbar-icon-badge message-badge">{noOfNotifications}</span> : null}
         </div>
         <span className='conversation-name'>{name}</span>
       </div>
@@ -75,4 +98,4 @@ const Conversation = ({index, conversation, setConversations, setCurrentChat, se
   )
 }
 
-export default Conversation
+export default Conversation;

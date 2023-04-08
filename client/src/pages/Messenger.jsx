@@ -10,14 +10,13 @@ import EmojiContainer from '../components/emoji/EmojiContainer';
 import PreviewMedia from '../components/PreviewMedia';
 
 const Messenger = () => {
+  const {user} = useContext(AuthContext);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
   const [arrivalMessage, setArrivalMessage] = useState(null);
-  const {user} = useContext(AuthContext);
   const scrollRef = useRef();
-  const [socket, setSocket] = useState(null);
   const [following, setFollowing] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
   const [query, setQuery] = useState("");
@@ -31,41 +30,48 @@ const Messenger = () => {
   const [file, setFile] = useState([]);
   const [xyz, setXYZ] = useState(false);
   const [preview, setPreview] = useState([]);
+  const [socket, setSocket] = useState(null);
+  const [messageNotifications, setMessageNotifications] = useState([]);
+  const [noOfNewmessages, setNoOfNewmessages] = useState(0);
   // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
-
-  // console.log('conversations--------------', conversations)
-  // console.log('currentChat--------------', currentChat)
-  // console.log('messages--------------', messages)
-  // console.log('newMessage--------------', newMessage)
-  // console.log('arrivalMessage--------------', arrivalMessage)
-  // console.log('following--------------', following)
 
   useEffect(()=>{
     setSocket(io("ws://localhost:8100"));
   },[]);
 
   useEffect(()=>{
+    socket?.emit("addUser2", user._id);
+  },[socket, user._id]);
+
+  useEffect(()=>{
+    socket?.on("getUsers2", (data)=>{
+      setOnlineUsers(data);
+    });
+  },[socket, onlineUsers]);
+
+  useEffect(()=>{
     socket?.on("getMessage", data =>{
       setArrivalMessage({
-        sender:data.senderId,
+        sender:data.sender,
         text:data.text,
+        media: data.media,
+        conversationId: data.conversationId,
+        replyForId: data.replyForId,
+        replyForText: data.replyForText,
+        replyForImage: data.replyForImage,
+        isSameDp: data.isSameDp,
         createdAt:Date.now(),
       })
-    })
-  },[socket])
+    });
+
+    socket?.on("getMessageNotification", (data)=>{
+      setMessageNotifications((prev)=>[...prev, data]);
+    });
+  },[socket]);
 
   useEffect(()=>{
     arrivalMessage && currentChat?.IDs.includes(arrivalMessage.sender) && setMessages((prev)=> [...prev, arrivalMessage]);
   }, [arrivalMessage, currentChat]);
-  
-  useEffect(()=>{
-    socket?.emit("addUser2", user._id);
-    // socket.current.on("getUsers", users=>{
-    //   console.log(users);                      // jobhi user massenger open karega wo users me aa jayega as array with there id and socketId
-    // })
-  },[socket, user._id]);
-
-  //console.log(socket)
   
   useEffect(()=>{
     const getConversations = async()=>{
@@ -105,9 +111,18 @@ const Messenger = () => {
     getMessages();
   },[currentChat]);
 
+  const notificationHandler = async() => {
+    socket.emit("sendMessageNotification", {
+      senderId: user._id,
+      receiverId: currentChat.members[0].id!==user._id
+        ? currentChat.members[0].id
+        : currentChat.members[1].id
+    });
+  }
+
   const submitHandler = async(e)=>{
     e.preventDefault();
-    if(newMessage || file.length){
+    if(newMessage || file?.length){
       const message={
         sender: user._id,
         text: newMessage,
@@ -115,11 +130,11 @@ const Messenger = () => {
         conversationId: currentChat._id,
         replyForId: replyFor.id ? replyFor.id : "",
         replyForText: replyFor.text ? replyFor.text : "",
-        replyForImage: replyFor.media.length ? replyFor.media : "",
+        replyForImage: replyFor.media?.length ? replyFor.media : "",
         isSameDp: replyFor.isSameDp,
       };
 
-      if(file.length){
+      if(file?.length){
         file.map((image)=>{
           const uploadFile = async() =>{
             const data = new FormData();
@@ -138,9 +153,8 @@ const Messenger = () => {
       }
 
       socket?.emit("sendMessage",{
-        senderId : user._id,
-        receiverId: currentChat.members[0].id,
-        text : newMessage,
+        ...message,
+        receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
       })
   
       try{
@@ -149,6 +163,7 @@ const Messenger = () => {
         setNewMessage("");
         setIsReply(false);
         setReplyFor({});
+        notificationHandler();
       }catch(err){
         console.log(err);
       }
@@ -181,15 +196,9 @@ const Messenger = () => {
     fetchFollowings();
   },[user._id]);
 
-  useEffect(()=>{
-    socket?.on("getUsers", (data)=>{
-        setOnlineUsers(data);
-    });
-  },[socket, onlineUsers]);
-
   useEffect(()=>{              // this useEffect is for preview the file before uploading it
     if(file?.[0] && xyz){
-      const len = preview.length
+      const len = preview?.length
       const objectUrl = URL.createObjectURL(file?.[len])
       setPreview((prev)=>[...prev, objectUrl])
       // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
@@ -235,8 +244,12 @@ const Messenger = () => {
                   conversation={c}
                   setConversations={setConversations}
                   setCurrentChat={setCurrentChat}
+                  currentChat={currentChat}
                   setIsReply={setIsReply}
                   setReplyFor={setReplyFor}
+                  setMessageNotifications={setMessageNotifications}
+                  messageNotifications={messageNotifications}
+                  setNoOfNewmessages={setNoOfNewmessages}
                 />
               ))}
             </div>
@@ -273,6 +286,8 @@ const Messenger = () => {
                         dp2={dp2}
                         setIsReply={setIsReply}
                         setReplyFor={setReplyFor}
+                        noOfNewmessages={noOfNewmessages}
+                        setNoOfNewmessages={setNoOfNewmessages}
                       />
                     </div>
                   ))}
@@ -282,7 +297,7 @@ const Messenger = () => {
                     <div className='reply-message'>
                       <img className='reply-message-img' src={DP} alt="" />
                       <span className='reply-message-text'>{text}</span>
-                      {replyFor?.media.length ? <img className='reply-message-img-right' src={PF+replyFor?.media} alt="" /> : null}
+                      {replyFor?.media?.length ? <img className='reply-message-img-right' src={PF+replyFor?.media} alt="" /> : null}
                       <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
                     </div>
                   </div>}
@@ -325,7 +340,7 @@ const Messenger = () => {
                       <label htmlFor="file">
                         {/* <i className="fa-solid fa-paperclip icon"></i> */}
                         <i className="fa-solid fa-photo-film icon"></i>
-                        <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file.length!==9 && fileHandler}/>
+                        <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file?.length!==9 && fileHandler}/>
                       </label>
                       <div className="emoji-div">
                         <i className="fa-regular fa-face-laugh icon" onClick={()=>{setShowEmojis(!showEmojis)}}></i>

@@ -1,14 +1,16 @@
 import axios from 'axios';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import {Link} from "react-router-dom";
+import { AuthContext } from '../context/AuthContext';
 import Notification from './Notification';
 
 const Topbar = ({user, socket}) => {
-    const [notification, setNotification] = useState([]);
-    const [noOfNotifications, setNoOfNotifications] = useState([]);
-    const [noOfNotifications2, setNoOfNotifications2] = useState([]);
+    const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
+    const [notification, setNotification] = useState([]);           // all the notifications of a particular user
+    const [noOfNotifications, setNoOfNotifications] = useState([]);       // this is for number in red badge
+    const [noOfNotifications2, setNoOfNotifications2] = useState([]);     // this is for new highlighted notifications
     const [open, setOpen] = useState(false);
-    const [renderNotification, setRenderNotification] = useState(false);
+    const [renderNotification, setRenderNotification] = useState(false);  // on deletion of a notification state will change
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const logo = PF+"images/logo144.png";
@@ -26,11 +28,11 @@ const Topbar = ({user, socket}) => {
         });
     },[socket]);
 
-    useEffect(()=>{
+    useEffect(()=>{    // for fetching all the notifications of a user
         if(open){
             const fetchNotifications = async()=>{
                 try{
-                    const res = await axios.get("notifications/"+user?._id);
+                    const res = await axios.get("notifications/"+currentUser?._id);
                     setNotification(res.data)
                 }
                 catch(err){}
@@ -39,10 +41,10 @@ const Topbar = ({user, socket}) => {
         }
     },[open, renderNotification]);
 
-    useEffect(()=>{
+    useEffect(()=>{           // for fetching number of notifications of a user
         const fetchNotifications = async()=>{
             try{
-                const res = await axios.get("notifications/noOfNotifications/" + user?._id);
+                const res = await axios.get("notifications/noOfNotifications/" + currentUser?._id);
                 setNoOfNotifications(res.data?.notifications);
                 setNoOfNotifications2(res.data?.notifications);
             }
@@ -55,19 +57,18 @@ const Topbar = ({user, socket}) => {
         setOpen(!open);
         setNoOfNotifications([]);
 
-        if(open)
+        if(open)                           // when click for close notification, so that new highlighted notification will normal and treated mark as read
             setNoOfNotifications2([]);
         
         if(noOfNotifications.length){
             try{
-                await axios.put("notifications/noOfNotifications/empty/" + user?._id);
+                await axios.put("notifications/noOfNotifications/empty/" + currentUser?._id);      // clearing array in database
             }
             catch(err){}
         }
     }
 
     const logoutHandler = () =>{
-        console.log(window.location.href)
         const logout = window.confirm("Are you sure, you want to logout?");
         if(logout){
             localStorage.clear();
@@ -90,10 +91,10 @@ const Topbar = ({user, socket}) => {
         </div>
         <div className="topbar-right">
             <div className="topbar-user">
-                <Link to={`/user/${user?._id}`} style={{textDecoration: 'none'}}>
+                <Link to={`/user/${currentUser?._id}`} style={{textDecoration: 'none'}}>
                     <img src={dp} alt="" className="topbar-img" />
                 </Link>
-                <Link to={`/user/${user?._id}`} style={{textDecoration: 'none', color: 'black'}}>
+                <Link to={`/user/${currentUser?._id}`} style={{textDecoration: 'none', color: 'black'}}>
                     <div className="topbar-username">{name}</div>
                 </Link>
             </div>

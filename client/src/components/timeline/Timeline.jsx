@@ -101,8 +101,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
 
   // fetching all active users from socket server
   useEffect(()=>{
-    socket.emit("sendUser", currentUser._id);
-    socket?.on("getUser", (data)=>{
+    socket?.on("getUsers1", (data)=>{
       setActiveUsers(data);
     });
   },[socket]);
@@ -131,21 +130,18 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
       }
       catch(err){}
       
-      const isPresent = activeUsers.filter((user)=> user.userId === userId);
-      // console.log("isPresent....",isPresent);
-      if(isPresent.length){
-        // console.log("hi.....")
-        socket.emit("sendNotification", notification);
+      const isOnlinePresent = activeUsers.filter((user)=> user.userId === userId);
+      if(isOnlinePresent.length){
+        socket.emit("sendNotification", notification);     // if user is online then directly show them notification without changing in database
       }
       else{
-        const aa = async()=>{
-          // console.log("bye.....")
+        const increaseCountInDatabase = async()=>{
           try{
-            await axios.put("notifications/noOfNotifications/"+ postUser?._id);
+            await axios.put("notifications/noOfNotifications/"+ postUser?._id);  // else increase array length of noOfNotifications by 1
           }
           catch(err){}
         }
-        aa();
+        increaseCountInDatabase();
       }
     }
   };

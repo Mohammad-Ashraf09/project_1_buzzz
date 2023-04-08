@@ -17,9 +17,6 @@ const removeUser1 = (socketId)=>{
 const getUser1 = (userId)=>{
     return users1.find((user)=> user.userId === userId);
 }
-const getUser = ()=>{
-    return users1;
-}
 
 
 //for messanger
@@ -43,13 +40,6 @@ io.on("connection", (socket)=>{
         console.log(userId + ", " + socket.id + " - Home");
     });
 
-    // get all users
-    socket.on("sendUser", (id)=>{
-        const x = getUser1(id)
-        const user = getUser();
-        io.to(x?.socketId).emit("getUser", user);
-    });
-
     // notification
     socket.on("sendNotification", ({senderId, name, avatar, receiverId, type})=>{
         const user = getUser1(receiverId);
@@ -69,16 +59,30 @@ io.on("connection", (socket)=>{
     });
     
     // send message/receive message
-    socket.on("sendMessage", ({senderId, receiverId, text})=>{
-        const user2 = getUser2(receiverId);
+    socket.on("sendMessage", ({sender, receiver, text, media, conversationId, replyForId, replyForText, replyForImage, isSameDp})=>{
+        const user2 = getUser2(receiver);
         io.to(user2.socketId).emit("getMessage", {
-            senderId,
+            sender,
             text,
+            media,
+            conversationId,
+            replyForId,
+            replyForText,
+            replyForImage,
+            isSameDp
         });
+    });
+
+    // notification
+    socket.on("sendMessageNotification", ({senderId, receiverId})=>{
+        const user = getUser2(receiverId);
+        io.to(user?.socketId).emit("getMessageNotification", senderId);
     });
 
     socket.on("disconnect", ()=>{
         removeUser1(socket.id);
+        console.log("disconnected...", socket.id);
+        removeUser2(socket.id);
         console.log("disconnected...", socket.id);
     });
 });

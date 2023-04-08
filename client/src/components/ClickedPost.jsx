@@ -48,7 +48,7 @@ const ClickedPost = ({
     socket,
 }) =>{
 
-    const [numberOfCommentsForThisComponent, setNumberOfCommentsForThisComponent] = useState(totalComment.length);
+    const [numberOfCommentsForThisComponent, setNumberOfCommentsForThisComponent] = useState(totalComment?.length);
     const [lik, setLik] = useState(likes);
     const [isLiked, setIsLiked] = useState(isLik);
     const [clr, setClr] = useState(color1);
@@ -159,7 +159,7 @@ const ClickedPost = ({
     }
 
     const showCommentHandler = () =>{
-        if(totalComment.length!==0)
+        if(totalComment?.length!==0)
             setShowComment(!showComment);
 
         if(showComment)
@@ -323,7 +323,7 @@ const ClickedPost = ({
                     ))}
                 </div>
 
-                {img.length && <div className='preview-clicked-post'>
+                {img?.length && <div className='preview-clicked-post'>
                     <PostImage images={img} clicked={true}/>
                 </div>}
 
@@ -340,7 +340,7 @@ const ClickedPost = ({
                         <div className="comment-count">{numberOfCommentsForThisComponent} comment</div>
                     }
 
-                    {(showWhoLiked && likeArray.length>0) && (
+                    {(showWhoLiked && likeArray?.length>0) && (
                         <div className="liked-disliked-div">
                             {likeArray.map((userId)=>(
                                 <WhoLikedDisliked
@@ -351,7 +351,7 @@ const ClickedPost = ({
                         </div>
                     )}
 
-                    {(showWhoDisLiked && dislikeArray.length>0) && (
+                    {(showWhoDisLiked && dislikeArray?.length>0) && (
                         <div className="liked-disliked-div">
                             {dislikeArray.map((userId)=>(
                                 <WhoLikedDisliked
