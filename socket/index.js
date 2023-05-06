@@ -61,16 +61,18 @@ io.on("connection", (socket)=>{
     // send message/receive message
     socket.on("sendMessage", ({sender, receiver, text, media, conversationId, replyForId, replyForText, replyForImage, isSameDp})=>{
         const user2 = getUser2(receiver);
-        io.to(user2.socketId).emit("getMessage", {
-            sender,
-            text,
-            media,
-            conversationId,
-            replyForId,
-            replyForText,
-            replyForImage,
-            isSameDp
-        });
+        if(user2){
+            io.to(user2.socketId).emit("getMessage", {
+                sender,
+                text,
+                media,
+                conversationId,
+                replyForId,
+                replyForText,
+                replyForImage,
+                isSameDp
+            });
+        }
     });
 
     // notification
@@ -80,10 +82,10 @@ io.on("connection", (socket)=>{
     });
 
     socket.on("disconnect", ()=>{
-        removeUser1(socket.id);
-        console.log("disconnected...", socket.id);
         removeUser2(socket.id);
-        console.log("disconnected...", socket.id);
+        console.log("disconnected from messenger...", socket.id);
+        removeUser1(socket.id);
+        console.log("disconnected from home...", socket.id);
     });
 });
 

@@ -26,6 +26,9 @@ const MessageSchema = new mongoose.Schema(
     isSameDp:{
         type: Boolean,
     },
+    noOfNotifications:{
+        type: Array,
+    },
   },
   { timestamps: true }
 );

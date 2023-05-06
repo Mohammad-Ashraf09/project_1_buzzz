@@ -2845,6 +2845,26 @@ input:valid[focused="true"] ~ .tickkk{
     border-bottom-left-radius: 16px;
     background-color: #0c9a97;
 }
+.new-msg-separator{
+    position: relative;
+}
+.new-msg-separator-line{
+    border: 1px solid #696969;
+    margin: 40px 0;
+}
+.new-msg-indicator-wrapper{
+    display: flex;
+    justify-content: center;
+}
+.new-msg-indicator{
+    border-radius: 25px;
+    background-color: #d4d1d1;
+    font-size: 12px;
+    font-weight: bold;
+    padding: 8px 10px;
+    position: absolute;
+    top: -15px;
+}
 
 .reply-message-div{
     height: 80px;

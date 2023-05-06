@@ -33,7 +33,11 @@ const Messenger = () => {
   const [socket, setSocket] = useState(null);
   const [messageNotifications, setMessageNotifications] = useState([]);
   const [noOfNewmessages, setNoOfNewmessages] = useState(0);
+  const [notifications, setNotifications] = useState([]);
   // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
+
+  const oldMessages = messages.slice(0, messages?.length-noOfNewmessages);
+  const newMessages = messages.slice(messages?.length-noOfNewmessages, messages?.length);
 
   useEffect(()=>{
     setSocket(io("ws://localhost:8100"));
@@ -47,7 +51,7 @@ const Messenger = () => {
     socket?.on("getUsers2", (data)=>{
       setOnlineUsers(data);
     });
-  },[socket, onlineUsers]);
+  },[socket]);
 
   useEffect(()=>{
     socket?.on("getMessage", data =>{
@@ -68,6 +72,16 @@ const Messenger = () => {
       setMessageNotifications((prev)=>[...prev, data]);
     });
   },[socket]);
+
+  useEffect(()=>{
+    if(messageNotifications.length===0){
+      notifications?.map((item)=>{
+        item.notifications.map((id)=>{
+          setMessageNotifications((prev)=>[...prev, item.id]);
+        })
+      })
+    }
+  },[notifications]);
 
   useEffect(()=>{
     arrivalMessage && currentChat?.IDs.includes(arrivalMessage.sender) && setMessages((prev)=> [...prev, arrivalMessage]);
@@ -94,6 +108,17 @@ const Messenger = () => {
       }
     }
     getConversations();
+
+    const getNotifications = async()=>{
+      try{
+        const res = await axios.get("/messages/noOfNotifications/"+user._id);
+        setNotifications(res.data.receiverId)
+      }
+      catch(err){
+        console.log(err);
+      }
+    }
+    getNotifications();
   },[user._id]);
 
   useEffect(()=>{
@@ -111,13 +136,37 @@ const Messenger = () => {
     getMessages();
   },[currentChat]);
 
+  const removeNotificationFromDatabase = async(id) => {
+    try{
+      await axios.put("/messages/noOfNotifications/"+user._id, {friendId: id});
+    }
+    catch(err){
+      console.log(err);
+    }
+  }
+
   const notificationHandler = async() => {
-    socket.emit("sendMessageNotification", {
-      senderId: user._id,
-      receiverId: currentChat.members[0].id!==user._id
-        ? currentChat.members[0].id
-        : currentChat.members[1].id
-    });
+    const arr = window.location.href.split("/")
+    const page = arr[arr.length-1]
+    const isOnlinePresent = onlineUsers.filter((user)=> user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
+
+    if(isOnlinePresent.length && page==='messenger'){
+      socket.emit("sendMessageNotification", {
+        senderId: user._id,
+        receiverId: currentChat.members[0].id!==user._id
+          ? currentChat.members[0].id
+          : currentChat.members[1].id
+      });     // if user is online then directly show them notification without changing in database
+    }
+    else{
+      const increaseCountInDatabase = async()=>{
+        try{
+          await axios.put("messages/noOfNotifications/", {user1: user._id, user2: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id});  // else increase array length of noOfNotifications by 1
+        }
+        catch(err){}
+      }
+      increaseCountInDatabase();
+    }
   }
 
   const submitHandler = async(e)=>{
@@ -152,10 +201,15 @@ const Messenger = () => {
         })
       }
 
-      socket?.emit("sendMessage",{
-        ...message,
-        receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
-      })
+      const arr = window.location.href.split("/");
+      const page = arr[arr.length-1];
+      const isOnlinePresent = onlineUsers.filter((user)=> user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
+      if(isOnlinePresent?.length && page==='messenger'){
+        socket?.emit("sendMessage",{
+          ...message,
+          receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
+        })
+      }
   
       try{
         const res = await axios.post("/messages", message);
@@ -163,6 +217,7 @@ const Messenger = () => {
         setNewMessage("");
         setIsReply(false);
         setReplyFor({});
+        setNoOfNewmessages(0)
         notificationHandler();
       }catch(err){
         console.log(err);
@@ -250,6 +305,8 @@ const Messenger = () => {
                   setMessageNotifications={setMessageNotifications}
                   messageNotifications={messageNotifications}
                   setNoOfNewmessages={setNoOfNewmessages}
+                  notifications={notifications}
+                  removeNotificationFromDatabase={removeNotificationFromDatabase}
                 />
               ))}
             </div>
@@ -275,7 +332,32 @@ const Messenger = () => {
                     height: (isReply || preview?.length>0) ? (isReply && preview?.length>0 ? 'calc(81% - 160px)' : 'calc(81% - 80px)') : '81%'
                   }}
                 >
-                  {messages.map((m)=>(
+                  {oldMessages.map((m)=>(
+                    <div  key={m._id} ref={scrollRef}>
+                      <Message
+                        user={user}
+                        message={m}
+                        setMessages={setMessages}
+                        my={m.sender === user._id}
+                        dp1={user?.profilePicture}
+                        dp2={dp2}
+                        setIsReply={setIsReply}
+                        setReplyFor={setReplyFor}
+                        noOfNewmessages={noOfNewmessages}
+                        setNoOfNewmessages={setNoOfNewmessages}
+                      />
+                    </div>
+                  ))}
+
+                  {noOfNewmessages ?
+                    <div className='new-msg-separator'>
+                      <div className='new-msg-separator-line'></div>
+                      <div className='new-msg-indicator-wrapper'><div className='new-msg-indicator'>{noOfNewmessages} Unread {noOfNewmessages>1 ? 'Messages' : 'Message'}</div></div>
+                    </div>
+                    : null
+                  }
+
+                  {newMessages.map((m)=>(
                     <div  key={m._id} ref={scrollRef}>
                       <Message
                         user={user}

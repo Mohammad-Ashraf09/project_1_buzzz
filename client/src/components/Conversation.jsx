@@ -12,9 +12,11 @@ const Conversation = ({
   setMessageNotifications,
   messageNotifications,
   setNoOfNewmessages,
+  notifications,
+  removeNotificationFromDatabase
 }) => {
   const [show3Dots, setShow3Dots] = useState(false);
-  const [noOfNotifications, setNoOfNotifications] = useState(0)
+  const [noOfNotifications, setNoOfNotifications] = useState(0);
 
   useEffect(()=>{
     if(!messageNotifications.includes(currentChat?.members[0].id)){
@@ -40,6 +42,12 @@ const Conversation = ({
     setReplyFor({});
     setMessageNotifications(messageNotifications.filter((id)=>id!==conversation?.members[0].id));
     setNoOfNewmessages(noOfNotifications);
+
+    notifications?.map((item)=>{
+      if(item.id===conversation?.members[0].id){
+        removeNotificationFromDatabase(item.id);
+      }
+    })
   }
 
   const deleteHandler = async(e)=>{
