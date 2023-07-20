@@ -595,6 +595,40 @@ input:invalid[focused="true"] ~ .error-msg{
 .rightbar{
     flex: 3;
 }
+.popup-blurr-div{
+    background-color: rgba(21, 21, 21, 0.95);
+    position: absolute;
+    width: calc(100vw - 4rem);
+    height: calc(100vh - 50px);
+    display: flex;
+    z-index: 999999999;
+    justify-content: center;
+    align-items: center;
+}
+.popup-container{
+    height: 200px;
+    width: 360px;
+    background-color: white;
+    border-radius: 8px;
+}
+.close-popup-div{
+    display: flex;
+    justify-content: end;
+    padding: 6px;
+}
+.close-popup-icon{
+    background-color: rgb(170, 166, 166);
+    border-radius: 25px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 20px;
+    width: 20px;
+    cursor: pointer;
+}
+.close{
+    font-size: 12px;
+}
 
 /*----------leftsidebar profile section---------*/
 .small-profile{

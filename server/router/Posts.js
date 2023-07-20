@@ -204,27 +204,59 @@ router.get("/:id/comment/:commentId/reply/:nestedCommentId", async (req, res) =>
   }
 });
 
-//like nested comment
-// router.put("/:id/comment/:commentId/like/:nestedCommentId/nestedLike", async (req, res) => {
-//   try {
-//     const post = await Post.findById(req.params.id);
-//     const comment = await post.comments.find((cmnt)=>cmnt.commentId===req.params.commentId);
-//     const nestedComment = await comment.nestedComments.find((cmnt)=>cmnt.nestedCommentId===req.params.nestedCommentId);
+//like nested comment--------------> working fine
+router.put("/:id/comment/:commentId/like/:nestedCommentId/nestedLike", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const comment = await post.comments.find((cmnt)=>cmnt.commentId===req.params.commentId);
+    const nestedComment = await comment.nestedComments.find((cmnt)=>cmnt.nestedCommentId===req.params.nestedCommentId);
 
-//     if (!nestedComment.nestedCommentLikes.includes(req.body.userId)) {
-//       await Post.updateOne(
-//         {"comments.nestedComments.nestedCommentId": req.params.nestedCommentId},
-//         {$push: {"comments.$[outer].nestedComments.$[inner].nestedCommentLikes": req.body.userId}},
-//         {arrayFilters: [{ "outer.commentId": req.params.commentId }, { "inner.nestedCommentId": req.params.nestedCommentId }]}
-//       );
-//       res.status(200).json("The comment has been liked");
-//     } else {
-//       await Post.updateOne({"comments.commentId": req.params.commentId}, {$pull: {"comments.$.commentLikes": req.body.userId}});   // toggle
-//       res.status(200).json("like removed");
-//     }
-//   } catch (err) {
-//     res.status(500).json(err);
-//   }
-// });
+    if (!nestedComment.nestedCommentLikes.includes(req.body.userId)) {
+      await Post.findOneAndUpdate(
+        {"comments.nestedComments.nestedCommentId": req.params.nestedCommentId},
+        {$push: {"comments.$[outer].nestedComments.$[inner].nestedCommentLikes": req.body.userId}},
+        {arrayFilters: [{ "outer.commentId": req.params.commentId }, { "inner.nestedCommentId": req.params.nestedCommentId }]}
+      );
+      res.status(200).json("nested comment has been liked");
+    } else {
+      await Post.findOneAndUpdate(
+        {"comments.nestedComments.nestedCommentId": req.params.nestedCommentId},
+        {$pull: {"comments.$[outer].nestedComments.$[inner].nestedCommentLikes": req.body.userId}},
+        {arrayFilters: [{ "outer.commentId": req.params.commentId }, { "inner.nestedCommentId": req.params.nestedCommentId }]}
+      );  // toggle
+      res.status(200).json("nested like removed");
+    }
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+//delete nested comment
+router.put("/:id/comment/:commentId/removeNestedComment", async (req, res) => {
+  try {
+    const post = await Post.findById(req.params.id);
+    const comment = await post.comments.find((cmnt)=>cmnt.commentId===req.params.commentId);
+    const nestedComment = await comment.nestedComments.find((cmnt)=>cmnt.nestedCommentId===req.body.nestedCommentId);
+
+    await Post.findOneAndUpdate(
+      {"comments.nestedComments.nestedCommentId": req.body.nestedCommentId},
+      {$pull: {"comments.$[outer].nestedComments": {nestedCommentId: req.body.nestedCommentId}}},
+      {arrayFilters: [{ "outer.commentId": req.params.commentId }]}
+    );
+    res.status(200).json("nested comment removed");
+    
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// if(receiver){  // agar main user ke andar wo present hai jisko notification bhejna hai
+//   await Message.findOneAndUpdate(
+//       {"noOfNotifications.userId": req.body.user2},
+//       {$push: {"noOfNotifications.$.receiverId.$[xxx].notifications": ""}},
+//       {arrayFilters: [{"xxx.id": req.body.user1}]},
+//   );
+//   res.status(200).json("notifications array increased by 1");
+// }
 
 module.exports = router;

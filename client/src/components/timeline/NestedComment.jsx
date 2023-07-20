@@ -5,7 +5,17 @@ import { useNavigate } from 'react-router-dom';
 
 // user --> jisne post dali hai
 // currentUser --> jisne login kiya hua hai
-const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nestedCommentLength}) => {
+const NestedComment = ({
+    user,
+    currentUser,
+    postId,
+    commentId,
+    nestedComment,
+    setNestedComments,
+    replyNestedCommentHandler,
+    showParticularPost,
+    replyNestedCommentHandlerForParticularPost,
+}) => {
     const [particularNestedComment, setParticularNestedComment] = useState({});
     const [nestedCommentUser, setNestedCommentUser] = useState({});
     const [noOfLikes, setNoOfLikes] = useState(null);
@@ -58,7 +68,7 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
 
     const likeCommentHandler = async() =>{
         try{
-            await axios.put("posts/"+ postId +"/comment/"+ commentId + "/like/" + particularNestedComment?.nestedCommentId + "nestedLike", {userId: currentUser._id});
+            await axios.put("posts/"+ postId +"/comment/"+ commentId + "/like/" + particularNestedComment?.nestedCommentId + "/nestedLike/", {userId: currentUser._id});
 
             setNoOfLikes(isLiked ? noOfLikes-1 : noOfLikes+1);
             setIsLiked(!isLiked);
@@ -77,9 +87,9 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
         try{
             const remove = window.confirm("Are you sure, you want to remove this comment?");
             if(remove){
-                await axios.put("posts/"+ postId +"/comment/"+ commentId +  "/nestedComment/"+ particularNestedComment?.nestedCommentId);
+                await axios.put("posts/"+ postId +"/comment/"+ commentId +  "/removeNestedComment/", {nestedCommentId: particularNestedComment?.nestedCommentId});
                 // setNumberOfComments(numberOfComments-1);
-                // setTotalComment((prev)=> prev.filter((item)=> item.commentId !== particularComment?.commentId))
+                setNestedComments((prev)=> prev.filter((item)=> item.nestedCommentId !== particularNestedComment?.nestedCommentId))
 
                 // notificationHandler("commented");
             }
@@ -122,20 +132,46 @@ const NestedComment = ({user, currentUser, postId, commentId, nestedComment, nes
                 }
             </div>
             <div className='nested-comment-caption-icon'>
-                {/* <div className='caption-icon' 
-                // onClick={likeCommentHandler}
-                >
+                <div className='caption-icon' onClick={likeCommentHandler} >
                     {clr==="#417af5" 
                         ? <i class="fa-solid fa-thumbs-up solid-thumbs-ups" style={{color:clr}}></i>
                         : <i class="fa-regular fa-thumbs-up"></i>
                     }
                     {noOfLikes>0 && <span style={{marginLeft: "5px"}}>{noOfLikes}</span>}
                 </div>
-                <div className='caption-icon'><i class="fa-solid fa-reply"></i></div> */}
-                {/* {currentUser._id===particularComment?.id && <div className='caption-icon'><i class="fa-solid fa-pen"></i></div>}
-                {(user._id===currentUser._id || particularComment?.id===currentUser._id)  && <div className='caption-icon trash' onClick={deleteCommentHandler}><i class="fa-solid fa-trash"></i></div>} */}
-                {/* <div className='caption-icon'><i class="fa-solid fa-pen"></i></div>
-                <div className='caption-icon trash'><i class="fa-solid fa-trash"></i></div> */}
+
+                {showParticularPost ?
+                    (currentUser._id!==particularNestedComment?.nestedId &&
+                        <div className='caption-icon'
+                            onClick={()=>
+                                replyNestedCommentHandlerForParticularPost(
+                                    commentId,
+                                    nestedCommentUser.fname + " " + nestedCommentUser.lname,
+                                    particularNestedComment.nestedId
+                                )
+                            }>
+                            <i class="fa-solid fa-reply"></i>
+                        </div>
+                    ) :
+                    (currentUser._id!==particularNestedComment?.nestedId &&
+                        <div className='caption-icon'
+                            onClick={()=>
+                                replyNestedCommentHandler(
+                                    commentId,
+                                    nestedCommentUser.fname + " " + nestedCommentUser.lname,
+                                    particularNestedComment.nestedId
+                                )
+                            }>
+                            <i class="fa-solid fa-reply"></i>
+                        </div>
+                    )
+                }
+
+                {(user._id===currentUser._id || particularNestedComment?.nestedId===currentUser._id) &&
+                    <div className='caption-icon trash' onClick={deleteCommentHandler}>
+                        <i class="fa-solid fa-trash"></i>
+                    </div>
+                }
             </div>
         </>
     )

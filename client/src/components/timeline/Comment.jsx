@@ -16,11 +16,13 @@ const Comment = ({
     replyCommentHandler,
     nestedCommentLength,
     editCommentHandler,
+    replyNestedCommentHandler,
     editDone,
     setNumberOfCommentsForPopupPost,
     showParticularPost,
     replyCommentHandlerForParticularPost,
     editCommentHandlerForParticularPost,
+    replyNestedCommentHandlerForParticularPost,
     _id
 }) => {
     const [particularComment, setParticularComment] = useState({});
@@ -160,7 +162,12 @@ const Comment = ({
                     postId={_id}
                     commentId={commentId}
                     nestedComment={nestedComment}
+                    nestedComments={nestedComments}
+                    setNestedComments={setNestedComments}
                     nestedCommentLength={nestedCommentLength}
+                    replyNestedCommentHandler={replyNestedCommentHandler}
+                    replyNestedCommentHandlerForParticularPost={replyNestedCommentHandlerForParticularPost}
+                    showParticularPost={showParticularPost}
                 />
             ))}
         </div>

@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import { AuthContext } from '../context/AuthContext';
 import Notification from './Notification';
 
-const Topbar = ({user, socket}) => {
+const Topbar = ({user, socket, setShowPopup}) => {
     const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
     const [notification, setNotification] = useState([]);           // all the notifications of a particular user
     const [noOfNotifications, setNoOfNotifications] = useState([]);       // this is for number in red badge
@@ -111,7 +111,8 @@ const Topbar = ({user, socket}) => {
                     {noOfNotifications?.length>0 && <span className="topbar-icon-badge">{noOfNotifications.length}</span>}
                 </div>
             </div>
-            <div className="logout-icon" onClick={logoutHandler}>
+            <div className="logout-icon" onClick={()=>setShowPopup(true)}>
+            {/* <div className="logout-icon" onClick={logoutHandler}> */}
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
             </div>
         </div>

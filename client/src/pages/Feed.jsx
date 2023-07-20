@@ -16,6 +16,7 @@ const Feed = () => {
   const [user, setUser] = useState({});
   const [posts, setPosts] = useState([]);
   const [socket, setSocket] = useState(null);
+  const [showPopup, setShowPopup] = useState(false);
 
   useEffect(()=>{
     const fetchUser = async() =>{
@@ -43,9 +44,17 @@ const Feed = () => {
     socket?.emit("addUser1", currentUser._id);
   },[socket, currentUser._id])
 
+  console.log(showPopup)
+  useEffect(()=>{
+    if(showPopup){
+      document.body.style.overflow = "hidden";
+      document.body.scrollIntoView();
+    }
+  },[showPopup]);
+
   return (
     <>
-      <Topbar user={user} socket={socket} />
+      <Topbar user={user} socket={socket} setShowPopup={setShowPopup} />
       <div className="feed-container">
         <div className="leftbar">
           <SmallProfile user={user}/>
@@ -71,6 +80,17 @@ const Feed = () => {
           <Contact user={currentUser} socket={socket}/>
           <Suggestion socket={socket}/>
         </div>
+
+        {showPopup && <div className='popup-blurr-div'>
+          <div className="popup-container">
+            <div className='close-popup-div'>
+              <div className="close-popup-icon" onClick={()=> {setShowPopup(false); document.body.style.overflow = "auto"}}>
+                  <i class="fa-solid fa-xmark close"></i>
+              </div>
+            </div>
+          </div>
+        </div>}
+
       </div>
       <Bottombar user={user}/>
     </>

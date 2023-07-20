@@ -301,6 +301,17 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
     }
   }
 
+  const replyNestedCommentHandler = (commentId, name, nameId) =>{
+    setReplyIconClicked(true);
+    const ref = inputRef2.current;
+    ref.focus();
+    setParticularCommentId(commentId);
+    setCommentedText("@" + name + " ");
+
+    setReplyToName(name);
+    setReplyToId(nameId);
+  }
+
   const deletePostHandler = async()=>{
     try{
       const remove = window.confirm("Are you sure, you want to remove this post?");
@@ -562,6 +573,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
                   replyCommentHandler={replyCommentHandler}
                   nestedCommentLength={nestedCommentLength}
                   editCommentHandler={editCommentHandler}
+                  replyNestedCommentHandler={replyNestedCommentHandler}
                   editDone={editDone}
                   _id={_id}
                 />
@@ -694,6 +706,7 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
           replyCommentHandler={replyCommentHandler}
           nestedCommentLength={nestedCommentLength}
           setNestedCommentLength={setNestedCommentLength}
+          replyNestedCommentHandler={replyNestedCommentHandler}
           socket={socket}
         />
       </div>}

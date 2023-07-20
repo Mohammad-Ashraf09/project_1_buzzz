@@ -45,6 +45,7 @@ const ClickedPost = ({
     nestedCommentLength,
     setNestedCommentLength,
     showParticularPost,
+    replyNestedCommentHandler,
     socket,
 }) =>{
 
@@ -236,6 +237,17 @@ const ClickedPost = ({
         }
     }
 
+    const replyNestedCommentHandlerForParticularPost = (commentId, name, nameId) =>{
+        setReplyIconClicked(true);
+        const ref = inputRef.current;
+        ref.focus();
+        setParticularCommentId(commentId);
+        setCommentedText("@" + name + " ");
+    
+        setReplyToName(name);
+        setReplyToId(nameId);
+    }
+
     const editCommentHandlerForParticularPost = (id, comment) =>{
         setEditIconClicked(true);
         const ref = inputRef.current;
@@ -397,6 +409,7 @@ const ClickedPost = ({
                                 editCommentHandlerForParticularPost={editCommentHandlerForParticularPost}
                                 editDone={editDone}
                                 showParticularPost={showParticularPost}
+                                replyNestedCommentHandlerForParticularPost={replyNestedCommentHandlerForParticularPost}
                                 _id={_id}
                             />
                         ))}
