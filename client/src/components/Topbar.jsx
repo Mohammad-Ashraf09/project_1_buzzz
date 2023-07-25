@@ -111,8 +111,8 @@ const Topbar = ({user, socket, setShowPopup}) => {
                     {noOfNotifications?.length>0 && <span className="topbar-icon-badge">{noOfNotifications.length}</span>}
                 </div>
             </div>
-            <div className="logout-icon" onClick={()=>setShowPopup(true)}>
-            {/* <div className="logout-icon" onClick={logoutHandler}> */}
+            {/* <div className="logout-icon" onClick={()=>setShowPopup(true)}> */}
+            <div className="logout-icon" onClick={logoutHandler}>
                 <i className="fa-solid fa-arrow-right-from-bracket"></i>
             </div>
         </div>
