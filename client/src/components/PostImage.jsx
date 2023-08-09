@@ -37,7 +37,8 @@ const PostImage = ({images, blurrScreenHandler, clicked}) => {
                 :
                 <div
                     className="preview-img"
-                    style={{backgroundImage: `url(${PF+images?.[currentIndex]})`, height: `${images?.length>1 ? "97%" : "100%"}`}}
+                    // style={{backgroundImage: `url(${PF+images?.[currentIndex]})`, height: `${images?.length>1 ? "97%" : "100%"}`}}
+                    style={{backgroundImage: `url(${images?.[currentIndex]})`, height: `${images?.length>1 ? "97%" : "100%"}`}}
                     onClick={blurrScreenHandler}
                 ></div>
             }

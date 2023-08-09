@@ -7,6 +7,10 @@ import FriendList from '../FriendList';
 import TaggedFriend from '../TaggedFriend';
 import EmojiContainer from '../emoji/EmojiContainer';
 import PreviewImage from '../PreviewImage';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../../firebase";
+import ProgressBar from "@ramonak/react-progress-bar";
+import Compressor from 'compressorjs';
 
 const CreateNewPost = () => {
   const [file, setFile] = useState([]);
@@ -26,6 +30,9 @@ const CreateNewPost = () => {
   const [taggedFriends, setTaggedFriends] = useState([]);
   const [showTaggedFriendsPostContainer, setShowTaggedFriendsPostContainer] = useState(false);
   const [xyz, setXYZ] = useState(false);
+  const [imgRef, setImgRef] = useState([]);
+  const [imgURL, setImgURL] = useState([]);
+  const [percentage, setPercentage] = useState(null);
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const profile = user?.profilePicture ? PF+user.profilePicture : PF+"default-dp.png";
@@ -48,13 +55,51 @@ const CreateNewPost = () => {
   },[currentUser._id]);
 
   useEffect(()=>{              // this useEffect is for preview the file before uploading it
-    if(file?.[0] && xyz){
-      const len = preview.length
+    if(file?.length && xyz){
+      const len = preview?.length
       const objectUrl = URL.createObjectURL(file?.[len])
       setPreview((prev)=>[...prev, objectUrl])
       // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
+
+      new Compressor(file?.[len], {
+        quality: 0.5, // 0.6 can also be used, but its not recommended to go below.
+        success: (compressedResult) => {
+          const imgName = compressedResult?.name?.toLowerCase()?.split(' ').join('-');
+          const uniqueImageName = new Date().getTime() + '-' + imgName;
+
+          const storageRef = ref(storage, uniqueImageName);
+          setImgRef((prev)=> [...prev, storageRef]);
+          const uploadTask = uploadBytesResumable(storageRef, compressedResult);
+          console.log('compressed File----------',compressedResult)
+
+          uploadTask.on('state_changed', (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setPercentage(progress);
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case 'paused':
+                  console.log('Upload is paused');
+                  break;
+                case 'running':
+                  console.log('Upload is running');
+                  break;
+                default:
+                  break;
+              }
+            }, 
+            (error) => {
+              console.log(error)
+            }, 
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setImgURL((prev)=> [...prev, downloadURL])
+              });
+            }
+          );
+        },
+      });
     }
-  },[file]);
+  },[file?.length]);
 
   const handleChange = (e)=>{
     setMessage(e.target.value);
@@ -66,28 +111,28 @@ const CreateNewPost = () => {
       const newPost = {
         userId: currentUser._id,
         desc: message,
-        img: [],
+        img: imgURL,
         location: showLocationPostContainer ? location : "",
         taggedFriends: showTaggedFriendsPostContainer ? taggedFriends : [],
       }
 
-      if(file.length){
-        file.map((image)=>{
-          const uploadFile = async() =>{
-            const data = new FormData();
-            const fileName = Date.now() + image.name;
-            data.append("name", fileName)
-            data.append("file", image)
-            newPost.img.push(fileName);
-            try{
-              await axios.post("/upload", data)        // to upload photo into local storage
-            }catch(err){
-              console.log(err)
-            }
-          }
-          uploadFile();
-        })
-      }
+      // if(file.length){
+      //   file.map((image)=>{
+      //     const uploadFile = async() =>{
+      //       const data = new FormData();
+      //       const fileName = Date.now() + image.name;
+      //       data.append("name", fileName)
+      //       data.append("file", image)
+      //       newPost.img.push(fileName);
+      //       try{
+      //         await axios.post("/upload", data)        // to upload photo into local storage
+      //       }catch(err){
+      //         console.log(err)
+      //       }
+      //     }
+      //     uploadFile();
+      //   })
+      // }
   
       try{
         await axios.post("/posts", newPost)         // to post the desc and file name to database
@@ -109,6 +154,11 @@ const CreateNewPost = () => {
     }
   }
 
+  if(percentage === 100){
+    setPercentage(null);
+  }
+  console.log('percentage----------------------------',percentage)
+
   return (
     <>
       <form className='timeline-search' onSubmit={submitHandler}>
@@ -126,7 +176,7 @@ const CreateNewPost = () => {
             <i class="fa-solid fa-location-dot" onClick={()=>{setShowLocations(!showLocations); setShowFriendList(false); setShowEmojis(false)}}></i>
 
             <div className="btn">
-              <button type="submit">Post</button>
+              <button type="submit" disabled={(percentage !== null && percentage !== 100) ? true : false}>Post</button>
             </div>
           </div>
         </div>
@@ -151,8 +201,42 @@ const CreateNewPost = () => {
           </div>
         }
 
+        {percentage ?
+          <ProgressBar
+            completed={percentage}
+            maxCompleted={100}
+            bgColor={'#03bfbc'}
+            isLabelVisible={false}
+            // labelColor={'#000'}
+            height={'5px'}
+            margin={'8px 0 0 0'}
+            // width={'100%'}
+          />
+          : null
+        }
+          {/* <ProgressBar
+            completed={percentage}
+            maxCompleted={100}
+            bgColor={'#03bfbc'}
+            isLabelVisible={false}
+            // labelColor={'#000'}
+            height={'5px'}
+            margin={'12px 0 -12px 0'}
+            // width={'100%'}
+          /> */}
+
         {preview.length>0 && <div className='preview'>
-          <PreviewImage preview={preview} setPreview={setPreview} file={file} setFile={setFile} setXYZ={setXYZ}/>
+          <PreviewImage
+            preview={preview}
+            setPreview={setPreview}
+            file={file}
+            setFile={setFile}
+            setXYZ={setXYZ}
+            imgURL={imgURL}
+            setImgURL={setImgURL}
+            imgRef={imgRef}
+            setImgRef={setImgRef}
+          />
         </div>}
       </form>
 

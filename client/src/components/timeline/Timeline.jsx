@@ -12,8 +12,10 @@ import PostImage from '../PostImage';
 import TaggedFriend from '../TaggedFriend';
 import WhoLikedDisliked from '../WhoLikedDisliked';
 import Comment from "./Comment";
+import { ref, deleteObject } from "firebase/storage";
+import { storage } from "../../firebase";
 
-const Timeline = ({post, isLik, isDisLik, socket}) => {
+const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
   const {_id, userId, createdAt, updatedAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
 
   const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
@@ -318,7 +320,21 @@ const Timeline = ({post, isLik, isDisLik, socket}) => {
       if(remove){
         await axios.delete("posts/"+ _id);
         await axios.put("users/"+currentUser._id, {userId: currentUser._id, totalPosts: user?.totalPosts-1});
-        window.location.reload();
+
+        img?.map(item=>{
+          const st1 = item.split('/o/')[1]
+          const imgName = st1.split('?alt')[0]
+          const storageRef = ref(storage, imgName);
+          console.log(storageRef)
+    
+          deleteObject(storageRef).then(() => {
+            console.log('file deleted--------------', storageRef)
+          }).catch((error) => {
+              console.log(error)
+          });
+        })
+
+        setPosts((prev)=> prev.filter((item)=> item?._id !== _id));
       }
     }
     catch(err){}

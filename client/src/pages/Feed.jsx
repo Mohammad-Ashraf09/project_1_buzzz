@@ -71,6 +71,7 @@ const Feed = () => {
                 key={post._id}
                 currentUser={user}
                 post={post}
+                setPosts={setPosts}
                 isLik={post.likes.includes(currentUser._id)}
                 isDisLik={post.dislikes.includes(currentUser._id)}
                 socket={socket}

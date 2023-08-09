@@ -40,6 +40,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
             fetchNotifications();
         }
     },[open, renderNotification]);
+    // to resolve the above dependency error watch this https://www.youtube.com/watch?v=D9W7AFeJ3kk&t=2694s video from 50:15
 
     useEffect(()=>{           // for fetching number of notifications of a user
         const fetchNotifications = async()=>{

@@ -1,8 +1,18 @@
 import React, { useEffect } from 'react'
 import { useState } from 'react'
 import ReactPlayer from 'react-player';
+import { deleteObject } from "firebase/storage";
 
-const PreviewImage = ({preview, setPreview, file, setFile, setXYZ}) => {
+const PreviewImage = ({
+    preview,
+    setPreview,
+    file, setFile,
+    setXYZ,
+    imgURL,
+    setImgURL,
+    imgRef,
+    setImgRef
+}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isVisibleLeftArrow, setIsVisibleLeftArrow] = useState(false);
     const [isVisibleRightArrow, setIsVisibleRightArrow] = useState(false);
@@ -33,6 +43,14 @@ const PreviewImage = ({preview, setPreview, file, setFile, setXYZ}) => {
         setPreview((prev)=> prev.filter((item)=> item !== preview[currentIndex]));
         setFile((prev)=> prev.filter((item)=> item.name !== file[currentIndex].name));
         setXYZ(false);
+        setImgURL((prev)=> prev.filter((item)=> item !== imgURL[currentIndex]))
+        setImgRef((prev)=> prev.filter((item)=> item?._location?.path_ !== imgRef[currentIndex]?._location?.path_))
+
+        deleteObject(imgRef[currentIndex]).then(() => {
+            console.log('file deleted--------------', imgRef[currentIndex]?._location?.path_)
+        }).catch((error) => {
+            console.log(error)
+        });
 
         if(preview.length===2){
             setIsVisibleLeftArrow(false)
