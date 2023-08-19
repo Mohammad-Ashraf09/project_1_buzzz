@@ -11,7 +11,8 @@ const PreviewImage = ({
     imgURL,
     setImgURL,
     imgRef,
-    setImgRef
+    setImgRef,
+    percentage
 }) => {
     const [currentIndex, setCurrentIndex] = useState(0);
     const [isVisibleLeftArrow, setIsVisibleLeftArrow] = useState(false);
@@ -89,7 +90,10 @@ const PreviewImage = ({
     return (
         <div className='preview-img-container'>
             <div className='img-count'>{preview.length>1 && currentIndex+1}</div>
-            <i class="fa-solid fa-square-xmark" onClick={cancelImageClickHandler} ></i>
+            {percentage ? 
+                null :
+                <i class="fa-solid fa-square-xmark" onClick={cancelImageClickHandler} ></i>
+            }
             <img src={leftArrow} alt="" className="left-arrow" style={{display: `${!isVisibleLeftArrow ? "none" : "block"}`}} onClick={goToPrevious} />
             <img src={rightArrow} alt="" className="right-arrow" style={{display: `${!isVisibleRightArrow ? "none" : "block"}`}} onClick={goToNext} />
 

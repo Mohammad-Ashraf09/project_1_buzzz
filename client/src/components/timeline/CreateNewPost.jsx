@@ -116,24 +116,6 @@ const CreateNewPost = () => {
         taggedFriends: showTaggedFriendsPostContainer ? taggedFriends : [],
       }
 
-      // if(file.length){
-      //   file.map((image)=>{
-      //     const uploadFile = async() =>{
-      //       const data = new FormData();
-      //       const fileName = Date.now() + image.name;
-      //       data.append("name", fileName)
-      //       data.append("file", image)
-      //       newPost.img.push(fileName);
-      //       try{
-      //         await axios.post("/upload", data)        // to upload photo into local storage
-      //       }catch(err){
-      //         console.log(err)
-      //       }
-      //     }
-      //     uploadFile();
-      //   })
-      // }
-  
       try{
         await axios.post("/posts", newPost)         // to post the desc and file name to database
         window.location.reload();
@@ -214,16 +196,6 @@ const CreateNewPost = () => {
           />
           : null
         }
-          {/* <ProgressBar
-            completed={percentage}
-            maxCompleted={100}
-            bgColor={'#03bfbc'}
-            isLabelVisible={false}
-            // labelColor={'#000'}
-            height={'5px'}
-            margin={'12px 0 -12px 0'}
-            // width={'100%'}
-          /> */}
 
         {preview.length>0 && <div className='preview'>
           <PreviewImage
@@ -236,6 +208,7 @@ const CreateNewPost = () => {
             setImgURL={setImgURL}
             imgRef={imgRef}
             setImgRef={setImgRef}
+            percentage={percentage}
           />
         </div>}
       </form>
