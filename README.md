@@ -34,6 +34,6 @@ This project also includes different frontend as well as backend libraries such 
  - and many more.......
 
 ----- RUN COMMANDS -----
- - cd server --> npm i --> nodemon app.js
+ - cd server --> npm i --> nodemon app.js, install nodemon globally (npm install -g nodemon)
  - cd client --> npm i --> npm start
  - cd socket --> npm i --> npm start
