@@ -103,13 +103,15 @@ const PreviewImage = ({
                     muted={true}
                     playing={true}
                     controls
-                    // height="380px"
-                    // width="670px"
+                    height={preview?.length>1 ? "97%" : "100%"}
+                    width="100%"
+                    className='react-player'
                 />
                 :
                 <div className="preview-img" style={{backgroundImage: `url(${preview[currentIndex]})`, height: `${preview.length>1 ? "97%" : "100%"}`}} ></div>
             }
 
+            {/* code for dots */}
             {preview.length>1 && <div className='preview-img-dots-container'>
                 {preview.map((prev, prevIndex)=>(
                     <div

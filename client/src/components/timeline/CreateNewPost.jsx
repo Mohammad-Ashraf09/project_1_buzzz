@@ -61,43 +61,77 @@ const CreateNewPost = () => {
       setPreview((prev)=>[...prev, objectUrl])
       // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
 
-      new Compressor(file?.[len], {
-        quality: 0.5, // 0.6 can also be used, but its not recommended to go below.
-        success: (compressedResult) => {
-          const imgName = compressedResult?.name?.toLowerCase()?.split(' ').join('-');
-          const uniqueImageName = new Date().getTime() + '-' + imgName;
-
-          const storageRef = ref(storage, uniqueImageName);
-          setImgRef((prev)=> [...prev, storageRef]);
-          const uploadTask = uploadBytesResumable(storageRef, compressedResult);
-          console.log('compressed File----------',compressedResult)
-
-          uploadTask.on('state_changed', (snapshot) => {
-              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-              setPercentage(progress);
-              console.log('Upload is ' + progress + '% done');
-              switch (snapshot.state) {
-                case 'paused':
-                  console.log('Upload is paused');
-                  break;
-                case 'running':
-                  console.log('Upload is running');
-                  break;
-                default:
-                  break;
+      if(file?.[len].type === "image/jpeg"){
+        new Compressor(file?.[len], {
+          quality: 0.4, // 0.6 can also be used, but its not recommended to go below.
+          success: (compressedResult) => {
+            const imgName = compressedResult?.name?.toLowerCase()?.split(' ').join('-');
+            const uniqueImageName = new Date().getTime() + '-' + imgName;
+  
+            const storageRef = ref(storage, uniqueImageName);
+            setImgRef((prev)=> [...prev, storageRef]);
+            const uploadTask = uploadBytesResumable(storageRef, compressedResult);
+  
+            uploadTask.on('state_changed', (snapshot) => {
+                const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                setPercentage(progress);
+                console.log('Upload is ' + progress + '% done');
+                switch (snapshot.state) {
+                  case 'paused':
+                    console.log('Upload is paused');
+                    break;
+                  case 'running':
+                    console.log('Upload is running');
+                    break;
+                  default:
+                    break;
+                }
+              }, 
+              (error) => {
+                console.log(error)
+              }, 
+              () => {
+                getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                  setImgURL((prev)=> [...prev, downloadURL])
+                });
               }
-            }, 
-            (error) => {
-              console.log(error)
-            }, 
-            () => {
-              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                setImgURL((prev)=> [...prev, downloadURL])
-              });
+            );
+          },
+        });
+      }
+      else {
+        const imgName = file?.[len]?.name?.toLowerCase()?.split(' ').join('-');
+        const uniqueImageName = new Date().getTime() + '-' + imgName;
+
+        const storageRef = ref(storage, uniqueImageName);
+        setImgRef((prev)=> [...prev, storageRef]);
+        const uploadTask = uploadBytesResumable(storageRef, file?.[len]);
+
+        uploadTask.on('state_changed', (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            setPercentage(progress);
+            console.log('Upload is ' + progress + '% done');
+            switch (snapshot.state) {
+              case 'paused':
+                console.log('Upload is paused');
+                break;
+              case 'running':
+                console.log('Upload is running');
+                break;
+              default:
+                break;
             }
-          );
-        },
-      });
+          }, 
+          (error) => {
+            console.log(error)
+          }, 
+          () => {
+            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+              setImgURL((prev)=> [...prev, downloadURL])
+            });
+          }
+        );
+      }
     }
   },[file?.length]);
 
@@ -139,7 +173,6 @@ const CreateNewPost = () => {
   if(percentage === 100){
     setPercentage(null);
   }
-  console.log('percentage----------------------------',percentage)
 
   return (
     <>

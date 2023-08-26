@@ -1533,6 +1533,10 @@ hr{
 .post-img-container:hover > .post-img-count{
     display: block;
 }
+.react-player video{
+    border-radius: 6px;
+    object-fit: cover;
+}
 .post-reaction-count{
     display: flex;
     justify-content: space-between;

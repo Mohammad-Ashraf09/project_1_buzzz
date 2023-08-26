@@ -1,7 +1,7 @@
-import React, {useState, useRef, useEffect } from 'react';
+import React, {useState } from 'react';
 import ReactPlayer from 'react-player';
 
-const PostImage = ({images, blurrScreenHandler, clicked}) => {
+const PostImage = ({images, blurrScreenHandler}) => {
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -9,13 +9,11 @@ const PostImage = ({images, blurrScreenHandler, clicked}) => {
     const rightArrow = PF+"images/right-arrow.png";
 
     const goToPrevious = () =>{
-        if(currentIndex!==0)
-            setCurrentIndex(currentIndex-1);
+        if(currentIndex!==0) setCurrentIndex(currentIndex-1);
     }
 
     const goToNext = () =>{
-        if(currentIndex!==images?.length-1)
-            setCurrentIndex(currentIndex+1);
+        if(currentIndex!==images?.length-1) setCurrentIndex(currentIndex+1);
     }
 
     return (
@@ -26,23 +24,23 @@ const PostImage = ({images, blurrScreenHandler, clicked}) => {
 
             {(images?.[currentIndex].includes(".mp4") || images?.[currentIndex].includes(".MOV")) ?
                 <ReactPlayer
-                    // url="http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4"
-                    url={PF+images?.[currentIndex]}
+                    url={images?.[currentIndex]}
                     muted={true}
                     playing={true}
                     controls
-                    height={clicked && "295px"}
-                    width={clicked && "520px"}
+                    height={images?.length>1 ? "97%" : "100%"}
+                    width="100%"
+                    className='react-player'
                 />
                 :
                 <div
                     className="preview-img"
-                    // style={{backgroundImage: `url(${PF+images?.[currentIndex]})`, height: `${images?.length>1 ? "97%" : "100%"}`}}
                     style={{backgroundImage: `url(${images?.[currentIndex]})`, height: `${images?.length>1 ? "97%" : "100%"}`}}
                     onClick={blurrScreenHandler}
                 ></div>
             }
             
+            {/* code for dots */}
             {images?.length>1 && <div className='preview-img-dots-container'>
                 {images.map((prev, prevIndex)=>(
                     <div

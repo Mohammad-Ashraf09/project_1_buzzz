@@ -336,7 +336,7 @@ const ClickedPost = ({
                 </div>
 
                 {img?.length && <div className='preview-clicked-post'>
-                    <PostImage images={img} clicked={true}/>
+                    <PostImage images={img}/>
                 </div>}
 
                 <div className="post-reaction-count">
