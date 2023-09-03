@@ -37,7 +37,6 @@ const Messenger = () => {
   const [messageNotifications, setMessageNotifications] = useState([]);
   const [noOfNewmessages, setNoOfNewmessages] = useState(0);
   const [notifications, setNotifications] = useState([]);
-  // const [imgRef, setImgRef] = useState([]);
   const [imgURL, setImgURL] = useState([]);
   const [sendMessageOnlyWithText, setSendMessageOnlyWithText] = useState(false);
   const [sendingFileInProgress, setSendingFileInProgress] = useState(false);
