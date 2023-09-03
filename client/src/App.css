@@ -2560,6 +2560,7 @@ input:valid[focused="true"] ~ .tickkk{
 .messenger-center-wrapper{
     padding: 0 10px;
     height: 100%;
+    width: 100%;
     box-sizing: border-box;
 }
 
@@ -2745,6 +2746,15 @@ input:valid[focused="true"] ~ .tickkk{
     margin-right: 0;
     margin-left: 6px;
 }
+.sending-in-progress{
+    display: flex;
+    align-items: end;
+    transition: 1s ease;
+}
+.sending-in-progress p{
+    font-size: 11px;
+    color: rgb(73, 71, 71);
+}
 .message-text{
     margin: 0;
     padding: 8px 16px;
@@ -2906,7 +2916,7 @@ input:valid[focused="true"] ~ .tickkk{
 
 .reply-message-div{
     height: 80px;
-    width: 91%;
+    width: 99%;
     /* border-radius: 8px; */
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
@@ -2935,6 +2945,15 @@ input:valid[focused="true"] ~ .tickkk{
     border-radius: 50%;
     box-sizing: border-box;
     cursor: pointer;
+}
+.media-div{
+    height: 80px;
+    width: 99%;
+    border-radius: 8px;
+    background-color: #51cac8;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 .reply-message{
     height: 66px;
@@ -2989,20 +3008,23 @@ input:valid[focused="true"] ~ .tickkk{
     padding: 1px 3px;
     border-radius: 50%;
 }
-.input-chat{
+.input-chat-area{
     display: flex;
     align-items: center;
+    width: 100%;
+}
+.input-chat{
     position: relative;
+    width: 92%;
 }
 .type-message{
     background-color: var(--bg-color);
-    width: 91%;
+    width: 99%;
     border: 2px solid rgba(218, 227, 218, 0);
     outline: none;
     border-bottom-left-radius: 8px;
     border-bottom-right-radius: 8px;
     padding: 10px 30px 10px 15px;
-    margin-right: 10px;
     resize: none;
     font-family: 'Franklin Gothic Medium';
     font-size: 15px;
@@ -3016,8 +3038,7 @@ input:valid[focused="true"] ~ .tickkk{
 }
 .emoji-media-div{
     position: absolute;
-    top: 8px;
-    right: 65px;
+    bottom: 9px;
 }
 .emoji-div{
     margin-top: 4px;
@@ -3028,8 +3049,8 @@ input:valid[focused="true"] ~ .tickkk{
 }
 .message-send-icon{
     background-color: var(--bg-color);
-    height: 50px;
-    width: 50px;
+    height: 52px;
+    width: 52px;
     font-size: 26px;
     color: #0c9a97;
     border-radius: 50%;

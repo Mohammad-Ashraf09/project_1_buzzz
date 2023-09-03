@@ -1,10 +1,10 @@
 import React from 'react'
 
-const PreviewMedia = ({idx, media, setPreview, file, setFile, setXYZ}) => {
+const PreviewMedia = ({index, media, setPreview, file, setFile, setXYZ}) => {
 
     const cancelPreviewPic = (med)=>{
         setPreview((prev)=> prev.filter((item)=> item !== med));
-        setFile((prev)=> prev.filter((item)=> item.name !== file[idx].name));
+        setFile((prev)=> prev.filter((item)=> item.name !== file[index].name));
         setXYZ(false);
     }
 

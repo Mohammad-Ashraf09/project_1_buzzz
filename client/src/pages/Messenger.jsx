@@ -8,6 +8,9 @@ import axios from "axios";
 import {io} from "socket.io-client";
 import EmojiContainer from '../components/emoji/EmojiContainer';
 import PreviewMedia from '../components/PreviewMedia';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../../src/firebase";
+import Compressor from 'compressorjs';
 
 const Messenger = () => {
   const {user} = useContext(AuthContext);
@@ -34,6 +37,11 @@ const Messenger = () => {
   const [messageNotifications, setMessageNotifications] = useState([]);
   const [noOfNewmessages, setNoOfNewmessages] = useState(0);
   const [notifications, setNotifications] = useState([]);
+  // const [imgRef, setImgRef] = useState([]);
+  const [imgURL, setImgURL] = useState([]);
+  const [sendMessageOnlyWithText, setSendMessageOnlyWithText] = useState(false);
+  const [sendingFileInProgress, setSendingFileInProgress] = useState(false);
+  const [lastPreviewMediaUrl, setLastPreviewMediaUrl] = useState('');
   // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
 
   const oldMessages = messages.slice(0, messages?.length-noOfNewmessages);
@@ -136,6 +144,28 @@ const Messenger = () => {
     getMessages();
   },[currentChat]);
 
+  useEffect(()=>{
+    scrollRef.current?.scrollIntoView({behavior: "smooth"});
+  },[messages]);
+
+  useEffect(()=>{
+    const fetchFollowings = async() =>{
+      const res = await axios.get("users/"+user._id);
+      const arr = res.data.followings                    // array of objects de raha hai ye
+      setFollowing(arr);
+    }
+    fetchFollowings();
+  },[user._id]);
+
+  useEffect(()=>{              // this useEffect is for preview the file before uploading it
+    if(file?.length && xyz){
+      const len = preview?.length
+      const objectUrl = URL.createObjectURL(file?.[len])
+      setPreview((prev)=>[...prev, objectUrl])
+      // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
+    }
+  },[file?.length]);
+
   const removeNotificationFromDatabase = async(id) => {
     try{
       await axios.put("/messages/noOfNotifications/"+user._id, {friendId: id});
@@ -171,94 +201,203 @@ const Messenger = () => {
 
   const submitHandler = async(e)=>{
     e.preventDefault();
-    if(newMessage || file?.length){
+
+    if(file?.length){
       const message={
         sender: user._id,
-        text: newMessage,
-        media: [],
+        text: "",
+        media: preview,
         conversationId: currentChat._id,
-        replyForId: replyFor.id ? replyFor.id : "",
-        replyForText: replyFor.text ? replyFor.text : "",
-        replyForImage: replyFor.media?.length ? replyFor.media : "",
+        replyForId: "",
+        replyForText: "",
+        replyForImage: "",
         isSameDp: replyFor.isSameDp,
+        createdAt: new Date(),
       };
-
-      if(file?.length){
-        file.map((image)=>{
-          const uploadFile = async() =>{
-            const data = new FormData();
-            const fileName = Date.now() + image.name;
-            data.append("name", fileName)
-            data.append("file", image)
-            message.media.push(fileName);
-            try{
-              await axios.post("/upload", data)        // to upload photo into local storage
-            }catch(err){
-              console.log(err)
-            }
-          }
-          uploadFile();
-        })
-      }
-
-      const arr = window.location.href.split("/");
-      const page = arr[arr.length-1];
-      const isOnlinePresent = onlineUsers.filter((user)=> user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
-      if(isOnlinePresent?.length && page==='messenger'){
-        socket?.emit("sendMessage",{
-          ...message,
-          receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
-        })
-      }
-  
-      try{
-        const res = await axios.post("/messages", message);
-        setMessages([...messages,res.data])
-        setNewMessage("");
-        setIsReply(false);
-        setReplyFor({});
-        setNoOfNewmessages(0)
-        notificationHandler();
-      }catch(err){
-        console.log(err);
-      }
-
-      // try{                                 // apply it mobile view
-      //   await axios.put("/conversations/update/"+currentChat._id, {lastMsgText: newMessage, lastMsgSenderId: user._id,});
-      // }
-      // catch(err){
-      //   console.log(err);
-      // }
-
-      // setIsNewMsg(!isNewMsg);
-      // setCurrentChat({...currentChat, lastMsgText: newMessage});
+      setMessages([...messages, message]);
       setShowEmojis(false);
+      setNoOfNewmessages(0);
+      setSendingFileInProgress(true);
+      setLastPreviewMediaUrl(preview[preview?.length-1]);
       setPreview([]);
-      setFile([]);
+
+      file.map((item)=>{
+        if(item.type === "image/jpeg"){   // for image upload after compressing
+          new Compressor(item, {
+            quality: 0.3,  // 0.6 can also be used, but its not recommended to go below.
+            success: (compressedResult) => {
+              const imgName = compressedResult?.name?.toLowerCase()?.split(' ').join('-');
+              const uniqueImageName = new Date().getTime() + '-' + imgName;
+    
+              const storageRef = ref(storage, uniqueImageName);
+              // setImgRef((prev)=> [...prev, storageRef]);
+              const uploadTask = uploadBytesResumable(storageRef, compressedResult);
+    
+              uploadTask.on('state_changed', (snapshot) => {
+                  const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                  console.log('Upload is ' + progress + '% done');
+                  switch (snapshot.state) {
+                    case 'paused':
+                      console.log('Upload is paused');
+                      break;
+                    case 'running':
+                      console.log('Upload is running');
+                      break;
+                    default:
+                      break;
+                  }
+                },
+                (error) => {
+                  console.log(error)
+                },
+                () => {
+                  getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                    setImgURL((prev)=> [...prev, downloadURL])
+                  });
+                }
+              );
+            },
+          });
+        }
+        else {     // for video upload without compressing
+          const imgName = item.name?.toLowerCase()?.split(' ').join('-');
+          const uniqueImageName = new Date().getTime() + '-' + imgName;
+  
+          const storageRef = ref(storage, uniqueImageName);
+          // setImgRef((prev)=> [...prev, storageRef]);
+          const uploadTask = uploadBytesResumable(storageRef, item);
+  
+          uploadTask.on('state_changed', (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case 'paused':
+                  console.log('Upload is paused');
+                  break;
+                case 'running':
+                  console.log('Upload is running');
+                  break;
+                default:
+                  break;
+              }
+            }, 
+            (error) => {
+              console.log(error)
+            }, 
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setImgURL((prev)=> [...prev, downloadURL])
+              });
+            }
+          );
+        }
+      })
+    }
+    else{
+      setSendMessageOnlyWithText(true);
     }
   };
 
   useEffect(()=>{
-    scrollRef.current?.scrollIntoView({behavior: "smooth"});
-  },[messages]);
+    if((imgURL?.length === file?.length) && imgURL?.length){
+      const saveMediaLinkToDatabaseWithEmptyText = async() => {
+        const message={
+          sender: user._id,
+          text: "",
+          media: imgURL,
+          conversationId: currentChat._id,
+          replyForId: "",
+          replyForText: "",
+          replyForImage: "",
+          isSameDp: replyFor.isSameDp,
+        };
 
-  useEffect(()=>{
-    const fetchFollowings = async() =>{
-      const res = await axios.get("users/"+user._id);
-      const arr = res.data.followings                    // array of objects de raha hai ye
-      setFollowing(arr);
-    }
-    fetchFollowings();
-  },[user._id]);
+        try{
+          await axios.post("/messages", message);
+          setNoOfNewmessages(0)
+          notificationHandler();
+        }catch(err){
+          console.log(err);
+        }
 
-  useEffect(()=>{              // this useEffect is for preview the file before uploading it
-    if(file?.[0] && xyz){
-      const len = preview?.length
-      const objectUrl = URL.createObjectURL(file?.[len])
-      setPreview((prev)=>[...prev, objectUrl])
-      // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
+        const arr = window.location.href.split("/");
+        const page = arr[arr.length-1];
+        const isOnlinePresent = onlineUsers.filter((user)=>
+          user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
+        if(isOnlinePresent?.length && page==='messenger'){
+          socket?.emit("sendMessage",{
+            ...message,
+            receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
+          })
+        }
+  
+        // try{                                 // apply it mobile view
+        //   await axios.put("/conversations/update/"+currentChat._id, {lastMsgText: newMessage, lastMsgSenderId: user._id,});
+        // }
+        // catch(err){
+        //   console.log(err);
+        // }
+        // setIsNewMsg(!isNewMsg);
+        // setCurrentChat({...currentChat, lastMsgText: newMessage});
+  
+        setFile([]);
+        setImgURL([]);
+        // setImgRef([]);
+        setSendingFileInProgress(false);
+      }
+      saveMediaLinkToDatabaseWithEmptyText();
     }
-  },[file]);
+    if(sendMessageOnlyWithText){
+      const saveTextMsgToDatabase = async() => {
+        const message={
+          sender: user._id,
+          text: newMessage,
+          media: imgURL,
+          conversationId: currentChat._id,
+          replyForId: replyFor.id ? replyFor.id : "",
+          replyForText: replyFor.text ? replyFor.text : "",
+          replyForImage: replyFor.media?.length ? replyFor.media : "",
+          isSameDp: replyFor.isSameDp,
+        };
+
+        try{
+          const res = await axios.post("/messages", message);
+          setMessages([...messages, res.data]);
+          setNewMessage("");
+          setIsReply(false);
+          setReplyFor({});
+          setNoOfNewmessages(0);
+          notificationHandler();
+        }catch(err){
+          console.log(err);
+        }
+
+        const arr = window.location.href.split("/");
+        const page = arr[arr.length-1];
+        const isOnlinePresent = onlineUsers.filter((user)=>
+          user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
+        if(isOnlinePresent?.length && page==='messenger'){
+          socket?.emit("sendMessage",{
+            ...message,
+            receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
+          })
+        }
+  
+        // try{                                 // apply it mobile view
+        //   await axios.put("/conversations/update/"+currentChat._id, {lastMsgText: newMessage, lastMsgSenderId: user._id,});
+        // }
+        // catch(err){
+        //   console.log(err);
+        // }
+        // setIsNewMsg(!isNewMsg);
+        // setCurrentChat({...currentChat, lastMsgText: newMessage});
+  
+        setShowEmojis(false);
+        setSendMessageOnlyWithText(false);
+      }
+      saveTextMsgToDatabase();
+    }
+  },[sendMessageOnlyWithText, imgURL?.length]);
 
   const clearChatHandler = async() => {
     const confirm = window.confirm('Are You Sure, want to clear chat');
@@ -315,127 +454,129 @@ const Messenger = () => {
 
         <div className="messenger-center">
           <div className="messenger-center-wrapper">
-            {(currentChat && messages?.length) ?
+            {(currentChat && messages?.length) ? (
               <div className='clear-chat'>
                 <i className="fa-solid fa-trash clear-chat-icon" onClick={clearChatHandler}></i>
                 <div className='clear-chat-text'>clear chat</div>
               </div>
-              :
-              <div style={{height: '40px'}}></div>
-            }
-            {
-              currentChat ?
+            ) : null}
+
+            {currentChat ? (
               <>
                 <div
                   className="chat-view-area"
                   style={{
-                    height: (isReply || preview?.length>0) ? (isReply && preview?.length>0 ? 'calc(81% - 160px)' : 'calc(81% - 80px)') : '81%'
+                    height: (isReply || preview?.length>0) ? (isReply ? 'calc(81% - 80px)' : 'calc(81% - 20px)') : '81%'
                   }}
                 >
-                  {oldMessages.map((m)=>(
-                    <div  key={m._id} ref={scrollRef}>
+                  {oldMessages.map((msg)=>(
+                    <div  key={msg._id} ref={scrollRef}>
                       <Message
-                        user={user}
-                        message={m}
+                        userId={user?._id}
+                        message={msg}
                         setMessages={setMessages}
-                        my={m.sender === user._id}
+                        my={msg?.sender === user?._id}
                         dp1={user?.profilePicture}
                         dp2={dp2}
                         setIsReply={setIsReply}
                         setReplyFor={setReplyFor}
-                        noOfNewmessages={noOfNewmessages}
-                        setNoOfNewmessages={setNoOfNewmessages}
+                        isHideReplyIcon={file?.length}
+                        lastPreviewMediaUrl={lastPreviewMediaUrl}
+                        sendingFileInProgress={sendingFileInProgress}
                       />
                     </div>
                   ))}
 
-                  {noOfNewmessages ?
+                  {noOfNewmessages ? (
                     <div className='new-msg-separator'>
                       <div className='new-msg-separator-line'></div>
-                      <div className='new-msg-indicator-wrapper'><div className='new-msg-indicator'>{noOfNewmessages} Unread {noOfNewmessages>1 ? 'Messages' : 'Message'}</div></div>
+                      <div className='new-msg-indicator-wrapper'>
+                        <div className='new-msg-indicator'>
+                          {noOfNewmessages} Unread {noOfNewmessages>1 ? 'Messages' : 'Message'}
+                        </div>
+                      </div>
                     </div>
-                    : null
-                  }
+                  ) : null}
 
-                  {newMessages.map((m)=>(
-                    <div  key={m._id} ref={scrollRef}>
+                  {newMessages.map((msg)=>(
+                    <div  key={msg._id} ref={scrollRef}>
                       <Message
-                        user={user}
-                        message={m}
+                        userId={user?._id}
+                        message={msg}
                         setMessages={setMessages}
-                        my={m.sender === user._id}
+                        my={msg?.sender === user?._id}
                         dp1={user?.profilePicture}
                         dp2={dp2}
                         setIsReply={setIsReply}
                         setReplyFor={setReplyFor}
-                        noOfNewmessages={noOfNewmessages}
-                        setNoOfNewmessages={setNoOfNewmessages}
                       />
                     </div>
                   ))}
                 </div>
                 <div className="input-chat-area">
-                  {isReply && <div className='reply-message-div'>
-                    <div className='reply-message'>
-                      <img className='reply-message-img' src={DP} alt="" />
-                      <span className='reply-message-text'>{text}</span>
-                      {replyFor?.media?.length ? <img className='reply-message-img-right' src={PF+replyFor?.media} alt="" /> : null}
-                      <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
-                    </div>
-                  </div>}
-
-                  {preview?.length>0 &&
-                    <div
-                      className='reply-message-div media-div'
-                      style={{
-                        borderTopLeftRadius: isReply ? '0px' : '',
-                        borderTopRightRadius: isReply ? '0px' : ''
-                      }}
-                    >
-                      <div className='reply-message'>
-                        {preview.map((media, index)=>(
-                          <PreviewMedia
-                            key={index}
-                            idx={index}
-                            media={media}
-                            setPreview={setPreview}
-                            file={file}
-                            setFile={setFile}
-                            setXYZ={setXYZ}
-                          />
-                        ))}
-                      </div>
-                    </div>
-                  }
-
                   <div className='input-chat'>
-                    <textarea
-                      className='type-message'
-                      onChange={(e) => setNewMessage(e.target.value)}
-                      value={newMessage}
-                      placeholder='Type your message here...'
-                      ref={inputRef}
-                      style={{borderRadius: (isReply || preview?.length>0) ? '' : '8px'}}
-                    ></textarea>
-
-                    <div className="emoji-media-div">
-                      <label htmlFor="file">
-                        {/* <i className="fa-solid fa-paperclip icon"></i> */}
-                        <i className="fa-solid fa-photo-film icon"></i>
-                        <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file?.length!==9 && fileHandler}/>
-                      </label>
-                      <div className="emoji-div">
-                        <i className="fa-regular fa-face-laugh icon" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
+                    {isReply ? (
+                      <div className='reply-message-div'>
+                        <div className='reply-message'>
+                          <img className='reply-message-img' src={DP} alt="" />
+                          <span className='reply-message-text'>{text}</span>
+                          {replyFor?.media?.length ? (
+                            <img className='reply-message-img-right' src={replyFor?.media} alt="" />
+                          ) : null}
+                          <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
+                        </div>
                       </div>
-                    </div>
+                    ) : null}
 
-                    <div className="message-send-icon">
-                      <i className="fa-solid fa-paper-plane" onClick={submitHandler} ></i>
+                    {preview?.length>0 ? (
+                      <div className='media-div'>
+                        <div className='reply-message'>
+                          {preview.map((media, index)=>(
+                            <PreviewMedia
+                              key={index}
+                              index={index}
+                              media={media}
+                              setPreview={setPreview}
+                              file={file}
+                              setFile={setFile}
+                              setXYZ={setXYZ}
+                            />
+                          ))}
+                        </div>
+                      </div>
+                    ) : null}
+
+                    {!file?.length || !preview.length ? (
+                      <textarea
+                        className='type-message'
+                        onChange={(e) => setNewMessage(e.target.value)}
+                        value={newMessage}
+                        placeholder='Type your message here...'
+                        ref={inputRef}
+                        style={{borderRadius: isReply ? '' : '8px'}}
+                      ></textarea>
+                    ) : null}
+
+                    <div className="emoji-media-div" style={{right: `${file?.length ? '16px' : '12px'}`}}>
+                      {(isReply || newMessage) ? null : (
+                        <label htmlFor="file">
+                          <i className="fa-solid fa-photo-film icon"></i>
+                          <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file?.length!==9 && fileHandler}/>
+                        </label>
+                      )}
+                      {!file?.length || !preview.length ? (
+                        <div className="emoji-div">
+                          <i className="fa-regular fa-face-laugh icon" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
+                        </div>
+                      ): null}
                     </div>
                   </div>
+
+                  <div className="message-send-icon">
+                    <i className="fa-solid fa-paper-plane" onClick={submitHandler} ></i>
+                  </div>
                 </div>
-              </>
-              :
+              </>) :
               <span className='no-conversation-text'>Open a conversation to start a chat.</span>
             }
           </div>

@@ -1,28 +1,39 @@
 import axios from 'axios';
-import React, { useContext, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import {format} from "timeago.js"
-import { AuthContext } from '../context/AuthContext';
 import ClickedMedia from './ClickedMedia';
 
-const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReplyFor, noOfNewmessages, setNoOfNewmessages}) => {
+const Message = ({
+  userId,
+  message,
+  setMessages,
+  my,
+  dp1,
+  dp2,
+  setIsReply,
+  setReplyFor,
+  isHideReplyIcon,
+  sendingFileInProgress,
+  lastPreviewMediaUrl
+}) => {
   const [hover, setHover] = useState(false);
   const [showMediaPopup, setShowMediaPopup] = useState(false);
   const [imageIndex, setImageIndex] = useState(0);
 
-  const {_id, conversationId, sender, text, media, replyForId, replyForText, replyForImage, isSameDp, createdAt} = message;
+  const {_id, sender, text, media, replyForText, replyForImage, isSameDp, createdAt} = message;
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const DP1 = PF+dp1;
   const DP2 = PF+dp2;
   let repliedDp;
   if(isSameDp){
-    if(sender===user._id)
+    if(sender===userId)
       repliedDp = DP1;
     else
       repliedDp = DP2;
   }
   else{
-    if(sender===user._id)
+    if(sender===userId)
       repliedDp = DP2;
     else
       repliedDp = DP1;
@@ -76,18 +87,20 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
                   <span className="reply-message-text">Photo</span>
                 </>
               }
-              {replyForImage ? <img className='reply-message-img-right reply-message-image-right' src={PF+replyForImage} alt="" /> : null}
+              {replyForImage ? (
+                <img className='reply-message-img-right reply-message-image-right' src={replyForImage} alt="" />
+              ) : null}
             </div>}
 
             {media?.length ?
               (media?.length<4 ?
                 (media?.length===1 ?
-                  <img className='message-image' src={PF+media[0]} alt="" onClick={()=>imageClickedHandler(0)} />   // if length 1
+                  <img className='message-image' src={media[0]} alt="" onClick={()=>imageClickedHandler(0)} />   // if length 1
                   :
                   <div
                     className='message-image-two-three'
                     style={{
-                      background: `linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(${PF+media[0]})`,
+                      background: `linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(${media[0]})`,
                       width: '280px',
                       height: '190px',
                       borderRadius: '6px',
@@ -102,26 +115,26 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
                 (media?.length===4 ?
                   <div className='message-image-four'>
                     <div className='message-image-four-half'>
-                      <img className='message-image image-two-in-line' src={PF+media[0]} alt="" onClick={()=>imageClickedHandler(0)} />
-                      <img className='message-image image-two-in-line' src={PF+media[1]} alt="" onClick={()=>imageClickedHandler(1)} />
+                      <img className='message-image image-two-in-line' src={media[0]} alt="" onClick={()=>imageClickedHandler(0)} />
+                      <img className='message-image image-two-in-line' src={media[1]} alt="" onClick={()=>imageClickedHandler(1)} />
                     </div>
                     <div className='message-image-four-half'>
-                      <img className='message-image image-two-in-line' src={PF+media[2]} alt="" onClick={()=>imageClickedHandler(2)} />
-                      <img className='message-image image-two-in-line' src={PF+media[3]} alt="" onClick={()=>imageClickedHandler(3)} />
+                      <img className='message-image image-two-in-line' src={media[2]} alt="" onClick={()=>imageClickedHandler(2)} />
+                      <img className='message-image image-two-in-line' src={media[3]} alt="" onClick={()=>imageClickedHandler(3)} />
                     </div>
                   </div>   // if length 4
                   :
                   <div className='message-image-four'>
                     <div className='message-image-four-half'>
-                      <img className='message-image image-two-in-line' src={PF+media[0]} alt="" onClick={()=>imageClickedHandler(0)} />
-                      <img className='message-image image-two-in-line' src={PF+media[1]} alt="" onClick={()=>imageClickedHandler(1)} />
+                      <img className='message-image image-two-in-line' src={media[0]} alt="" onClick={()=>imageClickedHandler(0)} />
+                      <img className='message-image image-two-in-line' src={media[1]} alt="" onClick={()=>imageClickedHandler(1)} />
                     </div>
                     <div className='message-image-four-half'>
-                      <img className='message-image image-two-in-line' src={PF+media[2]} alt="" onClick={()=>imageClickedHandler(2)} />
+                      <img className='message-image image-two-in-line' src={media[2]} alt="" onClick={()=>imageClickedHandler(2)} />
                       <div
                         className='message-image-two-three image-two-in-line'
                         style={{
-                          background: `linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(${PF+media[3]})`,
+                          background: `linear-gradient(rgba(4,9,30,0.7), rgba(4,9,30,0.7)), url(${media[3]})`,
                           borderRadius: '6px',
                           backgroundPosition: 'center',
                           backgroundSize: 'cover',
@@ -140,24 +153,35 @@ const Message = ({user, message, setMessages, my, dp1, dp2, setIsReply, setReply
             {text && <p className={replyForText ? "msg-text msg-text-margin-left" : "msg-text"}>{text}</p>}
             {text && <div className="message-time">{format(createdAt)}</div>}
             {(!text && media.length) && <div className="message-time message-time-for-image">{format(createdAt)}</div>}
-            <div
-              onMouseOver={()=>setHover(true)}
-              onMouseOut={()=>setHover(false)}
-              className={my ? "message-functionality message-functionality-my" : "message-functionality message-functionality-other"}
-            >
-              {!hover && <i class="fa-solid fa-ellipsis-vertical"></i>}
-              {hover &&<div className='delete-reply-div'>
-                <div className='functionality' onClick={()=>replyMessageHandler(0)}><i className="fa-solid fa-reply"></i></div>
-                <div> | </div>
-                <div className='functionality'><i className="fa-regular fa-face-laugh"></i></div>
-                {my && <>
-                  <div> | </div>
-                  <div className='functionality' onClick={deleteMessageHandler}><i className="fa-solid fa-trash message-delete"></i></div>
-                </>}
-              </div>}
-            </div>
+            {(sendingFileInProgress && media[media?.length-1] === lastPreviewMediaUrl) ? null : (
+              <div
+                onMouseOver={()=>setHover(true)}
+                onMouseOut={()=>setHover(false)}
+                className={my ? "message-functionality message-functionality-my" : "message-functionality message-functionality-other"}
+              >
+                {!hover && <i class="fa-solid fa-ellipsis-vertical"></i>}
+                {hover &&<div className='delete-reply-div'>
+                  {isHideReplyIcon ? null : (
+                    <>
+                      <div className='functionality' onClick={()=>replyMessageHandler(0)}><i className="fa-solid fa-reply"></i></div>
+                      <div> | </div>
+                    </>
+                  )}
+                  <div className='functionality'><i className="fa-regular fa-face-laugh"></i></div>
+                  {my ? (
+                    <>
+                      <div> | </div>
+                      <div className='functionality' onClick={deleteMessageHandler}><i className="fa-solid fa-trash message-delete"></i></div>
+                    </>
+                  ) : null}
+                </div>}
+              </div>
+            )}
           </div>
           {my && <img src={DP1} alt="" className="message-img my-img" />}
+          {(sendingFileInProgress && media[media?.length-1] === lastPreviewMediaUrl) ? (
+            <div className='sending-in-progress'><p>sending...</p></div>
+          ) : null}
         </div>
       </div>
 

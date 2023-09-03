@@ -51,7 +51,7 @@ const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler
                     :
                     <div className="preview-img" style={{backgroundImage: `url(${preview[currentIndex]})`, height: `${preview.length>1 ? "97%" : "100%"}`}} ></div>
                 } */}
-                <div className="clicked-img" style={{backgroundImage: `url(${PF+media[currentIndex]})`, height: `${media.length>1 ? "97%" : "100%"}`}} ></div>
+                <div className="clicked-img" style={{backgroundImage: `url(${media[currentIndex]})`, height: `${media.length>1 ? "97%" : "100%"}`}} ></div>
 
                 {media.length>1 && <div className='preview-img-dots-container'>
                     {media.map((prev, prevIndex)=>(
