@@ -21,14 +21,13 @@ const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler
     return (
         <div className="clicked-media-container">
             <div className='clicked-media-top'>
-                <div
-                    className='functionality image-reply'
-                    onClick={()=>{
+                <div className='image-reply'>
+                    <i className="fa-solid fa-reply functionality" onClick={()=>{
                         replyMessageHandler(currentIndex);
                         setShowMediaPopup(false);
                         document.body.style.overflow = "auto"
-                    }}>
-                    <i className="fa-solid fa-reply"></i>
+                    }}></i>
+                    <i class="fa-solid fa-download functionality"></i>
                 </div>
                 <div className="post-top-dots" onClick={()=> {setShowMediaPopup(false); document.body.style.overflow = "auto"}}>
                     <i class="fa-solid fa-xmark"></i>

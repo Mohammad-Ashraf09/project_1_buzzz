@@ -3139,7 +3139,10 @@ input:valid[focused="true"] ~ .tickkk{
     box-sizing: border-box;
 }
 .image-reply{
-    margin-right: 20px;
+    width: 50px;
+    display: flex;
+    justify-content: space-between;
+    margin-right: 40px;
     cursor: pointer;
 }
 .clicked-media{
