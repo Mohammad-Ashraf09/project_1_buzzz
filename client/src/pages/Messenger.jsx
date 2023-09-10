@@ -11,6 +11,7 @@ import PreviewMedia from '../components/PreviewMedia';
 import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../../src/firebase";
 import Compressor from 'compressorjs';
+import ReactPlayer from 'react-player';
 
 const Messenger = () => {
   const {user} = useContext(AuthContext);
@@ -159,8 +160,10 @@ const Messenger = () => {
   useEffect(()=>{              // this useEffect is for preview the file before uploading it
     if(file?.length && xyz){
       const len = preview?.length
+      const fileType = file?.[len].name.includes('.mp4') || file?.[len].name.includes('.MOV')
       const objectUrl = URL.createObjectURL(file?.[len])
-      setPreview((prev)=>[...prev, objectUrl])
+
+      setPreview((prev)=>[...prev, {url: objectUrl, isVideo: fileType}])
       // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
     }
   },[file?.length]);
@@ -229,7 +232,6 @@ const Messenger = () => {
               const uniqueImageName = new Date().getTime() + '-' + imgName;
     
               const storageRef = ref(storage, uniqueImageName);
-              // setImgRef((prev)=> [...prev, storageRef]);
               const uploadTask = uploadBytesResumable(storageRef, compressedResult);
     
               uploadTask.on('state_changed', (snapshot) => {
@@ -251,7 +253,7 @@ const Messenger = () => {
                 },
                 () => {
                   getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                    setImgURL((prev)=> [...prev, downloadURL])
+                    setImgURL((prev)=> [...prev, {url: downloadURL, isVideo: false}])
                   });
                 }
               );
@@ -263,7 +265,6 @@ const Messenger = () => {
           const uniqueImageName = new Date().getTime() + '-' + imgName;
   
           const storageRef = ref(storage, uniqueImageName);
-          // setImgRef((prev)=> [...prev, storageRef]);
           const uploadTask = uploadBytesResumable(storageRef, item);
   
           uploadTask.on('state_changed', (snapshot) => {
@@ -285,7 +286,7 @@ const Messenger = () => {
             }, 
             () => {
               getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-                setImgURL((prev)=> [...prev, downloadURL])
+                setImgURL((prev)=> [...prev, {url: downloadURL, isVideo: true}])
               });
             }
           );
@@ -312,7 +313,8 @@ const Messenger = () => {
         };
 
         try{
-          await axios.post("/messages", message);
+          const res = await axios.post("/messages", message);
+          setMessages([...(messages.slice(0, -1)), res.data]);     // removing the preview media message first then adding the last message from database
           setNoOfNewmessages(0)
           notificationHandler();
         }catch(err){
@@ -341,7 +343,6 @@ const Messenger = () => {
   
         setFile([]);
         setImgURL([]);
-        // setImgRef([]);
         setSendingFileInProgress(false);
       }
       saveMediaLinkToDatabaseWithEmptyText();
@@ -355,7 +356,7 @@ const Messenger = () => {
           conversationId: currentChat._id,
           replyForId: replyFor.id ? replyFor.id : "",
           replyForText: replyFor.text ? replyFor.text : "",
-          replyForImage: replyFor.media?.length ? replyFor.media : "",
+          replyForImage: replyFor.media ? replyFor.media : null,
           isSameDp: replyFor.isSameDp,
         };
 
@@ -519,8 +520,20 @@ const Messenger = () => {
                         <div className='reply-message'>
                           <img className='reply-message-img' src={DP} alt="" />
                           <span className='reply-message-text'>{text}</span>
-                          {replyFor?.media?.length ? (
-                            <img className='reply-message-img-right' src={replyFor?.media} alt="" />
+                          {replyFor?.media ? (
+                            (replyFor?.media?.isVideo) ?
+                              <div className='reply-message-img-right'>
+                                <ReactPlayer
+                                  url={replyFor?.media?.url}
+                                  muted={true}
+                                  playing={false}
+                                  height='100%'
+                                  width="66px"
+                                  className='video'
+                                />
+                              </div> 
+                              :
+                              <img className='reply-message-img-right' src={replyFor?.media?.url} alt="" />
                           ) : null}
                           <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
                         </div>

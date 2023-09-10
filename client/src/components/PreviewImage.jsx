@@ -51,7 +51,7 @@ const PreviewImage = ({
             console.log('file deleted--------------', imgRef[currentIndex]?._location?.path_)
         }).catch((error) => {
             console.log(error)
-        });
+        });   // to delete file from firebase
 
         if(preview.length===2){
             setIsVisibleLeftArrow(false)

@@ -325,14 +325,13 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
           const st1 = item.split('/o/')[1]
           const imgName = st1.split('?alt')[0]
           const storageRef = ref(storage, imgName);
-          console.log(storageRef)
     
           deleteObject(storageRef).then(() => {
             console.log('file deleted--------------', storageRef)
           }).catch((error) => {
               console.log(error)
           });
-        })
+        })   // to delete files from firebase
 
         setPosts((prev)=> prev.filter((item)=> item?._id !== _id));
       }

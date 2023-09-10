@@ -2732,7 +2732,7 @@ input:valid[focused="true"] ~ .tickkk{
     flex-direction: column;
     margin: 15px 0;
 }
-.message-top{
+.message-and-user-image{
     display: flex;
 }
 .message-img{
@@ -2838,6 +2838,7 @@ input:valid[focused="true"] ~ .tickkk{
     position: absolute;
     right: 15px;
     bottom: 15px;
+    z-index: 10;
 }
 .message-functionality{
     font-size: 10px;
@@ -2850,6 +2851,7 @@ input:valid[focused="true"] ~ .tickkk{
     background-color: var(--bg-color);
     cursor: pointer;
     position: absolute;
+    z-index: 10;
     display: none;
     transition: all 0.3s linear;
 }
@@ -2933,6 +2935,50 @@ input:valid[focused="true"] ~ .tickkk{
     width: 50px;
     object-fit: cover;
     margin-right: 12px;
+    border-radius: 6px;
+}
+.review-pic video{
+    object-fit: cover;
+    border-radius: 6px;
+}
+.video-player-wrapper{
+    position: relative;
+}
+.video{
+    object-fit: cover;
+}
+.video video{
+    object-fit: cover;
+    border-radius: 6px;
+}
+.control-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    z-index: 1;
+    cursor: pointer;
+    color: #fff;
+    font-size: 32px;
+    border-radius: 6px;
+}
+.play-icon{
+    height: 56px;
+    width: 56px;
+}
+.play-icon-small{
+    height: 32px;
+    width: 32px;
+}
+.media-contain-video-text{
+    font-size: 10px;
+    color: var(--grey-dark);
 }
 .review-pic-cancel-div{
     position: absolute;
@@ -2984,7 +3030,7 @@ input:valid[focused="true"] ~ .tickkk{
     font-size: 13px;
 }
 .reply-message-img-right{
-    height: 66px;
+    height: 100%;
     width: 66px;
     object-fit: cover;
     position: absolute;
@@ -2994,7 +3040,7 @@ input:valid[focused="true"] ~ .tickkk{
     border-bottom-right-radius: 4px;
 }
 .reply-message-image-right{
-    height: 36px;
+    height: 100%;
     width: 36px;
 }
 .reply-message-cancel{

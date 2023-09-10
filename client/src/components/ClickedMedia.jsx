@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import ReactPlayer from 'react-player';
 
 const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler}) => {
     const [currentIndex, setCurrentIndex] = useState(imageIndex);
@@ -39,19 +40,19 @@ const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler
                 {media?.length>1 && <img src={leftArrow} alt="" className="left-arrow left-arrow-media" onClick={goToPrevious} />}
                 {media?.length>1 && <img src={rightArrow} alt="" className="right-arrow right-arrow-media" onClick={goToNext} />}
 
-                {/* {(file[currentIndex].name.includes(".mp4") || file[currentIndex].name.includes(".MOV")) ?
+                {(media[currentIndex]?.isVideo) ?
                     <ReactPlayer
-                        url={preview[currentIndex]}
+                        url={media[currentIndex]?.url}
                         muted={true}
                         playing={true}
                         controls
-                        // height="380px"
-                        // width="670px"
+                        height={media.length>1 ? "97%" : "100%"}
+                        width="100%"
+                        className='video'
                     />
                     :
-                    <div className="preview-img" style={{backgroundImage: `url(${preview[currentIndex]})`, height: `${preview.length>1 ? "97%" : "100%"}`}} ></div>
-                } */}
-                <div className="clicked-img" style={{backgroundImage: `url(${media[currentIndex]})`, height: `${media.length>1 ? "97%" : "100%"}`}} ></div>
+                    <div className="preview-img" style={{backgroundImage: `url(${media[currentIndex]?.url})`, height: `${media.length>1 ? "97%" : "100%"}`}} ></div>
+                }
 
                 {media.length>1 && <div className='preview-img-dots-container'>
                     {media.map((prev, prevIndex)=>(

@@ -21,7 +21,7 @@ const MessageSchema = new mongoose.Schema(
         type: String,
     },
     replyForImage:{
-        type: String,
+        type: Object,
     },
     isSameDp:{
         type: Boolean,
