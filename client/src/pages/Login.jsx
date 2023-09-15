@@ -42,47 +42,44 @@ const Login = ()=> {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
+    <>
+    <TopbarForLogin/>
     <div className="login-container">
-      <TopbarForLogin/>
-      <div className="login-container-wrapper">
-        <div className="signup-section">
-          <form>
-            <img className="ttn-logo" src={PF+"/images/ttn.jpg"} alt=""/>
-            <h2 className="signup-text"> Enter your details and Start your journey with us </h2>
-            <h4>Don't Stop until you're proud.</h4>
-            <button className="google-btn"> Sign In with Google </button>
-            <span className="or">or</span>
-            <Link to="/register">
-              <button className="google-btn"> Sign Up </button>
-            </Link>
-          </form>
-        </div>
+      <div className="login signup-section">
+        <form>
+          <img className="ttn-logo" src={PF+"/images/ttn.jpg"} alt=""/>
+          <h2 className="signup-text"> Enter your details and Start your journey with us </h2>
+          <h4>Don't Stop until you're proud.</h4>
+          <button className="google-btn"> Sign In with Google </button>
+          <span className="or">or</span>
+          <Link to="/register">
+            <button className="google-btn"> Sign Up </button>
+          </Link>
+        </form>
+      </div>
 
-        <div className="signin-section">
-          <form onSubmit={clickHandler}>
-            <h3 className="signin-text"> Login To Your Account </h3>
-            <div className="input-section">
-              <input type="email" className="username" name='username' placeholder='Email' ref={email} required />
-              <br />
-              <input type="password" className="password" name='password' placeholder='Password' ref={password} required minLength='6' />
-            </div>
-            {invalidCredential && <div className="invalid-credential">Invalid Credentials!</div>}
+      <div className="login signin-section">
+        <form onSubmit={clickHandler}>
+          <h3 className="signin-text"> Login To Your Account </h3>
+          <div className="input-section">
+            <input type="email" className="credentials username" name='username' placeholder='Email' ref={email} required />
+            <input type="password" className="credentials password" name='password' placeholder='Password' ref={password} required minLength='6' />
+          </div>
+          {invalidCredential && <div className="invalid-credential">Invalid Credentials!</div>}
 
-            <div className="form-group">
-              <div className="checkbox">
-                <input className="checkbox-input" type="checkbox"/>
-                <label className="checkbox-label"> Remember Me </label>
-              </div>
-              <div className="forgot-pass">
-                <a href="">Forgot Password?</a>
-              </div>
+          <div className="form-group">
+            <div className="checkbox">
+              <input className="checkbox-input" type="checkbox"/>
+              <label className="checkbox-label"> Remember Me </label>
             </div>
-      
-            <button className='signin-btn'>Sign In</button>
-          </form>
-        </div>
+            <div className="forgot-pass"> Forgot Password? </div>
+          </div>
+    
+          <button className='signin-btn'>Sign In</button>
+        </form>
       </div>
     </div> 
+    </>
   )
 }
 

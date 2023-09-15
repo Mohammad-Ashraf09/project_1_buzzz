@@ -19,34 +19,34 @@ body{
 @import url(https://fonts.googleapis.com/css?family=Roboto:400,300,500);
 
 .signup-container{
-    height: 671px;
+    height: calc(100vh - 50px);
+    min-height: 657px;
     background-color: #03bfbc;
     position: relative;
     display: flex;
     justify-content: center;
     align-items: center;
 }
-.signup-box {
+.signup {
   width: 65%;
-  /* height: 85%; */
   background: rgb(244, 240, 240);
   border-radius: 8px;
   box-shadow: 4px 4px 10px var(--shadow-color);
   display: flex;
 }
-.left {
+.signup-left {
   box-sizing: border-box;
-  padding: 40px;
+  padding: 2.5rem;
   width: 49.80%;
   height: 100%;
   position: relative;
 }
-.left h1 {
+.signup-left h1 {
   font-family: 'Roboto', sans-serif;
   margin: 0 0 20px 0;
   color: var(--theme-color);
 }
-.left input[type="text"], .left input[type="email"], .left input[type="password"] {
+.signup-left input[type="text"], .signup-left input[type="email"], .signup-left input[type="password"], .signup-below-mobile input[type="text"], .signup-below-mobile input[type="email"], .signup-below-mobile input[type="password"] {
   display: block;
   box-sizing: border-box;
   margin-bottom: 20px;
@@ -102,21 +102,21 @@ body{
     border: none;
     color: white;
 }
-.agreement-div{
+.agreement{
     display: flex;
     align-items: center;
 }
-.agreement{
+.agreement-check{
     height: 14px;
     width: 14px;
 }
-.left label{
+.signup-left label{
     font-size: 13px;
 }
-.agreement-div a{
+.agreement-check a{
     color: var(--theme-color);
 }
-.bottom{
+.navigations{
     display: flex;
     justify-content: space-between;
     align-items: end;
@@ -156,32 +156,32 @@ body{
     background-color: var(--theme-color);
     border-radius: 2px;
 }
-.right {
+.signup-right {
     box-sizing: border-box;
     width: 49.80%;
     height: 100%;
-    padding: 60px 40px 40px 40px;
+    padding: 4rem 2rem 2rem 2rem;
+}
+.profile-picture-container{
+    display: flex;
+    justify-content: center;
+    margin-bottom: 2.5rem;
 }
 .profile-picture{
-    height: 260px;
-    width: 260px;
+    width: 246px;
+    height: 246px;
     border-radius: 50%;
-    margin-left: 65px;
     object-fit: cover;
 }
-.dummy-profile-div-male{
+.dummy-profile{
+    width: 100%;
     display: flex;
     justify-content: space-between;
-    margin-top: 20px;
-}
-.dummy-profile-div-female{
-    display: flex;
-    justify-content: space-between;
-    margin-top: 10px;
+    margin-top: 0.5rem;
 }
 .dummy-profile-picture{
-    height: 60px;
-    width: 60px;
+    width: 13.5%;
+    height: auto;
     border-radius: 50%;
     cursor: pointer;
 }
@@ -223,53 +223,53 @@ input:invalid[focused="true"] ~ .error-msg{
     display: block;
 }
 
+.signup-mobile{
+    display: none;
+}
+
 
 /* ################################################### login page CSS ####################################### */
 
 .login-container{
-    height: 100vh;
-    /* background-color: var(--bg-color); */
+    height: calc(100vh - 50px);
+    min-height: 657px;
     background-color: #03bfbc;
-}
-.login-container-wrapper{
     display: flex;
-    justify-content: center;
+    justify-content: space-around;
+    padding: 0 6rem;
     align-items: center;
-    height: 500px;
-    margin: 10vh 8%;
-    border-radius: 8px;
 }
-.signup-section{
+.login{
     text-align: center;
-    flex: 6;
+    width: 40%;
     background-color: white;
-    border-radius: 6px;
-    margin-right: 15px;
-    margin-left: 55px;
+    border-radius: 8px;
     box-shadow: 8px 8px 12px var(--grey-light);
-    height: 80%;
+    height: 60%;
+}
+.login form{
+    padding: 3rem;
 }
 .ttn-logo{
-    margin-top: 50px;
     height: 50px;
     width: 85px;
 }
 .signup-text{
-    margin: 40px 60px 20px 60px;
-    font-weight: 500;
+    margin: 40px 0 20px 0;
+    font-weight: 600;
     color: var(--grey-dark);
 }
-.signup-section h4{
+.login h4{
     font-weight: 400;
     color: var(--grey-light);
 }
 .google-btn{
     margin-top: 50px;
-    color: rgb(221, 44, 156);
+    color: var(--theme-color);;
     font-weight: 600;
     padding: 12px 24px;
     border-radius: 25px;
-    border: 1px solid rgb(221, 44, 156);
+    border: 1px solid var(--theme-color);;
     background-color: white;
     cursor: pointer;
 }
@@ -280,23 +280,14 @@ input:invalid[focused="true"] ~ .error-msg{
     margin: 0 20px;
     color: var(--grey-light);
 }
-.signin-section{
-    text-align: center;
-    flex: 6;
-    background-color: white;
-    border-radius: 6px;
-    margin-left: 15px;
-    margin-right: 55px;
-    box-shadow: 8px 8px 12px var(--grey-light);
-    height: 80%;
-}
 .signin-text{
-    margin-top: 50px;
+    margin-top: 0;
     margin-bottom: 40px;
-    font-size: 17px;
+    font-size: 18px;
 }
-.username{
-    width: 350px;
+.credentials{
+    max-width: 350px;
+    width: 85%;
     border: none;
     outline: none;
     border-bottom: 1px solid var(--shadow-color);
@@ -306,14 +297,7 @@ input:invalid[focused="true"] ~ .error-msg{
     margin-bottom: 30px;
 }
 .password{
-    width: 350px;
-    border: none;
-    outline: none;
-    border-bottom: 1px solid var(--shadow-color);
-    padding: 5px;
-    font-weight: 500;
-    font-size: 15px;
-    /* margin-bottom: 30px; */
+    margin-bottom: 0px;
 }
 [placeholder]{
     opacity: 0.6;
@@ -327,15 +311,12 @@ input:invalid[focused="true"] ~ .error-msg{
     color: red;
     margin-top: 10px;
     font-size: 14px;
-    /* display: none; */
 }
 .form-group{
     display: flex;
-    justify-content: space-between;
-    margin-top: 30px;
-    margin-left: 100px;
-    margin-right: 100px;
-    font-size: 13px;
+    justify-content: space-around;
+    margin-top: 2rem;
+    font-size: 12px;
 }
 .checkbox{
     display: flex;
@@ -346,11 +327,11 @@ input:invalid[focused="true"] ~ .error-msg{
     height: 15px;
     width: 15px;
 }
-.forgot-pass a{
-    text-decoration: none;
+.forgot-pass{
     color: rgba(156, 56, 233, 0.5);
+    cursor: pointer;
 }
-.forgot-pass a:hover{
+.forgot-pass:hover{
     color: var(--theme-color);
 }
 .signin-btn{
@@ -3254,103 +3235,112 @@ input:valid[focused="true"] ~ .tickkk{
     left: 40px;
 }
 
-/*--------------------------------------------- meadia querry for opto 400px ----------------------*/
-@media only screen and (max-width: 400px){
+/*--------------------------------------------- meadia querry for opto 420px ----------------------*/
+@media only screen and (max-width: 420px){
     body{
         margin: 0;
     }
 
     /*--------------------- SignUp page --------------------------*/
     .signup-container{
-        height: 100vh;
-        background-color: #03bfbc;
-        position: relative;
+        height: calc(100vh - 42px);
+        min-height: 870px;
+        align-items: flex-start;
     }
-    .signup-box {
-      width: 90%;
-      display: block;
+    .signup{
+        display: none;
     }
-    .left {
-      padding: 20px;
-      width: 100%;
+    .signup-mobile{
+        display: block;
     }
-    .left h1 {
-      margin: 0 0 15px 0;
+    .signup-mobile-container{
+        width: 90vw;
+        background-color: rgb(244, 240, 240);
+        border-radius: 8px;
+        padding: 1rem;
+        box-sizing: border-box;
+        margin-top: 1rem;
     }
-    .left input[type="text"], .left input[type="email"], .left input[type="password"]{
-      margin-bottom: 15px;
-      font-size: 14px;
+    .signup-above-mobile h1{
+        margin-top: 0;
+        color: var(--theme-color);
     }
-    .gender-text{
-        font-size: 14px !important;
+    .profile-picture-div{
+        display: flex;
     }
-    .gender-radio label {
-        font-size: 14px;
+    .profile-picture-container{
+        margin-bottom: 0;
+        margin-right: 1rem;
     }
-    .left label{
+    .profile-picture{
+        width: 120px;
+        height: 120px;
+    }
+    .dummy-profile{
+        margin-top: 0.25rem;
+    }
+    .dummy-profile-picture{
+        width: 19%;
+    }
+    .choose-remove-dp{
+        align-items: center;
+        margin-top: 0.5rem;
+    }
+    .-or{
+        font-size: 10px;
+    }
+    .agreement{
         font-size: 12px;
     }
     .register-btn {
-      margin-top: 24px;
+    padding: 12px 28px;
     }
-    .right {
-        display: none;
+    .existing-member{
+        font-size: 12px;
     }
 
     /* -------------------------Sign in page -------------------- */
     .login-container{
-        height: 100vh;
-    }
-    .login-container-wrapper{
+        height: calc(100vh - 42px);
+        min-height: 800px;
         flex-direction: column;
-        margin: 0rem 1rem;
+    }
+    .login{
+        width: 90vw;
+        height: 36%;
     }
     .signup-section{
-        margin: 120px 0 4vh 0;
-        width: 90vw;
-        height: 42vh;
+        margin-top: 5rem;
+    }
+    .signin-section{
+        margin-bottom: 5rem;
+    }
+    .login form{
+        padding: 1rem;
     }
     .ttn-logo{
-        margin-top: 10px;
         height: 40px;
         width: 70px;
     }
     .signup-text{
-        margin: 10px 0;
+        margin: 15px 0;
         font-size: 20px;
     }
     .google-btn{
-        margin: 20px 5px 30px 5px;
+        margin: 20px 0;
     }
     .or{
         margin: 0 5px;
-    }
-
-    .signin-section{
-        margin: 0;
-        width: 90vw;
-        height: 42vh;
     }
     .signin-text{
         margin-top: 15px;
         margin-bottom: 20px;
     }
-    .username{
-        width: 80%;
-        margin-bottom: 20px;
-    }
-    .password{
-        width: 80%;
-    }
     .form-group{
-        justify-content: space-around;
         margin-top: 10px;
-        margin-left: 0px;
-        margin-right: 0px;
     }
     .signin-btn{
         margin-top: 20px;
-        margin-bottom: 30px;
     }
 
     /* -------------------------Home page -------------------- */
@@ -3459,8 +3449,8 @@ input:valid[focused="true"] ~ .tickkk{
     }
 }
 
-/*--------------------------------------------- meadia querry for 400px to 500px ----------------------*/
-@media only screen and (min-width: 400px) and (max-width: 500px){
+/*--------------------------------------------- meadia querry for 420px to 500px ----------------------*/
+@media only screen and (min-width: 420px) and (max-width: 500px){
     body{
         margin: 0;
     }
@@ -3498,7 +3488,7 @@ input:valid[focused="true"] ~ .tickkk{
     .register-btn {
       margin-top: 24px;
     }
-    .right {
+    .signup-right {
         display: none;
     }
 

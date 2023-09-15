@@ -153,8 +153,8 @@ const Signup = () => {
         <>
             <TopbarForLogin/>
             <div className='signup-container'>
-                <div className="signup-box">
-                    <form className="left" onSubmit={saveHandler}>
+                <div className="signup">
+                    <form className="signup-left" onSubmit={saveHandler}>
                         <h1>Sign Up</h1>
 
                         <div className="input-section">
@@ -163,12 +163,12 @@ const Signup = () => {
                             ))}
                         </div>
 
-                        <div className="agreement-div">
-                            <input className='agreement' type="checkbox" name="agreement" onClick={disableHandler}/>
+                        <div className="agreement">
+                            <input className='agreement-check' type="checkbox" name="agreement" onClick={disableHandler}/>
                             <label htmlFor="agreement"> I agree all statements in <a href="">Terms of Service</a></label>
                         </div>
 
-                        <div className='bottom'>
+                        <div className='navigations'>
                             <button type='submit' className="register-btn" disabled={disable}>Register</button>
                             <Link to="/login" className='existing-member'>Already a Member?</Link>
                         </div>
@@ -176,13 +176,15 @@ const Signup = () => {
 
                     <div className='vertical-line'></div>
                 
-                    <div className="right">
-                        {dpPreview ?
-                            <img className="profile-picture" src={dpPreview} alt='profile'/>
-                            :
-                            <img className='profile-picture' src={currentDP} alt="" />
-                        }
-                        <div className='dummy-profile-div-male'>
+                    <div className="signup-right">
+                        <div className='profile-picture-container'>
+                            {dpPreview ?
+                                <img className="profile-picture" src={dpPreview} alt='profile'/>
+                                :
+                                <img className='profile-picture' src={currentDP} alt="" />
+                            }
+                        </div>
+                        <div className='dummy-profile'>
                             <img className='dummy-profile-picture' src={dummy01} alt="" onClick={()=>dpHandler(dummy01)} />
                             <img className='dummy-profile-picture' src={dummy02} alt="" onClick={()=>dpHandler(dummy02)} />
                             <img className='dummy-profile-picture' src={dummy03} alt="" onClick={()=>dpHandler(dummy03)} />
@@ -190,7 +192,7 @@ const Signup = () => {
                             <img className='dummy-profile-picture' src={dummy05} alt="" onClick={()=>dpHandler(dummy05)} />
                             <img className='dummy-profile-picture' src={dummy06} alt="" onClick={()=>dpHandler(dummy06)} />
                         </div>
-                        <div className='dummy-profile-div-female'>
+                        <div className='dummy-profile'>
                             <img className='dummy-profile-picture' src={dummy07} alt="" onClick={()=>dpHandler(dummy07)} />
                             <img className='dummy-profile-picture' src={dummy08} alt="" onClick={()=>dpHandler(dummy08)} />
                             <img className='dummy-profile-picture' src={dummy09} alt="" onClick={()=>dpHandler(dummy09)} />
@@ -210,6 +212,69 @@ const Signup = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+
+                <div className='signup-mobile'>
+                    <div className="signup-above-mobile signup-mobile-container">
+                        <h1>Sign Up</h1>
+                        <div className='profile-picture-div'>
+                            <div className='profile-picture-container'>
+                                {dpPreview ?
+                                    <img className="profile-picture" src={dpPreview} alt='profile'/>
+                                    :
+                                    <img className='profile-picture' src={currentDP} alt="" />
+                                }
+                            </div>
+                            <div>
+                                <div className='dummy-profile'>
+                                    <img className='dummy-profile-picture' src={dummy01} alt="" onClick={()=>dpHandler(dummy01)} />
+                                    <img className='dummy-profile-picture' src={dummy02} alt="" onClick={()=>dpHandler(dummy02)} />
+                                    <img className='dummy-profile-picture' src={dummy03} alt="" onClick={()=>dpHandler(dummy03)} />
+                                    <img className='dummy-profile-picture' src={dummy04} alt="" onClick={()=>dpHandler(dummy04)} />
+                                </div>
+                                <div className='dummy-profile'>
+                                    <img className='dummy-profile-picture' src={dummy05} alt="" onClick={()=>dpHandler(dummy05)} />
+                                    <img className='dummy-profile-picture' src={dummy06} alt="" onClick={()=>dpHandler(dummy06)} />
+                                    <img className='dummy-profile-picture' src={dummy07} alt="" onClick={()=>dpHandler(dummy07)} />
+                                    <img className='dummy-profile-picture' src={dummy08} alt="" onClick={()=>dpHandler(dummy08)} />
+                                </div>
+                                <div className='dummy-profile'>
+                                    <img className='dummy-profile-picture' src={dummy09} alt="" onClick={()=>dpHandler(dummy09)} />
+                                    <img className='dummy-profile-picture' src={dummy10} alt="" onClick={()=>dpHandler(dummy10)} />
+                                    <img className='dummy-profile-picture' src={dummy11} alt="" onClick={()=>dpHandler(dummy11)} />
+                                    <img className='dummy-profile-picture' src={dummy12} alt="" onClick={()=>dpHandler(dummy12)} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className='choose-remove-dp'>
+                            <label htmlFor="dp">
+                                <div className='choose-from-gallery'>Choose From Gallery</div>
+                                <input style={{display:"none"}} type="file" id="dp" name="file" accept='.jpg, .png, .jpeg' onChange={dpFromGalleryHandler}/>
+                            </label>
+                            <p className='-or'>OR</p>
+                            <div className='choose-from-gallery' onClick={()=>{setCurrentDP(banner); setDpPreview(null)}}>Remove DP</div>
+                        </div>
+                    </div>
+
+
+
+                    <form className="signup-below-mobile signup-mobile-container" onSubmit={saveHandler}>
+                        <div className="input-section">
+                            {inputs.map((item)=>(
+                                <FormInput key={item.id} name={item.name} type={item.type} placeholder={item.placeholder} errorMsg={item.errorMsg} pattern={item.pattern} required={item.required} values={values[item.name]} onChange={onChange} />
+                            ))}
+                        </div>
+
+                        <div className="agreement">
+                            <input className='agreement-check' type="checkbox" name="agreement" onClick={disableHandler}/>
+                            <label htmlFor="agreement"> I agree all statements in <a href="">Terms of Service</a></label>
+                        </div>
+
+                        <div className='navigations'>
+                            <button type='submit' className="register-btn" disabled={disable}>Register</button>
+                            <Link to="/login" className='existing-member'>Already a Member?</Link>
+                        </div>
+                    </form>
                 </div>
             </div> 
         </>
