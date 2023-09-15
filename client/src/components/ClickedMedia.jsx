@@ -50,14 +50,14 @@ const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler
                         className='video'
                     />
                     :
-                    <div className="preview-img" style={{backgroundImage: `url(${media[currentIndex]?.url})`, height: `${media.length>1 ? "97%" : "100%"}`}} ></div>
+                    <div className="preview-image" style={{backgroundImage: `url(${media[currentIndex]?.url})`, height: `${media.length>1 ? "97%" : "100%"}`}} ></div>
                 }
 
-                {media.length>1 && <div className='preview-img-dots-container'>
+                {media.length>1 && <div className='preview-image-dots-container'>
                     {media.map((prev, prevIndex)=>(
                         <div
                             key={prevIndex}
-                            className='preview-img-dots'
+                            className='preview-image-dots'
                             style={{color: `${prevIndex===currentIndex ? "black" : "rgb(154, 147, 147)"}`}}
                             onClick={()=>setCurrentIndex(prevIndex)}
                             > &#x2022;

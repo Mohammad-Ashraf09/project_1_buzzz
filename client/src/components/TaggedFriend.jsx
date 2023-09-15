@@ -9,10 +9,10 @@ const TaggedFriend = ({friend, setTaggedFriends, setShowTaggedFriendsPostContain
   }
 
   return (
-    <div className='location-post-container-wrapper'>
-      <i class="fa-solid fa-tags location-post-icon"></i>
-      <div className='location-post-name'>{friend.name}</div>
-      <div className='location-post-cross'><i class="fa-solid fa-xmark" onClick={()=> cancelTagHandler(friend)}></i></div>
+    <div className='selected-tagged-friends-wrapper'>
+      <i class="fa-solid fa-tags selected-tagged-friends-icon tagged-item-icon"></i>
+      <div className='selected-tagged-friends-name tagged-item-name'>{friend.name}</div>
+      <div className='selected-tagged-friends-cancel tagged-item-cancel'><i class="fa-solid fa-xmark" onClick={()=> cancelTagHandler(friend)}></i></div>
     </div>
   )
 }

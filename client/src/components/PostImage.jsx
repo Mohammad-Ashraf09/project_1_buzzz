@@ -34,18 +34,18 @@ const PostImage = ({images, blurrScreenHandler}) => {
                 />
                 :
                 <div
-                    className="preview-img"
+                    className="preview-image"
                     style={{backgroundImage: `url(${images?.[currentIndex]})`, height: `${images?.length>1 ? "97%" : "100%"}`}}
                     onClick={blurrScreenHandler}
                 ></div>
             }
             
             {/* code for dots */}
-            {images?.length>1 && <div className='preview-img-dots-container'>
+            {images?.length>1 && <div className='preview-image-dots-container'>
                 {images.map((prev, prevIndex)=>(
                     <div
                         key={prevIndex}
-                        className='preview-img-dots'
+                        className='preview-image-dots'
                         style={{color: `${prevIndex===currentIndex ? "#03bfbc" : "rgb(154, 147, 147)"}`}}
                         onClick={()=>setCurrentIndex(prevIndex)}
                         > &#x2022;

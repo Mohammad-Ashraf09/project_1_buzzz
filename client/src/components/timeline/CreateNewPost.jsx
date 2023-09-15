@@ -176,12 +176,11 @@ const CreateNewPost = () => {
 
   return (
     <>
-      <form className='timeline-search' onSubmit={submitHandler}>
-        <div className="timeline-search-wrapper">
-          <img className='post-user-img' src={profile} alt="" />
-          <textarea type="text" className="post-input" placeholder={"Hello " + name + ", Start a post..."} value={message} onChange={handleChange} ref={inputRef} />
-          <div className="y">
-
+      <form className='create-post' onSubmit={submitHandler}>
+        <div className="create-post-wrapper">
+          <img className='user-rectangular-image' src={profile} alt="" />
+          <textarea type="text" className="post-input" placeholder={"Hello " + name + ", start a post..."} value={message} onChange={handleChange} ref={inputRef} />
+          <div className="textarea-functionality">
             <label htmlFor="file">
               <i className="fa-solid fa-photo-film"></i>
               <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file.length!==10 && fileHandler}/>
@@ -189,21 +188,20 @@ const CreateNewPost = () => {
             <i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis); setShowLocations(false); setShowFriendList(false)}}></i>
             <i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList); setShowEmojis(false); setShowLocations(false)}}></i>
             <i class="fa-solid fa-location-dot" onClick={()=>{setShowLocations(!showLocations); setShowFriendList(false); setShowEmojis(false)}}></i>
-
             <div className="btn">
               <button type="submit" disabled={(percentage !== null && percentage !== 100) ? true : false}>Post</button>
             </div>
           </div>
         </div>
 
-        {showLocationPostContainer && <div className='location-post-container'>
-          <i class="fa-solid fa-location-dot location-post-icon"></i>
-          <div className='location-post-name'>{location}</div>
-          <div className='location-post-cross'><i class="fa-solid fa-xmark" onClick={()=>{setShowLocationPostContainer(false)}}></i></div>
+        {showLocationPostContainer && <div className='selected-post-location tagged-item'>
+          <i class="fa-solid fa-location-dot selected-post-location-icon tagged-item-icon"></i>
+          <div className='selected-post-location-name tagged-item-name'>{location}</div>
+          <div className='selected-post-location-cancel tagged-item-cancel'><i class="fa-solid fa-xmark" onClick={()=>{setShowLocationPostContainer(false)}}></i></div>
         </div>}
 
         {showTaggedFriendsPostContainer &&
-          <div className='location-post-container'>
+          <div className='selected-tagged-friends tagged-item'>
               {taggedFriends.map((friend)=>(
                 <TaggedFriend
                   key={Math.random()}
@@ -230,7 +228,7 @@ const CreateNewPost = () => {
           : null
         }
 
-        {preview.length>0 && <div className='preview'>
+        {preview.length>0 && <div className='post-media-preview-container'>
           <PreviewImage
             preview={preview}
             setPreview={setPreview}
@@ -256,7 +254,7 @@ const CreateNewPost = () => {
         />
       }
 
-      {showLocations && <div className='location-div'>
+      {showLocations && <div className='location-list-container'>
         <div className='location-search-filter'>
           <input type="text" className='location-search-input' name="" placeholder='Search Location' onChange={(e)=>setQuery(e.target.value)} />
         </div>

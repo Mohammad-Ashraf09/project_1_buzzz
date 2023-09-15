@@ -984,7 +984,7 @@ hr{
 }
 
 /*-------------- timeline post input --------------------*/
-.timeline-search{
+.create-post{
     margin: 3rem 2rem;
     border-radius: 8px;
     background-color: white;
@@ -992,12 +992,12 @@ hr{
     position: sticky;
     box-shadow: 4px 4px 8px var(--shadow-color);
 }
-.timeline-search-wrapper{
+.create-post-wrapper{
     display: flex;
     /* delete below height after removng bootsrap */
     /* height: 72px; */
 }
-.post-user-img{
+.user-rectangular-image{
     height: 72px;
     width: 60px;
     object-fit: cover;
@@ -1018,7 +1018,7 @@ hr{
     margin-right: 10px;
     resize: none;
 }
-.timeline-search-wrapper i{
+.create-post-wrapper i{
     font-size: 20px;
     color: rgb(11, 192, 11);
     cursor: pointer;
@@ -1052,29 +1052,29 @@ hr{
 .post-input::-webkit-scrollbar{
     display: none;
 }
-.location-post-container{
+.tagged-item{
     display: flex;
     flex-wrap: wrap;
     margin-top: 12px;
 }
-.location-post-container-wrapper{
+.selected-tagged-friends-wrapper{
     display: flex;
     margin-bottom: 5px;
 }
-.location-post-icon{
+.tagged-item-icon{
     font-size: 12px;
     padding: 4px 0 4px 8px;
     background-color: var(--grey-xl-light);
     color: var(--grey-dark);
     border-radius: 4px 0 0 4px;
 }
-.location-post-name{
+.tagged-item-name{
     font-size: 12px;
     padding: 3.5px 12px 3px 4px;
     background-color: var(--grey-xl-light);
     color: var(--grey-dark);
 }
-.location-post-cross{
+.tagged-item-cancel{
     font-size: 12px;
     padding: 4px 8px 3px 2px;
     background-color: var(--grey-xl-light);
@@ -1083,7 +1083,7 @@ hr{
     margin-right: 6px;
     cursor: pointer;
 }
-.preview{
+.post-media-preview-container{
     width: 100%;
     height: 400px;
     margin-top: 12px;
@@ -1093,11 +1093,11 @@ hr{
     height: 320px;
     margin-top: 12px;
 }
-.preview-img-container{
+.post-media-preview-container-wrapper{
     height: 100%;
     position: relative;
 }
-.img-count{
+.preview-media-count{
     position: absolute;
     top: 6px;
     left: 6px;
@@ -1136,7 +1136,7 @@ hr{
 .left-arrow:hover, .right-arrow:hover{
     transform: scale(1.1);
 }
-.preview-img{
+.preview-image{
     /* height: 97%; */
     width: 100%;
     border-radius: 6px;
@@ -1145,11 +1145,11 @@ hr{
     cursor: grab;
     /* object-fit: cover; */
 }
-.preview-img-dots-container{
+.preview-image-dots-container{
     display: flex;
     justify-content: center;
 }
-.preview-img-dots{
+.preview-image-dots{
     margin: -10px 10px 20px 0;
     font-size: 40px;
     cursor: pointer;
@@ -1167,7 +1167,7 @@ hr{
 .Flex{
     display: none !important;
 }
-.location-div{
+.location-list-container{
     height: 50vh;
     width: 20vw;
     border-radius: 8px;
@@ -1178,18 +1178,18 @@ hr{
     background-color: rgba(232, 232, 232, 0.9);
     overflow: auto;
 }
-.location-div::-webkit-scrollbar{
+.location-list-container::-webkit-scrollbar{
     width: 20px;
 }
-.location-div::-webkit-scrollbar-thumb{
+.location-list-container::-webkit-scrollbar-thumb{
     background-color: var(--grey-light);
     border-radius: 100vh;
     border: 7px solid rgb(232, 232, 232);
 }
-.location-div::-webkit-scrollbar-thumb:hover{
+.location-list-container::-webkit-scrollbar-thumb:hover{
     background-color: var(--grey-light);
 }
-.location-div::-webkit-scrollbar-track{
+.location-list-container::-webkit-scrollbar-track{
     background-color: transparent;
     border-radius: 8px;
 }
@@ -3387,12 +3387,12 @@ input:valid[focused="true"] ~ .tickkk{
     .rightbar{
         display: none;
     }
-    .timeline-search{
+    .create-post{
         margin: 2rem 1rem;
         padding: 7px;
         width: 88vw;
     }
-    .post-user-img{
+    .user-rectangular-image{
         height: 64px;
         width: 50px;
         margin-right: 6px;
@@ -3402,7 +3402,7 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 6px;
         margin-right: 6px;
     }
-    .timeline-search-wrapper i{
+    .create-post-wrapper i{
         font-size: 14px;
         margin-top: 4px;
     }
@@ -3591,12 +3591,12 @@ input:valid[focused="true"] ~ .tickkk{
     .rightbar{
         display: none;
     }
-    .timeline-search{
+    .create-post{
         margin: 2rem 1rem;
         padding: 7px;
         width: 88vw;
     }
-    .post-user-img{
+    .user-rectangular-image{
         height: 64px;
         width: 50px;
         margin-right: 6px;
@@ -3606,7 +3606,7 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 6px;
         margin-right: 6px;
     }
-    .timeline-search-wrapper i{
+    .create-post-wrapper i{
         font-size: 14px;
         margin-top: 4px;
     }
@@ -3795,12 +3795,12 @@ input:valid[focused="true"] ~ .tickkk{
     .rightbar{
         display: none;
     }
-    .timeline-search{
+    .create-post{
         margin: 2rem 1rem;
         padding: 7px;
         width: 92vw;
     }
-    .post-user-img{
+    .user-rectangular-image{
         height: 64px;
         width: 50px;
         margin-right: 6px;
@@ -3810,7 +3810,7 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 6px;
         margin-right: 6px;
     }
-    .timeline-search-wrapper i{
+    .create-post-wrapper i{
         font-size: 14px;
         margin-top: 4px;
     }
@@ -3999,12 +3999,12 @@ input:valid[focused="true"] ~ .tickkk{
     .rightbar{
         display: none;
     }
-    .timeline-search{
+    .create-post{
         margin: 2rem 1rem;
         padding: 7px;
         width: 92vw;
     }
-    .post-user-img{
+    .user-rectangular-image{
         height: 64px;
         width: 50px;
         margin-right: 6px;
@@ -4014,7 +4014,7 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 6px;
         margin-right: 6px;
     }
-    .timeline-search-wrapper i{
+    .create-post-wrapper i{
         font-size: 14px;
         margin-top: 4px;
     }
@@ -4321,12 +4321,12 @@ input:valid[focused="true"] ~ .tickkk{
         margin-right: 4px;
     }
     
-    .timeline-search{
+    .create-post{
         margin: 2rem 0.5rem;
         padding: 10px;
         width: 410px;
     }
-    .post-user-img{
+    .user-rectangular-image{
         height: 64px;
         width: 50px;
         margin-right: 10px;
@@ -4336,7 +4336,7 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 6px;
         margin-right: 5px;
     }
-    .timeline-search-wrapper i{
+    .create-post-wrapper i{
         font-size: 16px;
     }
     .photo-video{
@@ -4609,12 +4609,12 @@ input:valid[focused="true"] ~ .tickkk{
         margin-right: 4px;
     }
     
-    .timeline-search{
+    .create-post{
         margin: 2rem 0rem;
         padding: 10px;
         width: 500px;
     }
-    .post-user-img{
+    .user-rectangular-image{
         height: 64px;
         width: 50px;
         margin-right: 10px;
@@ -4624,7 +4624,7 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 6px;
         margin-right: 5px;
     }
-    .timeline-search-wrapper i{
+    .create-post-wrapper i{
         font-size: 16px;
     }
     .photo-video{

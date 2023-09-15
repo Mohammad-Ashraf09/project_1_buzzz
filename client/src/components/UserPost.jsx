@@ -266,7 +266,7 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
                     ))}
                 </div>
 
-                {img.length && <div className='preview'>
+                {img.length && <div className='post-media-preview-container'>
                     <PostImage images={img} />
                 </div>}
 

@@ -88,8 +88,8 @@ const PreviewImage = ({
     }
 
     return (
-        <div className='preview-img-container'>
-            <div className='img-count'>{preview.length>1 && currentIndex+1}</div>
+        <div className='post-media-preview-container-wrapper'>
+            <div className='preview-media-count'>{preview.length>1 && currentIndex+1}</div>
             {percentage ? 
                 null :
                 <i class="fa-solid fa-square-xmark" onClick={cancelImageClickHandler} ></i>
@@ -108,15 +108,15 @@ const PreviewImage = ({
                     className='react-player'
                 />
                 :
-                <div className="preview-img" style={{backgroundImage: `url(${preview[currentIndex]})`, height: `${preview.length>1 ? "97%" : "100%"}`}} ></div>
+                <div className="preview-image" style={{backgroundImage: `url(${preview[currentIndex]})`, height: `${preview.length>1 ? "97%" : "100%"}`}} ></div>
             }
 
             {/* code for dots */}
-            {preview.length>1 && <div className='preview-img-dots-container'>
+            {preview.length>1 && <div className='preview-image-dots-container'>
                 {preview.map((prev, prevIndex)=>(
                     <div
                         key={prevIndex}
-                        className='preview-img-dots'
+                        className='preview-image-dots'
                         style={{color: `${prevIndex===currentIndex ? "black" : "rgb(154, 147, 147)"}`}}
                         onClick={()=>setCurrentIndex(prevIndex)}
                         > &#x2022;

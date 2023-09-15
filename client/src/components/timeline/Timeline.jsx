@@ -417,9 +417,9 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
                   (loc &&(
                     <div className='location-post-container-edited'>
                       <div className='dot-edited'>.</div>
-                      <i class="fa-solid fa-location-dot location-post-icon"></i>
-                      <div className='location-post-name'>{loc}</div>
-                      <div className='location-post-cross'><i class="fa-solid fa-xmark" onClick={()=>setLoc("")}></i></div>
+                      <i class="fa-solid fa-location-dot post-location-icon tagged-item-icon"></i>
+                      <div className='post-location-name tagged-item-name'>{loc}</div>
+                      <div className='post-location-cancel tagged-item-cancel'><i class="fa-solid fa-xmark" onClick={()=>setLoc("")}></i></div>
                     </div>
                   ))
                   :
@@ -494,7 +494,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
         }
 
         {edit ?
-          <div className='location-post-container'>
+          <div className='tagged-friends-edited tagged-item'>
             {taggedFriend.map((friend)=>(
               <TaggedFriend
                 key={Math.random()}
@@ -517,7 +517,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
           </div>
         }
 
-        {img.length && <div className='preview'>
+        {img.length && <div className='post-media-preview-container'>
           <PostImage images={img} blurrScreenHandler={blurrScreenHandler}/>
         </div>}
 
@@ -648,7 +648,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
         />
       }
 
-      {showLocations && <div className='location-div'>
+      {showLocations && <div className='location-list-container'>
         <div className='location-search-filter'>
           <input type="text" className='location-search-input' name="" placeholder='Search Location' onChange={(e)=>setQuery(e.target.value)} />
         </div>
