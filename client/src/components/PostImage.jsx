@@ -19,8 +19,8 @@ const PostImage = ({images, blurrScreenHandler}) => {
     return (
         <div className='post-img-container'>
             {images?.length>1 && <div className='post-img-count'>{currentIndex+1}/{images?.length}</div>}
-            {images?.length>1 && <img src={leftArrow} alt="" className="left-arrow" onClick={goToPrevious} />}
-            {images?.length>1 && <img src={rightArrow} alt="" className="right-arrow" onClick={goToNext} />}
+            {images?.length>1 && <img src={leftArrow} alt="" className="left-arrow arrow" onClick={goToPrevious} />}
+            {images?.length>1 && <img src={rightArrow} alt="" className="right-arrow arrow" onClick={goToNext} />}
 
             {(images?.[currentIndex].includes(".mp4") || images?.[currentIndex].includes(".MOV")) ?
                 <ReactPlayer

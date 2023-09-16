@@ -94,8 +94,8 @@ const PreviewImage = ({
                 null :
                 <i class="fa-solid fa-square-xmark" onClick={cancelImageClickHandler} ></i>
             }
-            <img src={leftArrow} alt="" className="left-arrow" style={{display: `${!isVisibleLeftArrow ? "none" : "block"}`}} onClick={goToPrevious} />
-            <img src={rightArrow} alt="" className="right-arrow" style={{display: `${!isVisibleRightArrow ? "none" : "block"}`}} onClick={goToNext} />
+            <img src={leftArrow} alt="" className="left-arrow arrow" style={{display: `${!isVisibleLeftArrow ? "none" : "block"}`}} onClick={goToPrevious} />
+            <img src={rightArrow} alt="" className="right-arrow arrow" style={{display: `${!isVisibleRightArrow ? "none" : "block"}`}} onClick={goToNext} />
 
             {(file[currentIndex].name.includes(".mp4") || file[currentIndex].name.includes(".MOV")) ?
                 <ReactPlayer
@@ -117,7 +117,7 @@ const PreviewImage = ({
                     <div
                         key={prevIndex}
                         className='preview-image-dots'
-                        style={{color: `${prevIndex===currentIndex ? "black" : "rgb(154, 147, 147)"}`}}
+                        style={{color: `${prevIndex===currentIndex ? "#03bfbc" : "rgb(154, 147, 147)"}`}}
                         onClick={()=>setCurrentIndex(prevIndex)}
                         > &#x2022;
                         {/* &#x2022; code is code of dot circle symbol */}

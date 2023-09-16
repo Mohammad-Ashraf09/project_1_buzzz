@@ -36,8 +36,8 @@ const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler
 
             <div className='clicked-media'>
                 {media?.length>1 && <div className='media-count'>{media?.length>1 && currentIndex+1}/{media?.length}</div>}
-                {media?.length>1 && <img src={leftArrow} alt="" className="left-arrow left-arrow-media" onClick={goToPrevious} />}
-                {media?.length>1 && <img src={rightArrow} alt="" className="right-arrow right-arrow-media" onClick={goToNext} />}
+                {media?.length>1 && <img src={leftArrow} alt="" className="left-arrow left-arrow-media arrow" onClick={goToPrevious} />}
+                {media?.length>1 && <img src={rightArrow} alt="" className="right-arrow right-arrow-media arrow" onClick={goToNext} />}
 
                 {(media[currentIndex]?.isVideo) ?
                     <ReactPlayer

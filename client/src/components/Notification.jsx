@@ -89,7 +89,7 @@ const Notification = ({_id, name, avatar, type, time, postId, senderId, currentU
                         </span>
                     </div>
                 </div>
-                {post?.img?.length ? <img src={PF+post.img[0]} alt="" className="notification-post-img" onClick={blurrScreenHandler} /> : null}
+                {post?.img?.length ? <img src={post.img[0]} alt="" className="notification-post-img" onClick={blurrScreenHandler} /> : null}
             </div>
 
             {showParticularPost && <div className='blurr-div-notification-click'>

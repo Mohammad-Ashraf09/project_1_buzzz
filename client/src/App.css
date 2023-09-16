@@ -442,21 +442,15 @@ input:invalid[focused="true"] ~ .error-msg{
     cursor: pointer;
 }
 .notification-div{
-    /* position: absolute;
-    top: 55px;
-    right: 10px; */
     height: 450px;
     width: 300px;
     box-sizing: border-box;
     padding: 5px;
     border-radius: 8px;
     background-color: rgba(232, 232, 232, 0.9);
-    /* display: flex; */
-    /* flex-direction: column; */
     overflow: auto;
-    margin-top: 518px;
-    margin-left: 74.5vw;
-    /* margin-right: 10px; */
+    margin-top: 518px;  /* 450px(height) + 50px(topbar height) + 18px(this is origin margin) */
+    margin-left: calc(94vw - 300px);
 }
 .notification-div::-webkit-scrollbar{
     display: none;
@@ -540,22 +534,6 @@ input:invalid[focused="true"] ~ .error-msg{
     position: absolute;
     right: 6px;
     cursor: pointer;
-}
-.markReadBtn{
-    margin-top: 15px;
-    padding: 8px;
-    font-size: 16px;
-    border-radius: 6px;
-    background-color: #03bfbc;
-    border: none;
-    cursor: pointer;
-}
-.markReadBtn:hover{
-    background-color: #03bfbcc7;
-}
-.noNotification{
-    display: flex;
-    justify-content: center;
 }
 
 /* -------------- timeline container -----------*/
@@ -985,68 +963,71 @@ hr{
 
 /*-------------- timeline post input --------------------*/
 .create-post{
-    margin: 3rem 2rem;
+    margin: 3rem 0 1.5rem 0;
     border-radius: 8px;
     background-color: white;
-    padding: 14px;
+    padding: 0.5rem;
     position: sticky;
     box-shadow: 4px 4px 8px var(--shadow-color);
+    width: 100%;
+    box-sizing: border-box;
 }
 .create-post-wrapper{
     display: flex;
-    /* delete below height after removng bootsrap */
-    /* height: 72px; */
 }
 .user-rectangular-image{
     height: 72px;
-    width: 60px;
+    width: 9%;
     object-fit: cover;
-    border-radius: 5px;
-    margin-right: 15px;
+    border-radius: 6px;
+    margin-right: 0.5rem;
 }
 .post-input{
     background-color: var(--bg-color);
-    width: 400px;
+    width: 75%;
     height: 52px;
-    /* delete below height after removng bootsrap and uncomment above height */
-    /* height: 72px;          */
     border: none;
     outline: none;
-    border-radius: 8px;
+    border-radius: 6px;
     padding: 10px;
-    
-    margin-right: 10px;
+    margin-right: 0.5rem;
     resize: none;
 }
-.create-post-wrapper i{
+.textarea-functionality{
+    width: 16%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: center;
+}
+.textarea-functionality-icons {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     font-size: 20px;
     color: rgb(11, 192, 11);
-    cursor: pointer;
-    margin-top: 4px;
-    margin-right: 12px;
 }
-.photo-video{
-    font-size: 13px;
-    font-weight: 500;
-    margin-left: 5px;
+.textarea-functionality-icons i{
     cursor: pointer;
+}
+.btn{
+    width: 100%;
 }
 .btn button{
-    margin-top: 16px;
+    width: 100%;
     padding: 5px 15px;
     font-weight: 600;
     border: none;
-    /* background-color: var(--link-color); */
     color: white;
-    border-radius: 4px;
-    /* cursor: pointer; */
+    border-radius: 6px;
 }
 .btn button:disabled{
     background-color: var(--grey-light);
     cursor: not-allowed;
 }
 .btn button:enabled{
-    background-color: var(--link-color);
+    background-color: rgb(11, 192, 11);
     cursor: pointer;
 }
 .post-input::-webkit-scrollbar{
@@ -1115,23 +1096,19 @@ hr{
     color: #03bfbc;
     z-index: 1;
 }
-.left-arrow{
+.arrow{
     position: absolute;
     top: 45%;
-    left: 10px;
     height: 36px;
     cursor: pointer;
     display: none;
     z-index: 1;
 }
+.left-arrow{
+    left: 10px;
+}
 .right-arrow{
-    position: absolute;
-    top: 45%;
     right: 10px;
-    height: 36px;
-    cursor: pointer;
-    display: none;
-    z-index: 1;
 }
 .left-arrow:hover, .right-arrow:hover{
     transform: scale(1.1);
@@ -1150,7 +1127,7 @@ hr{
     justify-content: center;
 }
 .preview-image-dots{
-    margin: -10px 10px 20px 0;
+    margin: -13px 10px 20px 0;
     font-size: 40px;
     cursor: pointer;
 }
@@ -1207,7 +1184,7 @@ hr{
     font-size: 14px;
 }
 .locations-list{
-    margin-left: -30px;
+    padding-left: 0.5rem;
     list-style: none;
 }
 .locations-list-item{
@@ -3343,7 +3320,7 @@ input:valid[focused="true"] ~ .tickkk{
         margin-top: 20px;
     }
 
-    /* -------------------------Home page -------------------- */
+    /* ------------------------- topbar -------------------- */
     .topbar-container{
         height: 42px;
     }
@@ -3374,12 +3351,42 @@ input:valid[focused="true"] ~ .tickkk{
         font-size: 16px;
     }
     .notification-div{
-        height: 350px;
-        width: 220px;
+        height: 400px;
+        width: 80vw;
+        border-radius: 6px;
+        margin-top: 450px;   /* 400px(height) + 42px(topbar height) + 8px(this is origin margin) */
+        margin-left: 18.6vw; /* 100vw - 80vw = 20vw ---> 20vw - 18.6vw = 1.4vw(this is origin margin from right) */
     }
-    .feed-container{
-        width: 100vw;
-        padding-bottom: 0px;
+    .notification-div::-webkit-scrollbar{
+        display: none;
+    }
+    .notification{
+        padding: 6px 40px 6px 5px;
+    }
+    .background-dark{
+        padding: 6px 40px 6px 5px;
+    }
+    .notification-avatar{
+        height: 28px;
+        width: 28px;
+    }
+    .notification-text-name{
+        font-size: 11px;
+    }
+    .notification-text{
+        font-size: 11px;
+    }
+    .clickable-post{
+        font-size: 11px;
+    }
+    .time{
+        font-size: 9px;
+    }
+    .pipe{
+        display: inline;
+    }
+    .notification-delete{
+        display: inline;
     }
     .leftbar{
         display: none;
@@ -3387,33 +3394,104 @@ input:valid[focused="true"] ~ .tickkk{
     .rightbar{
         display: none;
     }
+
+    /* ------------------------- create new post -------------------- */
     .create-post{
-        margin: 2rem 1rem;
-        padding: 7px;
-        width: 88vw;
+        width: 96vw;
+        margin: 0.5rem;
+        border-radius: 6px;
+        padding: 0.35rem;
     }
     .user-rectangular-image{
         height: 64px;
-        width: 50px;
-        margin-right: 6px;
+        width: 14%;
+        margin-right: 0.35rem;
     }
     .post-input{
-        width: 167px;
-        padding: 6px;
-        margin-right: 6px;
+        width: 70%;
+        padding: 0.35rem;
+        margin-right: 0.35rem;
+        font-size: 11px;
     }
-    .create-post-wrapper i{
-        font-size: 14px;
-        margin-top: 4px;
+    .textarea-functionality{
+        width: 16%;
     }
-    .photo-video{
+    .textarea-functionality-icons {
         font-size: 12px;
-        font-weight: 500;
-        margin-left: 4px;
+    }
+    .create-post-emoji-icon{
+        display: none;
     }
     .btn button{
-        font-weight: 500;
+        font-size: 11px;
+        border-radius: 4px;
     }
+    .tagged-item-icon{
+        font-size: 11px;
+    }
+    .tagged-item-name{
+        font-size: 11px;
+        padding: 2px 8px 0px 4px;
+    }
+    .tagged-item-cancel{
+        font-size: 11px;
+        padding: 2px 8px 2px 4px;
+    }
+    .post-media-preview-container{
+        height: 240px;
+    }
+    .preview-media-count{
+        font-size: 11px;
+    }
+    .arrow{
+        height: 32px;
+    }
+    .preview-image-dots{
+        margin: -15px 10px 20px 0;
+        font-size: 36px;
+    }
+    .location-list-container{
+        height: 360px;
+        width: 80vw;
+        border-radius: 6px;
+        top: 130px;
+        right: 0.5rem;
+    }
+    .location-list-container::-webkit-scrollbar{
+        width: 12px;
+    }
+    .location-list-container::-webkit-scrollbar-thumb{
+        border: 4px solid rgb(232, 232, 232);
+    }
+    .location-search-filter{
+        margin-top: 0.625rem;
+    }
+    .location-search-input{
+        font-size: 12px;
+    }
+    .locations-list-item{
+        font-size: 12px;
+    }
+    .friend-list-container{
+        height: 360px;
+        width: 80vw;
+        border-radius: 6px;
+        top: 130px;
+        right: 0.5rem;
+    }
+    .friend-list-container::-webkit-scrollbar{
+        width: 12px;
+    }
+    .friend-list-container::-webkit-scrollbar-thumb{
+        border: 4px solid rgb(232, 232, 232);
+    }
+    .friend-img{
+        height: 28px;
+        width: 28px;
+    }
+    /* ---------------------------------------------------okkkkkkkk--------------------------------- */
+
+    /* ------------------------- timeline post area -------------------- */
     .timeline-post-area{
         height: 100vh;
         margin: 2rem 1rem;
@@ -3609,11 +3687,6 @@ input:valid[focused="true"] ~ .tickkk{
     .create-post-wrapper i{
         font-size: 14px;
         margin-top: 4px;
-    }
-    .photo-video{
-        font-size: 12px;
-        font-weight: 500;
-        margin-left: 4px;
     }
     .btn button{
         font-weight: 500;
@@ -3814,11 +3887,6 @@ input:valid[focused="true"] ~ .tickkk{
         font-size: 14px;
         margin-top: 4px;
     }
-    .photo-video{
-        font-size: 12px;
-        font-weight: 500;
-        margin-left: 4px;
-    }
     .btn button{
         font-weight: 500;
     }
@@ -4017,11 +4085,6 @@ input:valid[focused="true"] ~ .tickkk{
     .create-post-wrapper i{
         font-size: 14px;
         margin-top: 4px;
-    }
-    .photo-video{
-        font-size: 12px;
-        font-weight: 500;
-        margin-left: 4px;
     }
     .btn button{
         font-weight: 500;
@@ -4339,10 +4402,6 @@ input:valid[focused="true"] ~ .tickkk{
     .create-post-wrapper i{
         font-size: 16px;
     }
-    .photo-video{
-        font-size: 11px;
-        font-weight: 500;
-    }
     
     .timeline-post-area{
         height: 100vh;
@@ -4626,10 +4685,6 @@ input:valid[focused="true"] ~ .tickkk{
     }
     .create-post-wrapper i{
         font-size: 16px;
-    }
-    .photo-video{
-        font-size: 11px;
-        font-weight: 500;
     }
     
     .timeline-post-area{

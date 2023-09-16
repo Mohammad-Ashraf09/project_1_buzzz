@@ -118,7 +118,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
             </div>
         </div>
         
-        {open && (
+        {open ? (
             <div className="notification-div">
                 {newNotifications.map((notification)=>(
                     <Notification
@@ -153,7 +153,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
                     />
                 ))}
             </div>
-        )}
+        ) : null}
     </div>
   )
 }
