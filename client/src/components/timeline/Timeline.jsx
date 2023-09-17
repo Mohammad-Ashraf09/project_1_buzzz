@@ -16,7 +16,7 @@ import { ref, deleteObject } from "firebase/storage";
 import { storage } from "../../firebase";
 
 const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
-  const {_id, userId, createdAt, updatedAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
+  const {_id, userId, createdAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
 
   const {user:currentUser} = useContext(AuthContext);   // jisne login kiya hua hai wo hai ye
   const [user, setUser] = useState({});
@@ -475,8 +475,10 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
           <div className="edit-post">
             <textarea type="text" className="post-input-edit" placeholder={"Start a post..."} value={message} onChange={handleDescChange} ref={inputRef}/>
             <div className="edit-btn">
-              <button type="submit" className="update-btn" onClick={updateBtnHandler}>Update</button>
-              <button type="submit" className="cancel-btn" onClick={cancelBtnHandler}>Cancel</button>
+              <div className='update-btns'>
+                <button type="submit" className="update-btn" onClick={updateBtnHandler}>Update</button>
+                <button type="submit" className="cancel-btn" onClick={cancelBtnHandler}>Cancel</button>
+              </div>
               <div className='icons-after-edit'>
                 <div className='edit-emoji'><i class="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForEditDesc(!showEmojisForEditDesc); setShowLocations(false); setShowFriendList(false)}}></i></div>
                 <div className='edit-tag'><i class="fa-solid fa-tags" onClick={()=>{setShowFriendList(!showFriendList); setShowEmojisForEditDesc(false); setShowLocations(false)}}></i></div>
@@ -597,34 +599,40 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
         )}
         
         <form className="comment-section">
-          <img className='comment-profile-img' src={PF+user?.profilePicture} alt="" />
-          <textarea type="text" className="comment-input" placeholder='Write a comment...' value={commentedText} onChange={handleCommentChange} ref={inputRef2} />
-          <div className="emoji-icon">
-            <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForComment(!showEmojisForComment)}}></i>
+          <div className='comment-profile-img-container'>
+            <img className='comment-profile-img' src={PF+user?.profilePicture} alt="" />
           </div>
-          <div className="tag-icon">
-            <i class="fa-solid fa-tags"></i>
-          </div>
-
-          {showComment ?
-            ((replyIconClicked || editIconClicked) ?
-              (replyIconClicked ?
+          <div className='comment-input-container'>
+            <textarea
+              type="text"
+              className="comment-input"
+              placeholder='Write a comment...'
+              value={commentedText}
+              onChange={handleCommentChange}
+              ref={inputRef2}
+            />
+            <div className="emoji-icon">
+              <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForComment(!showEmojisForComment)}}></i>
+            </div>
+            {showComment ?
+              ((replyIconClicked || editIconClicked) ?
+                (replyIconClicked ?
+                  <div className="send-icon">
+                    <i className="fa-solid fa-paper-plane" onClick={replySubmitHandler}></i>
+                  </div> :
+                  <div className="send-icon">
+                    <i className="fa-solid fa-paper-plane" onClick={editCommentSubmitHandler}></i>
+                  </div>
+                ) : 
                 <div className="send-icon">
-                  <i className="fa-solid fa-paper-plane" onClick={replySubmitHandler}></i>
-                </div> :
-                <div className="send-icon">
-                  <i className="fa-solid fa-paper-plane" onClick={editCommentSubmitHandler}></i>
+                  <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
                 </div>
-              ) : 
+              ) :
               <div className="send-icon">
                 <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
               </div>
-            ) :
-            <div className="send-icon">
-              <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
-            </div>
-          }
-
+            }
+          </div>
         </form>
       </div>
 

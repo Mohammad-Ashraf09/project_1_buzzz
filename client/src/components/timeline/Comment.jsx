@@ -105,53 +105,79 @@ const Comment = ({
 
     return (
         <div onMouseOver={()=>setHover(true)} onMouseOut={()=>setHover(false)}>
-            <div className="comment-list">
-                <div className="comment-top-left">
-                    <img src={DP} alt="" className="comment-list-profile-img" onClick={clickHandler}/>
-                    <span className="comment-username-date">
-                        <div className="comment-username"  onClick={clickHandler}> {name} </div>
-                        <div className="comment-date"> {format(particularComment?.date)} </div>
-                    </span>
-                </div>
+            <div className="comment-top-left">
+                <img src={DP} alt="" className="comment-list-profile-img" onClick={clickHandler}/>
+                <span className="comment-username-date">
+                    <div className="comment-username"  onClick={clickHandler}> {name} </div>
+                    <div className="comment-date"> {format(particularComment?.date)} </div>
+                </span>
             </div>
             <div className="comment-caption"> {particularComment?.comment} </div>
             <div className='comment-caption-icon'>
 
                 <div className='caption-icon' onClick={likeCommentHandler}>
-                    {clr==="#417af5" 
+                    {clr==="#417af5"
                         ? <i class="fa-solid fa-thumbs-up solid-thumbs-ups" style={{color:clr}}></i>
                         : <i class="fa-regular fa-thumbs-up"></i>
                     }
-                    {noOfLikes>0 && <span style={{marginLeft: "5px"}}>{noOfLikes}</span>}
+                    {noOfLikes ? <span style={{marginLeft: "5px"}}>{noOfLikes}</span> : null}
                 </div>
 
                 {showParticularPost ?
-                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandlerForParticularPost(commentId, commentUser.fname+' '+commentUser.lname, particularComment.id)}>
+                    <div
+                        className='caption-icon onHover'
+                        style={{display: hover && 'block'}}
+                        onClick={
+                            ()=>replyCommentHandlerForParticularPost(
+                                commentId, commentUser.fname+' '+commentUser.lname, particularComment.id
+                        )}
+                    >
                         <i class="fa-solid fa-reply"></i>
-                    </div> :
-                    <div className='caption-icon onHover' style={{display: hover && 'block'}} onClick={()=>replyCommentHandler(commentId, commentUser.fname+' '+commentUser.lname, particularComment.id)}>
+                    </div>
+                    :
+                    <div
+                        className='caption-icon onHover'
+                        style={{display: hover && 'block'}}
+                        onClick={
+                            ()=>replyCommentHandler(
+                                commentId, commentUser.fname+' '+commentUser.lname, particularComment.id
+                        )}
+                    >
                         <i class="fa-solid fa-reply"></i>
                     </div>
                 }
 
                 {showParticularPost ?
                     (currentUser._id===particularComment?.id &&
-                        <div className='caption-icon onHover'style={{display: hover && 'block'}} onClick={()=>editCommentHandlerForParticularPost(commentId, particularComment.comment)}>
+                        <div 
+                            className='caption-icon onHover'
+                            style={{display: hover && 'block'}}
+                            onClick={()=>editCommentHandlerForParticularPost(commentId, particularComment.comment)}
+                        >
                             <i class="fa-solid fa-pen"></i>
                         </div>
-                    ) :
+                    )
+                    :
                     (currentUser._id===particularComment?.id &&
-                        <div className='caption-icon onHover'style={{display: hover && 'block'}} onClick={()=>editCommentHandler(commentId, particularComment.comment)}>
+                        <div
+                            className='caption-icon onHover'
+                            style={{display: hover && 'block'}}
+                            onClick={()=>editCommentHandler(commentId, particularComment.comment)}
+                        >
                             <i class="fa-solid fa-pen"></i>
                         </div>
                     )
                 }
 
-                {(user._id===currentUser._id || particularComment?.id===currentUser._id) &&
-                    <div className='caption-icon trash onHover'style={{display: hover && 'block'}} onClick={deleteCommentHandler}>
+                {(user._id===currentUser._id || particularComment?.id===currentUser._id) ? (
+                    <div
+                        className='caption-icon trash onHover'
+                        style={{display: hover && 'block'}}
+                        onClick={deleteCommentHandler}
+                    >
                         <i class="fa-solid fa-trash"></i>
                     </div>
-                }
+                ) : null}
             </div>
 
             {nestedComments.map((nestedComment)=>(

@@ -111,14 +111,12 @@ const NestedComment = ({
 
     return (
         <>
-            <div className="nested-comment-list">
-                <div className="comment-top-left">
-                    <img src={DP} alt="" className="nested-comment-list-profile-img" onClick={()=>clickHandler('1')}/>
-                    <span className="nested-comment-username-date">
-                        <div className="nested-comment-username" onClick={()=>clickHandler('1')}> {name} </div>
-                        <div className="nested-comment-date"> {format(nestedComment?.date)} </div>
-                    </span>
-                </div>
+            <div className="nested-comment-top-left">
+                <img src={DP} alt="" className="nested-comment-list-profile-img" onClick={()=>clickHandler('1')}/>
+                <span className="nested-comment-username-date">
+                    <div className="nested-comment-username" onClick={()=>clickHandler('1')}> {name} </div>
+                    <div className="nested-comment-date"> {format(nestedComment?.date)} </div>
+                </span>
             </div>
             <div className="nested-comment-caption">
                 {tagId ?
