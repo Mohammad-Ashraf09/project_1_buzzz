@@ -32,7 +32,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
         if(open){
             const fetchNotifications = async()=>{
                 try{
-                    const res = await axios.get("notifications/"+currentUser?._id);
+                    const res = await axios.get("/notifications/"+currentUser?._id);
                     setNotification(res.data)
                 }
                 catch(err){}
@@ -45,7 +45,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
     useEffect(()=>{           // for fetching number of notifications of a user
         const fetchNotifications = async()=>{
             try{
-                const res = await axios.get("notifications/noOfNotifications/" + currentUser?._id);
+                const res = await axios.get("/notifications/noOfNotifications/" + currentUser?._id);
                 setNoOfNotifications(res.data?.notifications);
                 setNoOfNotifications2(res.data?.notifications);
             }
@@ -63,7 +63,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
         
         if(noOfNotifications.length){
             try{
-                await axios.put("notifications/noOfNotifications/empty/" + currentUser?._id);      // clearing array in database
+                await axios.put("/notifications/noOfNotifications/empty/" + currentUser?._id);      // clearing array in database
             }
             catch(err){}
         }

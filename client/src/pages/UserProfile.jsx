@@ -8,6 +8,8 @@ import {Chart as ChartJs, CategoryScale, LinearScale, BarElement, Title, Tooltip
 import {Bar} from "react-chartjs-2";
 import Contact from "../components/rightbar/Contact";
 import { Link } from "react-router-dom";
+import Bottombar from "../components/Bottombar";
+import WhoLikedDisliked from "../components/WhoLikedDisliked";
 
 ChartJs.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -17,6 +19,8 @@ const UserProfile = () => {
   const [userPosts, setUserPosts] = useState([]);
   const [chartData, setChartData] = useState({datasets: [],});
   const [chartOptions, setChartOptions] = useState({});
+  const [showFollowers, setShowFollowers] = useState(false);
+  const [showFollowing, setShowFollowing] = useState(false);
 
   const {user:currentUser} = useContext(AuthContext);
   const userId = useParams().id;
@@ -178,8 +182,9 @@ const UserProfile = () => {
       
     });
   }, [userId, userPosts]);
+  console.log(user)
 
-  const {profilePicture, coverPicture, fname, lname, gender, bio, city, place} = user;
+  const {username, profilePicture, coverPicture, fname, lname, gender, bio, city, place, totalPosts, followers, followings} = user;
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const name = fname+' '+lname;
@@ -200,51 +205,99 @@ const UserProfile = () => {
     setFollowed(!followed);
   }
 
+  const handleScroll = () => {
+    global.window.scrollTo({
+      top: 300,
+      behavior: 'smooth',
+    });
+  }
+
   return (
     <>
       <Topbar user={currentUser}/>
       <div className="user">
-        <div className="user-friend-conatiner">
+        <div className="user-graph-conatiner">
           <div className="user-container">
             <img src={cover} alt="" className="user-cover-img" />
             <img src={DP} alt="" className="user-profile-img" />
-            <div className="discription-add-remove">
-              <div className="user-discription">
-                <h2 className="user-profile-name">
-                  {name} 
+            <div className="user-about">
+              <div className="user-about-left">
+                <p className="user-profile-name">
+                  {name} | <span className="user-username">{username}</span>
                   {gender==='male' ?
                     <span className="gender-sign"><i class="fa-solid fa-mars"></i></span>
                     :
                     <span className="gender-sign"><i class="fa-solid fa-venus"></i></span>
                   }
-                </h2>
-                <h4 className="user-about"> {bio} </h4>
-                <p className="user-location"> {place}  &#8226; {city}  &#8226; India  &#8226; 2 friends </p>
+                </p>
+                <p className="bio"> {bio} </p>
+                <p className="user-location"> {place}  &#8226; {city}  &#8226; India </p>
               </div>
-              <div className="buttons">
-                {userId!==currentUser?._id &&
-                  <button className="add-remove-friend-btn" onClick={followHandler} >
-                    {followed ?
-                      <i class="fa-solid fa-user-xmark user-icon"></i>
-                      : 
-                      <i className="fas fa-user-plus user-icon"></i>
-                    }
-                    {followed ? "Remove Friend" : "Add Friend"}
-                  </button>
-                }
+              
+              <div className="user-about-right">
+                <div className="user-about-right-top">
+                  <div className="follower">
+                    <p className="follower-count" onClick={handleScroll}>{totalPosts}</p>
+                    <p>Posts</p>
+                  </div>
 
-                {userId===currentUser?._id ?
-                  <Link to={`/edit/user/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
-                    <button className="add-remove-friend-btn" > Edit Profile </button>
-                  </Link>
-                  :
-                  <button className="add-remove-friend-btn" > Message </button>
-                }
+                  <div className="follower" onClick={()=>{setShowFollowers(!showFollowers); setShowFollowing(false)}}>
+                    <p className="follower-count">{followers?.length}</p>
+                    <p>Followers</p>
+                    {showFollowers ? (
+                      <>
+                        <div className="follower-popup">
+                          {followers.map((userId)=>(
+                            <WhoLikedDisliked key={userId} userId={userId}/>
+                          ))}
+                        </div>
+                        <div className="triangle-right"></div>
+                      </>
+                    ): null}
+                  </div>
+
+                  <div className="follower" onClick={()=>{setShowFollowing(!showFollowing); setShowFollowers(false)}}>
+                    <p className="follower-count">{followings?.length}</p>
+                    <p>Following</p>
+                    {showFollowing ? (
+                      <>
+                        <div className="follower-popup">
+                          {followings.map((userId)=>(
+                            <WhoLikedDisliked key={userId} userId={userId.id}/>
+                          ))}
+                        </div>
+                        <div className="triangle-right"></div>
+                      </>
+                    ): null}
+                  </div>
+                </div>
+
+                <div className="user-about-right-bottom">
+                  {userId===currentUser?._id ?
+                    <>
+                      <Link to={`/edit/user/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
+                        <div className="buttons"> Edit Profile </div>
+                      </Link>
+                      <div className="buttons"> Share Profile </div>
+                    </>
+                    :
+                    <>
+                      <div
+                        className="buttons"
+                        onClick={followHandler}
+                        style={followed ? null : {backgroundColor: '#417af5', color: '#fff'}}
+                      >
+                        {followed ? "Remove" : "Follow"}
+                      </div>
+                      <div className="buttons"> Message </div>
+                    </>
+                  }
+                </div>
               </div>
             </div>
           </div>
 
-          <div className="friends-div">
+          <div className="graph-container">
             <Bar options={chartOptions} data={chartData} />
           </div>
         </div>
@@ -266,12 +319,11 @@ const UserProfile = () => {
           </div>
           <div className="user-post-right">
             <Contact user={user} isUserProfile={true} />
-            <div className="story-area">
-              
-            </div>
+            <div className="story-area"></div>
           </div>
         </div>
       </div>
+      <Bottombar user={currentUser}/>
     </>
   )
 }

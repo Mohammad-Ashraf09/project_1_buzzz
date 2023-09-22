@@ -9,7 +9,7 @@ import Comment from './timeline/Comment';
 import WhoLikedDisliked from './WhoLikedDisliked';
 
 const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
-    const {_id, userId, createdAt, updatedAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
+    const {_id, userId, createdAt, location, edited, desc, taggedFriends, img, likes, dislikes, comments} = post;
 
     const {user:currentUser} = useContext(AuthContext);
     const [totalComment, setTotalComment] = useState();
@@ -347,33 +347,40 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
                 )}
                 
                 <form className="comment-section">
-                    <img className='comment-profile-img' src={loginUserDp} alt="" />
-                    <textarea type="text" className="comment-input" placeholder='Write a comment...' value={commentedText} onChange={handleCommentChange} ref={inputRef} />
-                    <div className="emoji-icon">
-                        <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForComment(!showEmojisForComment)}} ></i>
+                    <div className='comment-profile-img-container'>
+                        <img className='comment-profile-img' src={PF+user?.profilePicture} alt="" />
                     </div>
-                    <div className="tag-icon">
-                        <i class="fa-solid fa-tags"></i>
-                    </div>
-
-                    {showComment ?
-                        ((replyIconClicked || editIconClicked) ?
-                            (replyIconClicked ?
+                    <div className='comment-input-container'>
+                        <textarea
+                            type="text"
+                            className="comment-input"
+                            placeholder='Write a comment...'
+                            value={commentedText}
+                            onChange={handleCommentChange}
+                            ref={inputRef}
+                        />
+                        <div className="emoji-icon">
+                            <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojisForComment(!showEmojisForComment)}}></i>
+                        </div>
+                        {showComment ?
+                            ((replyIconClicked || editIconClicked) ?
+                                (replyIconClicked ?
                                 <div className="send-icon">
-                                    <i className="fa-solid fa-paper-plane" onClick={replySubmitHandler} ></i>
+                                    <i className="fa-solid fa-paper-plane" onClick={replySubmitHandler}></i>
                                 </div> :
                                 <div className="send-icon">
-                                    <i className="fa-solid fa-paper-plane" onClick={editCommentSubmitHandler} ></i>
+                                    <i className="fa-solid fa-paper-plane" onClick={editCommentSubmitHandler}></i>
                                 </div>
-                            ) : 
+                                ) : 
+                                <div className="send-icon">
+                                <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
+                                </div>
+                            ) :
                             <div className="send-icon">
                                 <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
                             </div>
-                        ) :
-                        <div className="send-icon">
-                            <i className="fa-solid fa-paper-plane" onClick={commentHandler}></i>
-                        </div>
-                    }
+                        }
+                    </div>
                 </form>
             </div>
 

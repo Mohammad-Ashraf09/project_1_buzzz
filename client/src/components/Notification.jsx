@@ -23,7 +23,7 @@ const Notification = ({_id, name, avatar, type, time, postId, senderId, currentU
 
     useEffect(()=>{
         const fetchParticularPost = async() =>{
-            const res = await axios.get("posts/" + postId);
+            const res = await axios.get("/posts/" + postId);
 
             setPost(res.data);
             setLik(res.data.likes.length)
@@ -51,7 +51,7 @@ const Notification = ({_id, name, avatar, type, time, postId, senderId, currentU
 
     const deleteNotificationHandler = async()=>{
         try{
-            await axios.delete("notifications/"+ _id);
+            await axios.delete("/notifications/"+ _id);
         }
         catch(err){}
         
