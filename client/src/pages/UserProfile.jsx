@@ -10,6 +10,7 @@ import Contact from "../components/rightbar/Contact";
 import { Link } from "react-router-dom";
 import Bottombar from "../components/Bottombar";
 import WhoLikedDisliked from "../components/WhoLikedDisliked";
+import UserPostGrid from "../components/UserPostGrid";
 
 ChartJs.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -17,13 +18,20 @@ const UserProfile = () => {
   const [user, setUser] = useState({});
   const [followed, setFollowed] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
+  const [userPostsForGrid, setUserPostsForGrid] = useState([]);
   const [chartData, setChartData] = useState({datasets: [],});
   const [chartOptions, setChartOptions] = useState({});
   const [showFollowers, setShowFollowers] = useState(false);
   const [showFollowing, setShowFollowing] = useState(false);
+  const [isGrid, setIsGrid] = useState(false);
+  const [isSingle, setIsSingle] = useState(false);
 
   const {user:currentUser} = useContext(AuthContext);
   const userId = useParams().id;
+
+  useEffect(()=>{
+    if(window.innerWidth <= 420) setIsGrid(true);
+  },[]);
 
   useEffect(()=>{
     setFollowed(currentUser.followings.some(e=>e.id===user._id))
@@ -46,6 +54,19 @@ const UserProfile = () => {
     }
     fetchUserPosts();
   },[userId]);
+
+  useEffect(()=>{
+    const chunk = (array, size) => {
+      const chunkedArray = [];
+      let index = 0;
+      while (index < array.length) {
+          chunkedArray.push(array.slice(index, size+index));
+          index += size;
+      }
+      return chunkedArray;
+    }
+    setUserPostsForGrid(chunk(userPosts, 3));
+  },[userPosts]);
 
   const getBarData = () =>{
     const currentDate = new Date();
@@ -182,7 +203,6 @@ const UserProfile = () => {
       
     });
   }, [userId, userPosts]);
-  console.log(user)
 
   const {username, profilePicture, coverPicture, fname, lname, gender, bio, city, place, totalPosts, followers, followings} = user;
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
@@ -221,77 +241,99 @@ const UserProfile = () => {
             <img src={cover} alt="" className="user-cover-img" />
             <img src={DP} alt="" className="user-profile-img" />
             <div className="user-about">
-              <div className="user-about-left">
-                <p className="user-profile-name">
-                  {name} | <span className="user-username">{username}</span>
-                  {gender==='male' ?
-                    <span className="gender-sign"><i class="fa-solid fa-mars"></i></span>
-                    :
-                    <span className="gender-sign"><i class="fa-solid fa-venus"></i></span>
-                  }
-                </p>
-                <p className="bio"> {bio} </p>
-                <p className="user-location"> {place}  &#8226; {city}  &#8226; India </p>
-              </div>
-              
-              <div className="user-about-right">
-                <div className="user-about-right-top">
-                  <div className="follower">
-                    <p className="follower-count" onClick={handleScroll}>{totalPosts}</p>
-                    <p>Posts</p>
+              <div className="user-about-top">
+                <div className="user-about-left">
+                  <p className="user-profile-name">
+                    {name} | <span className="user-username">{username}</span>
+                    {gender==='male' ?
+                      <span className="gender-sign"><i class="fa-solid fa-mars"></i></span>
+                      :
+                      <span className="gender-sign"><i class="fa-solid fa-venus"></i></span>
+                    }
+                  </p>
+                  <p className="bio"> {bio} </p>
+                  <p className="user-location"> {place}  &#8226; {city}  &#8226; India </p>
+                </div>
+                <div className="user-about-right">
+                  <div className="user-about-right-top">
+                    <div className="follower">
+                      <p className="follower-count" onClick={handleScroll}>{totalPosts}</p>
+                      <p>Posts</p>
+                    </div>
+
+                    <div className="follower" onClick={()=>{setShowFollowers(!showFollowers); setShowFollowing(false)}}>
+                      <p className="follower-count">{followers?.length}</p>
+                      <p>Followers</p>
+                      {showFollowers ? (
+                        <>
+                          <div className="follower-popup">
+                            {followers.map((userId)=>(
+                              <WhoLikedDisliked key={userId} userId={userId}/>
+                            ))}
+                          </div>
+                          <div className="triangle-right"></div>
+                        </>
+                      ): null}
+                    </div>
+
+                    <div className="follower" onClick={()=>{setShowFollowing(!showFollowing); setShowFollowers(false)}}>
+                      <p className="follower-count">{followings?.length}</p>
+                      <p>Following</p>
+                      {showFollowing ? (
+                        <>
+                          <div className="follower-popup">
+                            {followings.map((userId)=>(
+                              <WhoLikedDisliked key={userId} userId={userId.id}/>
+                            ))}
+                          </div>
+                          <div className="triangle-right"></div>
+                        </>
+                      ): null}
+                    </div>
                   </div>
 
-                  <div className="follower" onClick={()=>{setShowFollowers(!showFollowers); setShowFollowing(false)}}>
-                    <p className="follower-count">{followers?.length}</p>
-                    <p>Followers</p>
-                    {showFollowers ? (
+                  <div className="user-about-right-bottom">
+                    {userId===currentUser?._id ?
                       <>
-                        <div className="follower-popup">
-                          {followers.map((userId)=>(
-                            <WhoLikedDisliked key={userId} userId={userId}/>
-                          ))}
-                        </div>
-                        <div className="triangle-right"></div>
+                        <Link to={`/edit/user/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
+                          <div className="buttons"> Edit Profile </div>
+                        </Link>
+                        <div className="buttons"> Share Profile </div>
                       </>
-                    ): null}
-                  </div>
-
-                  <div className="follower" onClick={()=>{setShowFollowing(!showFollowing); setShowFollowers(false)}}>
-                    <p className="follower-count">{followings?.length}</p>
-                    <p>Following</p>
-                    {showFollowing ? (
+                      :
                       <>
-                        <div className="follower-popup">
-                          {followings.map((userId)=>(
-                            <WhoLikedDisliked key={userId} userId={userId.id}/>
-                          ))}
+                        <div
+                          className="buttons"
+                          onClick={followHandler}
+                          style={followed ? null : {backgroundColor: '#417af5', color: '#fff'}}
+                        >
+                          {followed ? "Remove" : "Follow"}
                         </div>
-                        <div className="triangle-right"></div>
+                        <div className="buttons"> Message </div>
                       </>
-                    ): null}
+                    }
                   </div>
                 </div>
+              </div>
+              
+              <hr className="user-horizontal-line"/>
 
-                <div className="user-about-right-bottom">
-                  {userId===currentUser?._id ?
-                    <>
-                      <Link to={`/edit/user/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
-                        <div className="buttons"> Edit Profile </div>
-                      </Link>
-                      <div className="buttons"> Share Profile </div>
-                    </>
-                    :
-                    <>
-                      <div
-                        className="buttons"
-                        onClick={followHandler}
-                        style={followed ? null : {backgroundColor: '#417af5', color: '#fff'}}
-                      >
-                        {followed ? "Remove" : "Follow"}
-                      </div>
-                      <div className="buttons"> Message </div>
-                    </>
-                  }
+              <div className="user-about-icons-container">
+                <div className="user-about-icons">
+                  <div
+                    className="user-about-icon"
+                    style={isGrid ? {color: '#000', borderBottom: '1px solid #000'} : null}
+                    onClick={()=>{setIsGrid(!isGrid); setIsSingle(false)}}
+                  >
+                    <i class="fa-solid fa-table-cells"></i>
+                  </div>
+                  <div
+                    className="user-about-icon"
+                    style={isSingle ? {color: '#000', borderBottom: '1px solid #000'} : null}
+                    onClick={()=>{setIsGrid(false); setIsSingle(!isSingle)}}
+                  >
+                    <i class="fa-solid fa-bars"></i>
+                  </div>
                 </div>
               </div>
             </div>
@@ -305,17 +347,31 @@ const UserProfile = () => {
         <div className="user-post-area">
           <div className="user-post-left"></div>
           <div className="user-post-timeline">
-            {userPosts.map((post)=>(
-              <UserPost
-                key={post.__id}
-                user={user}
-                name={name}
-                DP={DP}
-                post={post}
-                isLik={post.likes.includes(currentUser._id)}
-                isDisLik={post.dislikes.includes(currentUser._id)}
-              />
-            ))}
+            {isGrid ? 
+              userPostsForGrid.map((post)=>(
+                <UserPostGrid
+                  // key={post[0].__id}
+                  // user={user}
+                  // name={name}
+                  // DP={DP}
+                  post={post}
+                  // isLik={post.likes.includes(currentUser._id)}
+                  // isDisLik={post.dislikes.includes(currentUser._id)}
+                />
+              ))
+              :
+              userPosts.map((post)=>(
+                <UserPost
+                  key={post.__id}
+                  user={user}
+                  name={name}
+                  DP={DP}
+                  post={post}
+                  isLik={post.likes.includes(currentUser._id)}
+                  isDisLik={post.dislikes.includes(currentUser._id)}
+                />
+              ))
+            }
           </div>
           <div className="user-post-right">
             <Contact user={user} isUserProfile={true} />
