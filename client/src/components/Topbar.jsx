@@ -14,7 +14,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const logo = PF+"images/logo144.png";
-    const dp = user?.profilePicture ? PF+user?.profilePicture : PF+"default-dp.png";
+    const dp = user?.profilePicture ? user?.profilePicture : PF+"default-dp.png";
     const name = user?.fname +" "+ user?.lname;
 
     const reverseOrderNotification = [...notification].reverse();
@@ -124,8 +124,6 @@ const Topbar = ({user, socket, setShowPopup}) => {
                     <Notification
                         key={notification._id}
                         _id={notification._id}
-                        name={notification.name}
-                        avatar={notification.avatar}
                         type={notification.type}
                         time={notification.createdAt}
                         postId={notification.postId}
@@ -140,8 +138,6 @@ const Topbar = ({user, socket, setShowPopup}) => {
                     <Notification
                         key={notification._id}
                         _id={notification._id}
-                        name={notification.name}
-                        avatar={notification.avatar}
                         type={notification.type}
                         time={notification.createdAt}
                         postId={notification.postId}

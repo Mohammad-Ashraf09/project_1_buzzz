@@ -15,6 +15,7 @@ import UserPostGrid from "../components/UserPostGrid";
 ChartJs.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 const UserProfile = () => {
+  const [loggedInUser, setLoggedInUser] = useState({});
   const [user, setUser] = useState({});
   const [followed, setFollowed] = useState(false);
   const [userPosts, setUserPosts] = useState([]);
@@ -34,8 +35,8 @@ const UserProfile = () => {
   },[]);
 
   useEffect(()=>{
-    setFollowed(currentUser.followings.some(e=>e.id===user._id))
-  },[currentUser, user._id]);
+    setFollowed(loggedInUser?.followings?.some(e=>e.id===user._id));
+  },[user._id, loggedInUser]);
 
   useEffect(()=>{
     const fetchUser = async() =>{
@@ -43,6 +44,12 @@ const UserProfile = () => {
       setUser(res.data);
     }
     fetchUser();
+
+    const fetchLoggedInUser = async() =>{
+      const res = await axios.get(`/users/${currentUser._id}`);
+      setLoggedInUser(res.data);
+    }
+    fetchLoggedInUser();
   },[userId]);
 
   useEffect(()=>{
@@ -208,8 +215,8 @@ const UserProfile = () => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const name = fname+' '+lname;
-  const DP = profilePicture ? PF+profilePicture : PF+"default-dp.png";
-  const cover = coverPicture ? PF+coverPicture : PF+"default-cover.jpg";
+  const DP = profilePicture ? profilePicture : PF+"default-dp.png";
+  const cover = coverPicture ? coverPicture : PF+"default-cover.jpg";
 
   const followHandler = async () =>{
     try{
@@ -234,7 +241,7 @@ const UserProfile = () => {
 
   return (
     <>
-      <Topbar user={currentUser}/>
+      <Topbar user={user}/>
       <div className="user">
         <div className="user-graph-conatiner">
           <div className="user-container">
@@ -379,7 +386,7 @@ const UserProfile = () => {
           </div>
         </div>
       </div>
-      <Bottombar user={currentUser}/>
+      <Bottombar user={user}/>
     </>
   )
 }

@@ -120,8 +120,6 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
     if(currentUser._id !== postUser?._id){
       const notification = {
         senderId : user?._id,
-        name : user?.fname + " " + user?.lname,
-        avatar : user?.profilePicture,
         receiverId : postUser?._id,
         postId: _id,
         type,
@@ -396,7 +394,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const name = postUser?.fname + ' ' + postUser?.lname;
-  const DP = postUser?.profilePicture ? PF + postUser.profilePicture : PF + "default-dp.png";
+  const DP = postUser?.profilePicture ? postUser.profilePicture : PF+"default-dp.png";
   return (
     <div className='timeline-post'>
       <div className="timeline-post-wrapper">
@@ -583,7 +581,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
                   key={data.commentId}
                   commentId={data.commentId}
                   user={postUser}
-                  currentUser={currentUser}
+                  currentUserId={currentUser._id}
                   numberOfComments={numberOfComments}
                   setNumberOfComments={setNumberOfComments}
                   setTotalComment={setTotalComment}
@@ -600,7 +598,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
         
         <form className="comment-section">
           <div className='comment-profile-img-container'>
-            <img className='comment-profile-img' src={PF+user?.profilePicture} alt="" />
+            <img className='comment-profile-img' src={user?.profilePicture} alt="" />
           </div>
           <div className='comment-input-container'>
             <textarea
@@ -693,7 +691,8 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
       {showParticularPost && <div className='blurr-div'>
         <ClickedPost
           user={postUser}
-          currentUser={currentUser}
+          currentUserId={currentUser._id}
+          currentUserDp={user?.profilePicture}
           DP={DP}
           name={name}
           _id={_id}

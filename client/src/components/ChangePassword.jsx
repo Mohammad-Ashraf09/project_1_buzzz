@@ -214,8 +214,8 @@ const ChangePassword = ({setShowParticularPost, password, id}) => {
                     </div>
 
                     <div className='change-password-btns'>
-                        <div className="edit-btns margin-left" onClick={()=>{setShowParticularPost(false); document.body.style.overflow="auto"}}>cancel</div>
-                        {!hideSaveBtn && <div className="edit-btns margin-right" onClick={saveHandler}>save</div>}
+                        <div className="cancell-btn buttons" onClick={()=>{setShowParticularPost(false); document.body.style.overflow="auto"}}>Cancel</div>
+                        {!hideSaveBtn && <div className="save-btn buttons" onClick={saveHandler}>Save</div>}
                         {isLoader && <div className="loader-btn">
                             <img className='loader' src={loader} alt="" />
                         </div>}

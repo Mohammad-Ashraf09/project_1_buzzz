@@ -1,10 +1,14 @@
 import axios from 'axios';
 import React, { createRef, useContext, useEffect, useState } from 'react'
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ChangePassword from '../components/ChangePassword';
 import EmojiContainer from '../components/emoji/EmojiContainer';
 import Topbar from '../components/Topbar';
 import { AuthContext } from '../context/AuthContext';
+import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebase/storage";
+import { storage } from "../firebase";
+import ProgressBar from "@ramonak/react-progress-bar";
+import Compressor from 'compressorjs';
 
 const EditUserProfile = () => {
   const {user:currentUser} = useContext(AuthContext);
@@ -33,11 +37,19 @@ const EditUserProfile = () => {
   const inputRef = createRef();
   const [cursorPosition, setCursorPosition] = useState();
   const [showParticularPost, setShowParticularPost] = useState(false);
+
+  const [dpRef, setDpRef] = useState(null);
+  const [oldDpRef, setOldDpRef] = useState(null);
+  const [coverRef, setCoverRef] = useState(null);
+  const [oldCoverRef, setOldCoverRef] = useState(null);
+  const [dpURL, setDpURL] = useState('');
+  const [coverURL, setCoverURL] = useState('');
+  const [percentage, setPercentage] = useState(null);
   
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const camera = PF + "images/blue-cam.png";
-  const cover = coverPicture ? PF+coverPicture : PF+"default-cover.jpg";
-  const DP = profilePicture ? PF+profilePicture : PF+"default-dp.png";
+  const cover = coverPicture ? coverPicture : PF+"default-cover.jpg";
+  const DP = profilePicture ? profilePicture : PF+"default-dp.png";
 
   useEffect(()=>{
     const fetchAllUsers = async() =>{
@@ -72,7 +84,170 @@ const EditUserProfile = () => {
     }
     fetchLoggedInUserData();
   },[]);
-  
+
+  const dpFileHandler = (e) =>{
+    if(e.target.files[0]){
+      setDpFile(e.target.files[0]);
+      setDpChanged(true);
+    }
+  }
+
+  useEffect(()=>{
+    if(dpFile && dpChanged){
+      const objectUrl = URL.createObjectURL(dpFile);
+      setDpPreview(objectUrl);
+
+      new Compressor(dpFile, {
+        quality: 0.4, // 0.6 can also be used, but its not recommended to go below.
+        success: (compressedResult) => {
+          const imgName = compressedResult?.name?.toLowerCase()?.split(' ').join('-');
+          const uniqueImageName = new Date().getTime() + '-' + imgName;
+
+          const storageRef = ref(storage, uniqueImageName);
+          setOldDpRef(dpRef);
+          setDpRef(storageRef);
+          const uploadTask = uploadBytesResumable(storageRef, compressedResult);
+
+          uploadTask.on('state_changed', (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setPercentage(progress);
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case 'paused':
+                  console.log('Upload is paused');
+                  break;
+                case 'running':
+                  console.log('Upload is running');
+                  break;
+                default:
+                  break;
+              }
+            }, 
+            (error) => {
+              console.log(error);
+            }, 
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setDpURL(downloadURL);
+              });
+            }
+          );
+        },
+      });
+    }
+  },[dpFile]);
+
+  useEffect(()=>{
+    if(oldDpRef && dpChanged){
+      deleteObject(oldDpRef).then(() => {
+        console.log('dp deleted--------------', oldDpRef?._location?.path_)
+      }).catch((error) => {
+          console.log(error)
+      });   // to delete file from firebase
+    }
+  },[oldDpRef]);
+
+  const coverFileHandler = (e) =>{
+    if(e.target.files[0]){
+      setCoverFile(e.target.files[0]);
+    }
+    setCoverChanged(true);
+  }
+
+  useEffect(()=>{
+    if(coverFile && coverChanged){
+      const objectUrl = URL.createObjectURL(coverFile);
+      setCoverPreview(objectUrl);
+
+      new Compressor(coverFile, {
+        quality: 0.4, // 0.6 can also be used, but its not recommended to go below.
+        success: (compressedResult) => {
+          const imgName = compressedResult?.name?.toLowerCase()?.split(' ').join('-');
+          const uniqueImageName = new Date().getTime() + '-' + imgName;
+
+          const storageRef = ref(storage, uniqueImageName);
+          setOldCoverRef(coverRef)
+          setCoverRef(storageRef)
+          const uploadTask = uploadBytesResumable(storageRef, compressedResult);
+
+          uploadTask.on('state_changed', (snapshot) => {
+              const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+              setPercentage(progress);
+              console.log('Upload is ' + progress + '% done');
+              switch (snapshot.state) {
+                case 'paused':
+                  console.log('Upload is paused');
+                  break;
+                case 'running':
+                  console.log('Upload is running');
+                  break;
+                default:
+                  break;
+              }
+            }, 
+            (error) => {
+              console.log(error);
+            }, 
+            () => {
+              getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                setCoverURL(downloadURL);
+              });
+            }
+          );
+        },
+      });
+    }
+  },[coverFile]);
+
+  useEffect(()=>{
+    if(oldCoverRef && coverChanged){
+      deleteObject(oldCoverRef).then(() => {
+        console.log('cover deleted--------------', oldCoverRef?._location?.path_)
+      }).catch((error) => {
+          console.log(error)
+      });   // to delete file from firebase
+    }
+  },[oldCoverRef]);
+
+  useEffect(()=>{
+    if(isShakeEffect){
+      setTimeout(()=>{
+        const collection = document.getElementsByClassName("edit-profile-error-msg");
+        for (let i=0; i<collection.length; i++) {
+          if(getComputedStyle(collection[i]).display==='block'){
+            const elm = document.getElementById(`${i}`);
+            elm.classList.remove('shake-effect')
+            setIsShakeEffect(false);
+          }
+        }
+      },500);
+    }
+  },[isShakeEffect]);
+
+  useEffect(()=>{
+    if(isShakeEffect2){
+      setTimeout(()=>{
+        if(uniqueUsernameError){
+          const elm2 = document.getElementById('username-exist');
+          elm2.classList.remove('shake-effect')
+          setIsShakeEffect2(false);
+        }
+      },500);
+    }
+  },[isShakeEffect2]);
+
+  useEffect(()=>{
+    if(isShakeEffect3){
+      setTimeout(()=>{
+        if(noOfLineError){
+          const elm3 = document.getElementById('no-of-line');
+          elm3.classList.remove('shake-effect')
+          setIsShakeEffect3(false);
+        }
+      },500);
+    }
+  },[isShakeEffect3]);
+
   const handleChange = (e)=>{
     setFormdata({...formdata,[e.target.name]:e.target.value});
 
@@ -106,6 +281,20 @@ const EditUserProfile = () => {
     setCoverPreview(null);
     setDpChanged(false);
     setCoverChanged(false);
+    setDpFile(profilePicture);
+    setCoverFile(coverFile);
+    setDpURL('');
+    setCoverURL('');
+
+    if(dpRef && dpChanged){
+      dpRemoveFromFirebase(dpRef);
+    }
+    if(coverRef && coverChanged){
+      coverRemoveFromFirebase(coverRef);
+    }
+
+    setOldDpRef(null);
+    setOldCoverRef(null);
 
     setFormdata({
       username: username,
@@ -123,34 +312,16 @@ const EditUserProfile = () => {
     });
   }
 
-  const dpFileHandler = (e) =>{
-    if(e.target.files[0]){
-      setDpFile(e.target.files[0]);
+  const cancelClickHandler = () => {
+    if(dpRef && dpChanged){
+      dpRemoveFromFirebase(dpRef);
     }
-    setDpChanged(true);
+    if(coverRef && coverChanged){
+      coverRemoveFromFirebase(coverRef);
+    }
+
+    navigate(`/user/${currentUser._id}`);
   }
-
-  useEffect(()=>{
-    if(dpFile && dpChanged){
-      const objectUrl = URL.createObjectURL(dpFile)
-      setDpPreview(objectUrl)
-    }
-  },[dpFile]);
-
-  const coverFileHandler = (e) =>{
-    if(e.target.files[0]){
-      setCoverFile(e.target.files[0]);
-    }
-    setCoverChanged(true);
-  }
-
-  useEffect(()=>{
-    if(coverFile && coverChanged){
-      const objectUrl = URL.createObjectURL(coverFile)
-      setCoverPreview(objectUrl)
-      // return () => URL.revokeObjectURL(objectUrl)   // free memory when ever this component is unmounted
-    }
-  },[coverFile]);
 
   const saveHandler = async(e) => {
     e.preventDefault();
@@ -206,30 +377,24 @@ const EditUserProfile = () => {
         updatedData.city = formdata.city
 
       if(dpChanged){
-        const data = new FormData();
-        const fileName = Date.now() + dpFile.name;
-        data.append("name", fileName)
-        data.append("file", dpFile)
-        updatedData.profilePicture = fileName;
+        updatedData.profilePicture = dpURL;
 
-        try{
-          await axios.post("/upload", data)        // to upload photo into local storage
-        }catch(err){
-          console.log(err)
+        const st1 = profilePicture?.split('/o/')[1];
+        const profileName = st1?.split('?alt')[0];
+        const profileStorageRef = ref(storage, profileName);
+        if(st1){
+          dpRemoveFromFirebase(profileStorageRef);
         }
       }
 
       if(coverChanged){
-        const data = new FormData();
-        const fileName = Date.now() + coverFile.name;
-        data.append("name", fileName)
-        data.append("file", coverFile)
-        updatedData.coverPicture = fileName;
+        updatedData.coverPicture = coverURL;
 
-        try{
-          await axios.post("/upload", data)        // to upload photo into local storage
-        }catch(err){
-          console.log(err)
+        const st2 = coverPicture?.split('/o/')[1];
+        const coverName = st2?.split('?alt')[0];
+        const coverStorageRef = ref(storage, coverName);
+        if(st2){
+          coverRemoveFromFirebase(coverStorageRef);
         }
       }
 
@@ -257,44 +422,21 @@ const EditUserProfile = () => {
     }
   }
 
-  useEffect(()=>{
-    if(isShakeEffect){
-      setTimeout(()=>{
-        const collection = document.getElementsByClassName("edit-profile-error-msg");
-        for (let i=0; i<collection.length; i++) {
-          if(getComputedStyle(collection[i]).display==='block'){
-            const elm = document.getElementById(`${i}`);
-            elm.classList.remove('shake-effect')
-            setIsShakeEffect(false);
-          }
-        }
-      },500);
-    }
-  },[isShakeEffect]);
+  const dpRemoveFromFirebase = (imageRef) => {
+    deleteObject(imageRef).then(() => {
+      console.log('dp deleted--------------', imageRef?._location?.path_)
+    }).catch((error) => {
+        console.log(error)
+    });   // to delete file from firebase
+  }
 
-  useEffect(()=>{
-    if(isShakeEffect2){
-      setTimeout(()=>{
-        if(uniqueUsernameError){
-          const elm2 = document.getElementById('username-exist');
-          elm2.classList.remove('shake-effect')
-          setIsShakeEffect2(false);
-        }
-      },500);
-    }
-  },[isShakeEffect2]);
-
-  useEffect(()=>{
-    if(isShakeEffect3){
-      setTimeout(()=>{
-        if(noOfLineError){
-          const elm3 = document.getElementById('no-of-line');
-          elm3.classList.remove('shake-effect')
-          setIsShakeEffect3(false);
-        }
-      },500);
-    }
-  },[isShakeEffect3]);
+  const coverRemoveFromFirebase = (imageRef) => {
+    deleteObject(imageRef).then(() => {
+      console.log('cover deleted--------------', imageRef?._location?.path_)
+    }).catch((error) => {
+        console.log(error)
+    });   // to delete file from firebase
+  }
 
   const blurrScreenHandler = ()=>{
     setShowParticularPost(!showParticularPost);
@@ -305,6 +447,10 @@ const EditUserProfile = () => {
     }
     else
       document.body.style.overflow = "auto";
+  }
+
+  if(percentage === 100){
+    setPercentage(null);
   }
 
   return (
@@ -324,6 +470,21 @@ const EditUserProfile = () => {
               <img src={camera} alt="" className="camera camera-cover" style={{display: editCover && 'block'}} />
               <input style={{display:"none"}} type="file" id="cover" name="file" accept='.jpg, .png, .jpeg' onChange={coverFileHandler}/>
             </label>
+          </div>
+
+          <div className='progress-bar-container'>
+            {percentage ? (
+              <ProgressBar
+                completed={percentage}
+                maxCompleted={100}
+                bgColor={'#03bfbc'}
+                isLabelVisible={false}
+                // labelColor={'#000'}
+                height={'5px'}
+                margin={'8px 0 0 0'}
+                // width={'100%'}
+              />
+            ) : null}
           </div>
 
           <div className='dp-div' onMouseOver={()=>setEditDP(true)} onMouseOut={()=>setEditDP(false)}>
@@ -515,11 +676,17 @@ const EditUserProfile = () => {
                   <div className="bio-character-count">{formdata?.bio?.length}/100</div>
                 </div>
                 <div className='btns-div'>
-                  <Link to={`/user/${currentUser._id}`} style={{textDecoration: 'none', color:'black'}}>
-                    <div className='edit-btns cancell-btn'>calcel</div>
-                  </Link>
-                  <div className='edit-btns reset-btn' onClick={resetClickHandler}>reset</div>
-                  <div className="edit-btns save-btn" onClick={saveHandler}>save</div>
+                  <div className='reset-btn' onClick={resetClickHandler}>Reset</div>
+                  <button
+                    className='cancell-btn buttons'
+                    onClick={cancelClickHandler}
+                    disabled={(percentage !== null && percentage !== 100) ? true : false}
+                  >Cancel</button>
+                  <button
+                    className='save-btn buttons'
+                    onClick={saveHandler}
+                    disabled={(percentage !== null && percentage !== 100) ? true : false}
+                  >Save</button>
                 </div>
               </div>
               {noOfLineError && <div id='no-of-line' className='no-of-lines-error-msg'>Only 4 lines allowed</div>}

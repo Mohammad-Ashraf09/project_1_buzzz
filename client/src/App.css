@@ -606,8 +606,8 @@ input:invalid[focused="true"] ~ .error-msg{
 .cover-img{
     height: 90px;
     width: 100%;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
+    border-top-left-radius: 8px;
+    border-top-right-radius: 8px;
     object-fit: cover;
 }
 .user-img{
@@ -1980,9 +1980,16 @@ hr{
     cursor: pointer;
     font-size: 12px;
     font-weight: 600;
+    border: none;
 }
 .buttons:hover{
     transform: scale(1.02);
+}
+.buttons:disabled {
+    background-color: var(--grey-light);
+    box-shadow: none;
+    cursor:not-allowed;
+    opacity: 1;
 }
 .user-horizontal-line{
     display: none;
@@ -2090,6 +2097,12 @@ hr{
 }
 .camera:hover{
     transform: scale(1.1);
+}
+.progress-bar-container{
+    width: calc(100% - 15.5%);
+    position: absolute;
+    left: 15%;
+    top: calc(13% + 70px);
 }
 .details-div{
     height: calc(100% - 160px);
@@ -2219,37 +2232,22 @@ hr{
     margin-top: 15px;
     margin-left: 30px;
     justify-content: space-around;
-}
-.edit-btns{
-    padding: 8px 20px;
-    width: 60px;
-    text-align: center;
-    border-radius: 25px;
-    color: #fff;
-    font-family: 'Roboto', sans-serif;
-    font-weight: 500;
-    text-transform: uppercase;
-    cursor: pointer;
-    box-shadow: 4px 4px 10px var(--theme-shadow);
-    opacity: 0.8;
-}
-.edit-btns:hover{
-    opacity: 1;
-    transition: 0.2s ease;
+    align-items: end;
 }
 .cancell-btn{
     background-color: rgb(216, 2, 2);
     color: white;
 }
 .reset-btn{
-    background-color: rgb(241, 245, 10);
-    color: black;
+    text-decoration: underline;
+    color: blue;
+    font-size: 13px;
+    cursor: pointer;
 }
 .save-btn{
     background-color: rgb(2, 216, 9);
     color: white;
 }
-
 
 .admin-profile-cover{
     height: 200px;
@@ -2525,14 +2523,6 @@ hr{
 .change-password-btns{
     display: flex;
     justify-content: space-around;
-}
-.margin-left{
-    margin-left: 100px;
-    background-color: rgb(216, 2, 2);
-}
-.margin-right{
-    margin-right: 100px;
-    background-color: rgb(2, 216, 9);
 }
 .loader-btn{
     width: 100px;

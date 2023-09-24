@@ -28,7 +28,7 @@ const SuggestionPerson = ({users, onlineUsers}) => {
 
   const {fname, lname, profilePicture, _id} = users;
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const dp = profilePicture ? PF+profilePicture : PF+'default-dp.png';
+  const dp = profilePicture ? profilePicture : PF+'default-dp.png';
   const name = fname +' '+ lname;
 
   return (

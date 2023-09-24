@@ -5,11 +5,11 @@ import NestedComment from './NestedComment';
 import { useNavigate } from 'react-router-dom';
 
 // user --> jisne post dali hai
-// currentUser --> jisne login kiya hua hai
+// currentUserId --> jisne login kiya hua hai uski id
 const Comment = ({
     commentId,
     user,
-    currentUser,
+    currentUserId,
     numberOfComments,
     setNumberOfComments,
     setTotalComment,
@@ -39,9 +39,9 @@ const Comment = ({
             const res = await axios.get("/posts/"+ _id +"/comment/"+ commentId);
 
             setParticularComment(res.data);
-            setIsLiked(res.data?.commentLikes.includes(currentUser._id));
+            setIsLiked(res.data?.commentLikes.includes(currentUserId));
             setNoOfLikes(res.data?.commentLikes.length);
-            setClr(res.data?.commentLikes.includes(currentUser._id) ? "#417af5" : "#000");
+            setClr(res.data?.commentLikes.includes(currentUserId) ? "#417af5" : "#000");
             setNestedComments(res.data.nestedComments);
         }
         fetchParticularComment();
@@ -57,7 +57,7 @@ const Comment = ({
 
     const likeCommentHandler = async() =>{
         try{
-            await axios.put("/posts/"+ _id +"/comment/"+ particularComment?.commentId + "/like", {userId: currentUser._id});
+            await axios.put("/posts/"+ _id +"/comment/"+ particularComment?.commentId + "/like", {userId: currentUserId});
 
             setNoOfLikes(isLiked ? noOfLikes-1 : noOfLikes+1);
             setIsLiked(!isLiked);
@@ -100,7 +100,7 @@ const Comment = ({
     }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = commentUser?.profilePicture ? PF+commentUser?.profilePicture : PF+"default-dp.png";
+    const DP = commentUser?.profilePicture ? commentUser?.profilePicture : PF+"default-dp.png";
     const name = commentUser?.fname + " " + commentUser?.lname;
 
     return (
@@ -148,7 +148,7 @@ const Comment = ({
                 }
 
                 {showParticularPost ?
-                    (currentUser._id===particularComment?.id &&
+                    (currentUserId===particularComment?.id &&
                         <div 
                             className='caption-icon onHover'
                             style={{display: hover && 'block'}}
@@ -158,7 +158,7 @@ const Comment = ({
                         </div>
                     )
                     :
-                    (currentUser._id===particularComment?.id &&
+                    (currentUserId===particularComment?.id &&
                         <div
                             className='caption-icon onHover'
                             style={{display: hover && 'block'}}
@@ -169,7 +169,7 @@ const Comment = ({
                     )
                 }
 
-                {(user._id===currentUser._id || particularComment?.id===currentUser._id) ? (
+                {(user._id===currentUserId || particularComment?.id===currentUserId) ? (
                     <div
                         className='caption-icon trash onHover'
                         style={{display: hover && 'block'}}
@@ -184,7 +184,7 @@ const Comment = ({
                 <NestedComment
                     key={nestedComment.nestedCommentId}
                     user={user}
-                    currentUser={currentUser}
+                    currentUserId={currentUserId}
                     postId={_id}
                     commentId={commentId}
                     nestedComment={nestedComment}

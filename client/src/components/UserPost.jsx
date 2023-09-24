@@ -209,8 +209,6 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
     }
 
     const reverseOrderComment = totalComment && [...totalComment].reverse();
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const loginUserDp = currentUser.profilePicture ? PF+currentUser.profilePicture : PF+"default-dp.png";
 
     return (
         <div className='timeline-post'>
@@ -348,7 +346,7 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
                 
                 <form className="comment-section">
                     <div className='comment-profile-img-container'>
-                        <img className='comment-profile-img' src={PF+user?.profilePicture} alt="" />
+                        <img className='comment-profile-img' src={user?.profilePicture} alt="" />
                     </div>
                     <div className='comment-input-container'>
                         <textarea

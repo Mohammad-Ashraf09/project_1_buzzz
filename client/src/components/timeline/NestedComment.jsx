@@ -4,10 +4,10 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 // user --> jisne post dali hai
-// currentUser --> jisne login kiya hua hai
+// currentUserId --> jisne login kiya hua hai uski id
 const NestedComment = ({
     user,
-    currentUser,
+    currentUserId,
     postId,
     commentId,
     nestedComment,
@@ -51,9 +51,9 @@ const NestedComment = ({
             // console.log(res.data)
 
             setParticularNestedComment(res.data);
-            setIsLiked(res.data?.nestedCommentLikes.includes(currentUser._id));
+            setIsLiked(res.data?.nestedCommentLikes.includes(currentUserId));
             setNoOfLikes(res.data?.nestedCommentLikes.length);
-            setClr(res.data?.nestedCommentLikes.includes(currentUser._id) ? "#417af5" : "#000");
+            setClr(res.data?.nestedCommentLikes.includes(currentUserId) ? "#417af5" : "#000");
         }
         fetchParticularNestedComment();
     },[]);
@@ -68,7 +68,7 @@ const NestedComment = ({
 
     const likeCommentHandler = async() =>{
         try{
-            await axios.put("posts/"+ postId +"/comment/"+ commentId + "/like/" + particularNestedComment?.nestedCommentId + "/nestedLike/", {userId: currentUser._id});
+            await axios.put("posts/"+ postId +"/comment/"+ commentId + "/like/" + particularNestedComment?.nestedCommentId + "/nestedLike/", {userId: currentUserId});
 
             setNoOfLikes(isLiked ? noOfLikes-1 : noOfLikes+1);
             setIsLiked(!isLiked);
@@ -106,7 +106,7 @@ const NestedComment = ({
     }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = nestedCommentUser?.profilePicture ? PF+nestedCommentUser.profilePicture : PF+"default-dp.png";
+    const DP = nestedCommentUser?.profilePicture ? nestedCommentUser.profilePicture : PF+"default-dp.png";
     const name = nestedCommentUser?.fname + " " + nestedCommentUser?.lname;
 
     return (
@@ -139,7 +139,7 @@ const NestedComment = ({
                 </div>
 
                 {showParticularPost ?
-                    (currentUser._id!==particularNestedComment?.nestedId &&
+                    (currentUserId!==particularNestedComment?.nestedId &&
                         <div className='caption-icon'
                             onClick={()=>
                                 replyNestedCommentHandlerForParticularPost(
@@ -151,7 +151,7 @@ const NestedComment = ({
                             <i class="fa-solid fa-reply"></i>
                         </div>
                     ) :
-                    (currentUser._id!==particularNestedComment?.nestedId &&
+                    (currentUserId!==particularNestedComment?.nestedId &&
                         <div className='caption-icon'
                             onClick={()=>
                                 replyNestedCommentHandler(
@@ -165,7 +165,7 @@ const NestedComment = ({
                     )
                 }
 
-                {(user._id===currentUser._id || particularNestedComment?.nestedId===currentUser._id) &&
+                {(user._id===currentUserId || particularNestedComment?.nestedId===currentUserId) &&
                     <div className='caption-icon trash' onClick={deleteCommentHandler}>
                         <i class="fa-solid fa-trash"></i>
                     </div>

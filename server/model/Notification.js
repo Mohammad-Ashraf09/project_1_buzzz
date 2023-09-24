@@ -5,12 +5,6 @@ const NotificationSchema = new mongoose.Schema(
     senderId:{
         type: String,
     },
-    name:{
-        type: String,
-    },
-    avatar:{
-        type: String,
-    },
     receiverId:{
         type: String,
     },
@@ -20,7 +14,7 @@ const NotificationSchema = new mongoose.Schema(
     postId:{
         type: String,
     },
-    noOfNotifications:{
+    noOfNotifications:{   // this field is only for 1st entry in database having _id = 6374b1028931795513d7c592 in notifications collection
         type: Array,
     },
   },

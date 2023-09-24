@@ -4,8 +4,9 @@ import { Link } from 'react-router-dom';
 import { format } from 'timeago.js';
 import ClickedPost from './ClickedPost';
 
-const Notification = ({_id, name, avatar, type, time, postId, senderId, currentUser, background, renderNotification, setRenderNotification}) => {
+const Notification = ({_id, type, time, postId, senderId, currentUser, background, renderNotification, setRenderNotification}) => {
     const [post, setPost] = useState({});
+    const [senderDpAndName, setSenderDpAndName] = useState(null);
     const [lik, setLik] = useState(null);
     const [isLiked, setIsLiked] = useState(false);
     const [disLik, setDisLik] = useState(null);
@@ -18,8 +19,17 @@ const Notification = ({_id, name, avatar, type, time, postId, senderId, currentU
     const [nestedCommentLength, setNestedCommentLength] = useState(0);
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = currentUser?.profilePicture ? PF + currentUser?.profilePicture : PF + "default-dp.png";
+    const DP = currentUser?.profilePicture ? currentUser?.profilePicture : PF+"default-dp.png";
     const profileName = currentUser?.fname + ' ' + currentUser?.lname;
+
+    useEffect(()=>{
+        const fetchNotificationSenderData = async() =>{
+          const res = await axios.get(`/users/${senderId}`);
+          console.log(res?.data)
+          setSenderDpAndName({dp: res?.data?.profilePicture, name: res?.data?.fname + ' ' + res?.data?.lname});
+        }
+        fetchNotificationSenderData();
+    },[]);
 
     useEffect(()=>{
         const fetchParticularPost = async() =>{
@@ -62,12 +72,12 @@ const Notification = ({_id, name, avatar, type, time, postId, senderId, currentU
         <>
             <div className={`notification ${background}`}>
                 {background==="background-dark" && <div className='notification-dot'></div>}
-                <Link to={`/user/${senderId}`} style={{textDecoration: 'none'}}> <img src={PF+avatar} alt="" className="notification-avatar"/> </Link>
+                <Link to={`/user/${senderId}`} style={{textDecoration: 'none'}}> <img src={senderDpAndName?.dp} alt="" className="notification-avatar"/> </Link>
                 <div className='comment-time'>
                     {(type==="liked" || type==="disliked")  ?
                         <div className='notification-text-name' >
                             <Link to={`/user/${senderId}`} style={{textDecoration: 'none', color: 'black'}}>
-                                {name}
+                                {senderDpAndName?.name}
                             </Link>
                             <span className='notification-text'>{`${type} your`}</span>
                             <span className='clickable-post' onClick={blurrScreenHandler} >post</span>
@@ -75,7 +85,7 @@ const Notification = ({_id, name, avatar, type, time, postId, senderId, currentU
                         :
                         <div className='notification-text-name' >
                             <Link to={`/user/${senderId}`} style={{textDecoration: 'none', color: 'black'}}>
-                                {name}
+                                {senderDpAndName?.name}
                             </Link>
                             <span className='notification-text'>{`${type} on your`}</span>
                             <span className='clickable-post' onClick={blurrScreenHandler} >post</span>

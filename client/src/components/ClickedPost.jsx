@@ -9,7 +9,8 @@ import WhoLikedDisliked from './WhoLikedDisliked';
 
 const ClickedPost = ({
     user,
-    currentUser,
+    currentUserId,
+    currentUserDp,
     DP,
     name,
     _id,
@@ -77,11 +78,9 @@ const ClickedPost = ({
 
 
     const notificationHandler = (type)=>{
-        if(currentUser._id !== user._id){
+        if(currentUserId !== user._id){
             socket.emit("sendNotification", {
-            senderId : currentUser._id,
-            name : currentUser.fname + " " + currentUser.lname,
-            avatar : currentUser.profilePicture,
+            senderId : currentUserId,
             receiverId : user._id,
             type,
             });
@@ -95,7 +94,7 @@ const ClickedPost = ({
 
     const likeHandler = async() =>{
         try{
-            await axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
+            await axios.put("posts/"+ _id +"/like", {userId: currentUserId});
 
             setLik(isLiked ? lik-1 : lik+1);
             setLike(isLiked ? lik-1 : lik+1);
@@ -118,7 +117,7 @@ const ClickedPost = ({
                 setColor2("rgb(108, 104, 104)");
                 setIsDisLiked(false);
                 setIsDisLik(false);
-                await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id});
+                await axios.put("posts/"+ _id +"/dislike", {userId: currentUserId});
             }
 
             notificationHandler("liked");
@@ -128,7 +127,7 @@ const ClickedPost = ({
   
     const dislikeHandler = async() =>{
         try{
-            await axios.put("posts/"+ _id +"/dislike", {userId: currentUser._id})
+            await axios.put("posts/"+ _id +"/dislike", {userId: currentUserId})
 
             setDisLik(isDisLiked ? dislik-1 : dislik+1);
             setDisLike(isDisLiked ? dislik-1 : dislik+1);
@@ -151,7 +150,7 @@ const ClickedPost = ({
                 setColor("rgb(108, 104, 104)");
                 setIsLiked(false);
                 setIsLik(false);
-                await axios.put("posts/"+ _id +"/like", {userId: currentUser._id});
+                await axios.put("posts/"+ _id +"/like", {userId: currentUserId});
             }
 
             notificationHandler("disliked");
@@ -174,7 +173,7 @@ const ClickedPost = ({
         if(commentedText){
             const newComment = {
                 commentId: Math.random().toString(),
-                id: currentUser._id,
+                id: currentUserId,
                 comment: commentedText,
                 commentLikes: [],
                 nestedComments: [],
@@ -218,7 +217,7 @@ const ClickedPost = ({
 
             const newNestedComment = {
                 nestedCommentId: Math.random().toString(),
-                nestedId: currentUser._id,
+                nestedId: currentUserId,
                 nestedComment: text,
                 nestedCommentLikes: [],
                 date: new Date()
@@ -277,14 +276,13 @@ const ClickedPost = ({
 
 
     const reverseOrderComment = [...totalComment].reverse();
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     return (
         <>
             <div className="particular-post-wrapper">
                 <div className="post-top-section">
                     <div className="post-top-left">
-                        {user._id===currentUser._id ?
+                        {user._id===currentUserId ?
                             <Link to={`/edit/user/${user._id}`}>
                                 <img src={DP} alt="" className="post-profile-img" />
                             </Link> :
@@ -294,7 +292,7 @@ const ClickedPost = ({
                         }
 
                         <span className="post-username-date">
-                            {user._id===currentUser._id ?
+                            {user._id===currentUserId ?
                                 <Link to={`/edit/user/${user._id}`} style={{textDecoration: 'none', color:'black'}}>
                                     <div className="post-username"> {name} </div>
                                 </Link> :
@@ -398,7 +396,7 @@ const ClickedPost = ({
                                 key={data.commentId}
                                 commentId={data.commentId}
                                 user={user}
-                                currentUser={currentUser}
+                                currentUserId={currentUserId}
                                 setNumberOfCommentsForPopupPost={setNumberOfCommentsForThisComponent}
                                 numberOfComments={numberOfCommentsForThisComponent}
                                 setNumberOfComments={setNumberOfComments}
@@ -418,7 +416,7 @@ const ClickedPost = ({
                 
                 <form className="comment-section" onSubmit={commentHandler}>
                     <div className='comment-profile-img-container'>
-                        <img className='comment-profile-img' src={PF+currentUser.profilePicture} alt="" />
+                        <img className='comment-profile-img' src={currentUserDp} alt="" />
                     </div>
                     <div className='comment-input-container'>
                         <textarea
