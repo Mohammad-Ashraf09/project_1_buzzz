@@ -9,6 +9,7 @@ import { ref, uploadBytesResumable, getDownloadURL, deleteObject } from "firebas
 import { storage } from "../firebase";
 import ProgressBar from "@ramonak/react-progress-bar";
 import Compressor from 'compressorjs';
+import Bottombar from '../components/Bottombar';
 
 const EditUserProfile = () => {
   const {user:currentUser} = useContext(AuthContext);
@@ -576,7 +577,7 @@ const EditUserProfile = () => {
                   <div id='3' className='edit-profile-error-msg'>Enter a valid DOB in dd/mm/yyyy format</div>
                 </div>
 
-                <div className="gender-div">
+                <div className="gender-container">
                   <div className='gender-label'>
                     <label className='label' htmlFor="">Gender :</label>
                   </div>
@@ -674,6 +675,7 @@ const EditUserProfile = () => {
                     <i className="fa-regular fa-face-laugh" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
                   </div>
                   <div className="bio-character-count">{formdata?.bio?.length}/100</div>
+                  {noOfLineError ? <div id='no-of-line' className='no-of-lines-error-msg'>Only 4 lines allowed</div> : null}
                 </div>
                 <div className='btns-div'>
                   <div className='reset-btn' onClick={resetClickHandler}>Reset</div>
@@ -689,7 +691,6 @@ const EditUserProfile = () => {
                   >Save</button>
                 </div>
               </div>
-              {noOfLineError && <div id='no-of-line' className='no-of-lines-error-msg'>Only 4 lines allowed</div>}
             </div>
           </div>
         </div>
@@ -710,6 +711,8 @@ const EditUserProfile = () => {
             <ChangePassword setShowParticularPost={setShowParticularPost} password={currentUser.password} id={currentUser._id}/>
         </div>
       }
+
+      <Bottombar user={user}/>
     </>
   )
 }

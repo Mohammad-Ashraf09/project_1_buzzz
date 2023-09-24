@@ -152,20 +152,22 @@ const ChangePassword = ({setShowParticularPost, password, id}) => {
         }
     },[isShakeEffect3]);
 
-    // console.log(values)
-
     return (
         <div className="password-change-container">
             <div className='cross-div'>
                 <h3 className='change-password-heading'>Change Password</h3>
-                {showSuccess && <div className='successful-message'>
-                    Password changed successfully...
-                    <span><img className='tick-mark' src={check} alt="" /></span>
-                </div>}
                 <div className="post-top-dots" onClick={()=> {setShowParticularPost(false); document.body.style.overflow = "auto"}}>
                     <i class="fa-solid fa-xmark"></i>
                 </div>
             </div>
+            {showSuccess ?
+                <div className='successful-message'>
+                    Password changed successfully...
+                    <span>
+                        <img className='tick-mark' src={check} alt="" />
+                    </span>
+                </div>
+            : null}
 
             <div className='password-div'>
                 <form className="change-password-form">
@@ -179,8 +181,10 @@ const ChangePassword = ({setShowParticularPost, password, id}) => {
                             onChange={handleChange}
                             onBlur={blurHandler}
                         />
-                        {isFalsePassword && <div id='incorrect-password' className='username-exist-error-msg password-error'>Invalid password entered!!</div>}
-                        {oldPassword && <img className='tick' src={tick} alt="" />}
+                        {isFalsePassword ?
+                            <div id='incorrect-password' className='username-exist-error-msg password-error'>Invalid password entered!!</div>
+                        : null}
+                        {oldPassword ? <img className='tick' src={tick} alt="" /> : null}
                     </div>
 
                     <div className='input-password'>
@@ -209,16 +213,20 @@ const ChangePassword = ({setShowParticularPost, password, id}) => {
                             onChange={handleChange}
                             onBlur={blurHandler}
                         />
-                        {isPasswordNotMatched && <div id='password-not-matched' className='username-exist-error-msg password-error'>Passwords didn't match!</div>}
-                        {passwordMatched && <img className='tick' src={tick} alt="" />}
+                        {isPasswordNotMatched ?
+                            <div id='password-not-matched' className='username-exist-error-msg password-error'>Passwords didn't match!</div>
+                        : null}
+                        {passwordMatched ? <img className='tick' src={tick} alt="" /> : null}
                     </div>
 
                     <div className='change-password-btns'>
                         <div className="cancell-btn buttons" onClick={()=>{setShowParticularPost(false); document.body.style.overflow="auto"}}>Cancel</div>
-                        {!hideSaveBtn && <div className="save-btn buttons" onClick={saveHandler}>Save</div>}
-                        {isLoader && <div className="loader-btn">
-                            <img className='loader' src={loader} alt="" />
-                        </div>}
+                        {!hideSaveBtn ? <div className="save-btn buttons" onClick={saveHandler}>Save</div> : null}
+                        {isLoader ?
+                            <div className="loader-btn buttons">
+                                <img className='loader' src={loader} alt="" />
+                            </div>
+                        : null}
                     </div>
                 </form>
             </div>

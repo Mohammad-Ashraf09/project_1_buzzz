@@ -63,6 +63,7 @@ body{
 .gender-div{
     display: flex;
     margin-bottom: 10px;
+    width: 100%;
 }
 .gender-title{
     display: flex;
@@ -2038,26 +2039,26 @@ hr{
 }
 
 
-/*################################################## Admin Profile CSS #############################################*/
+/*################################################## Edit Profile CSS #############################################*/
 
 .edit-profile{
-    background-color: #03bfbc;
-    height: 671px;
     display: flex;
     justify-content: center;
     align-items: center;
+    height: calc(100vh - 50px);
+    min-height: 657px;
+    background-color: #03bfbc;
 }
 .edit-profile-wrapper{
     height: 95%;
     width: 95%;
     background-color: white;
-    border-radius: 12px;
+    border-radius: 8px;
     position: relative;
 }
 .cover-div{
     height: 160px;
     width: 100%;
-    /* position: absolute; */
 }
 .edit-cover{
     height: 100%;
@@ -2105,10 +2106,11 @@ hr{
     top: calc(13% + 70px);
 }
 .details-div{
-    height: calc(100% - 160px);
+    position: absolute;
+    top: 240px;
     width: 100%;
+    padding: 2% 3%;
     box-sizing: border-box;
-    position: relative;
 }
 .change-password{
     position: absolute;
@@ -2119,22 +2121,25 @@ hr{
     font-size: 13px;
     cursor: pointer;
 }
-.details-div-wrapper{
-    height: 100%;
+.username-div{
+    width: 40%;
+}
+.fname-lname-div{
+    display: flex;
     width: 100%;
-    padding: 100px 42px 15px 42px;
-    box-sizing: border-box;
+}
+.fname-div, .lname-div{
+    width: 40%;
 }
 .label{
     display: inline-block;
-    width: 140px;
+    width: 25%;
 }
 .edit-profile input[type="text"],
 .edit-profile input[type="email"]{
     padding: 0 8px;
-    width: 250px;
+    width: 55%;
     height: 32px;
-    margin-right: 150px;
     margin-bottom: 16px;
     border: none;
     border-bottom: 2px solid #AAA;
@@ -2142,15 +2147,21 @@ hr{
     font-size: 15px;
     transition: 0.2s ease;
 }
-.fname-lname-div{
+.gender-container{
     display: flex;
-    width: 100%;
+    margin-bottom: 10px;
+    width: 50%;
 }
 .gender-label{
     display: flex;
     align-items: center;
+    width: 20%;
+}
+.gender-label .label{
+    width: 100%;
 }
 .edit-gender-radio{
+    width: 42%;
     display: flex;
     justify-content: space-between;
 }
@@ -2167,7 +2178,6 @@ hr{
     font-family: sans-serif, Arial;
     font-size: 15px;
     border-radius: 25px;
-    margin-right: 100px;
     border: none;
     cursor: pointer;
     background-color: var(--bg-color);
@@ -2184,13 +2194,13 @@ hr{
 }
 .bio-div{
     display: flex;
-    flex: 9;
     position: relative;
+    width: 73%;
 }
 .edit-profile textarea[type="text"]{
     box-sizing: border-box;
     padding: 4px 8px;
-    width: 822px;
+    width: 86%;
     height: 60px;
     margin-top: 15px;
     border: 2px solid var(--grey-light);
@@ -2205,6 +2215,7 @@ hr{
 }
 .bio-label{
     margin-top: 15px;
+    width: 14%;
 }
 .bio-emoji-icon{
     position: absolute;
@@ -2227,10 +2238,8 @@ hr{
     color: var(--grey-dark);
 }
 .btns-div{
+    width: 27%;
     display: flex;
-    flex: 3;
-    margin-top: 15px;
-    margin-left: 30px;
     justify-content: space-around;
     align-items: end;
 }
@@ -2249,195 +2258,6 @@ hr{
     color: white;
 }
 
-.admin-profile-cover{
-    height: 200px;
-    position: relative;
-}
-.admin-cover-img{
-    height: 150px;
-    width: 100%;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    object-fit: cover;
-}
-.admin-profile-img{
-    height: 120px;
-    width: 120px;
-    position: absolute;
-    left: 50px;
-    top: 90px;
-    border: none;
-}
-#upload-img{
-    width: 120px;
-    height: 120px;
-    border-radius: 5px;
-    object-fit: cover;
-}
-.form-details{
-    margin-top: 30px;
-}
-.admin-profile-name{
-    margin: 10px 0 20px 50px;
-    font-size: 25px;
-    font-weight: bold;
-    color: black;
-}
-.about{
-    margin-top: -100px;
-    margin-right: 500px;
-    margin-left: 50px;
-    color: gray;
-}
-
-.admin-container i{
-    padding-left: 20px;
-    font-size: 20px;
-    margin-bottom: 20px;
-    cursor: pointer;
-    transition: .5s;
-}
-.admin-container i:hover{
-    color: #03bfbc;
-} 
-.admin-container input{
-  height: 35px;
-  border:1px solid #d1d1d1;
-  outline-color: #5a92bb;
-  border-radius: 5px;
-  margin-top: 10px;
-}
-.admin-profile-conatiner::placeholder {
-  color: rgb(194, 194, 194);
-  padding: 5px;
-}
-
-.details-input select{
-  height: 40px;
-  color: rgb(194, 194, 194);
-  border:1px solid #d1d1d1;
-  outline-color: #5a92bb;
-}
-#state{
-  width: 7%; 
-  border-radius: 5px;
-  margin-right:15px ;
-}
-.details{
-    margin-left: 50px;
-}
-.details-name{
-    margin-right: 160px; 
-} 
-
-.details-name2{
-    margin-right: 200px;
-}
-.details-name2-lname{
-    margin-left: 5px;
-}
-.details-input{
-    margin-left: 50px;
-} 
-.details-value{
-    margin-right: 70px;
-}
-#details-value2-bday{
-    margin-left: 108px;
-}
-#details-name-brth{
-    margin-left: 30px;
-}
-#details-name-state{
-    margin-left: 52px;
-}
-#details-name-ZIP{
-    margin-left: 50px;
-
-}
-.btn_upload {
-  color: #fff;
-  text-align: center;
-  position: relative;
-  display: inline-block;
-  overflow: hidden;
-  z-index: 3;
-  white-space: nowrap;
-  position: absolute;
-  top: 81%;
-  left: 82%;
-}
-.btn_upload input {
-  position: absolute;
-  width: 100%;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 105%;
-  cursor: pointer;
-  opacity: 0;
-}
-.file_uploading {
-  width: 100%;
-  height: 10px;
-  margin-top: 20px;
-  background: #ccc;
-}
-.file_uploading .btn_upload {
-  display: none;
-}
-.radio-toolbar {
-  margin: 0px;
-}
-.radio-toolbar input[type="radio"] {
-  opacity: 0;
-  position: fixed;
-  width: 0;
-}
-.radio-toolbar label {
-    display: inline-block;
-    background-color: white;
-    padding: 10px 10px;
-    font-family: sans-serif, Arial;
-    font-size: 15px;
-    border: 1px solid black;
-    border-radius: 4px;
-    margin-left: 5px;
-    border: none;
-}
-.radio-toolbar input[type="radio"]:checked + label {
-    background-color: #4dd2ff;
-    border: none;
-    color: white;
-}
-.btns{
-    border-radius: 5px;
-    font-family: Montserrat, sans-serif;
-    cursor: pointer;
-    font-weight: 600;
-}
-#save-btn{
-      color: white;
-      background-color: var(--link-color);
-      margin-left: 50px;
-      height: 42px;
-      width: 70px;
-      padding-left:20px;
-      padding-right: 20px;
-}
-#reset-btn{
-    height: 40px;
-    width: 90px;
-    padding-left: 18px;
-    padding-right: 18px;
-    color: var(--link-color);
-    border-color:  var(--link-color);
-    background: transparent;
-    margin-left: 30px;
-}
-.btns:hover{
-    transform: scale(1.02);
-}
 .edit-profile-error-msg{
     font-size: 11px;
     color: red;
@@ -2452,7 +2272,9 @@ hr{
 .no-of-lines-error-msg{
     font-size: 11px;
     color: red;
-    margin: 5px 0px 8px 140px;
+    position: absolute;
+    top: 78px;
+    left: 14%;
 }
 
 .shake-effect {
@@ -2468,7 +2290,7 @@ hr{
 }
 
 .password-change-container{
-    height: 300px;
+    height: auto;
     width: 500px;
     padding: 12px;
     background-color: white;
@@ -2488,8 +2310,6 @@ hr{
     color: green;
     display: flex;
     align-items: center;
-    margin-top: -4px;
-    margin-right: 50px;
 }
 .tick-mark{
     height: 30px;
@@ -2525,15 +2345,7 @@ hr{
     justify-content: space-around;
 }
 .loader-btn{
-    width: 100px;
-    margin-right: 100px;
     background-color: rgba(2, 216, 9, 0.5);
-    box-shadow: 4px 4px 10px var(--theme-shadow);
-    border-radius: 25px;
-    cursor: not-allowed;
-    display: flex;
-    align-items: center;
-    justify-content: center;
 }
 .loader{
     height: 32px;
@@ -2562,8 +2374,8 @@ input:valid[focused="true"] ~ .tickkk{
     display: block;
 }
 
-/*########################################### Messenger page #############################################*/
 
+/*########################################### Messenger page #############################################*/
 .messenger{
     height: 671px;
     display: flex;
@@ -3917,6 +3729,178 @@ input:valid[focused="true"] ~ .tickkk{
     }
     .user-post-right{
         display: none;
+    }
+
+
+    /* -------------------------Edit Profile page -------------------- */
+    .edit-profile{
+        height: calc(100vh - 84px);
+        min-height: 652px;
+        width: 100vw;
+        align-items: normal;
+    }
+    .edit-profile-wrapper{
+        height: 98%;
+        margin-top: 0.5rem;
+        width: 96%;
+    }
+    .cover-div{
+        height: 110px;
+    }
+    .dp-div{
+        height: 90px;
+        width: 90px;
+        top: 10px;
+    }
+    .camera{
+        display: block;
+        height: 16px;
+    }
+    .camera-cover{
+        top: 86px;
+    }
+    .progress-bar-container{
+        width: 92vw;
+        left: 2vw;
+        top: 105px;
+    }
+    .details-div{
+        top: 100px;
+        padding: 2rem 1rem;
+    }
+    .change-password{
+        top: 20px;
+        right: 6px;
+        font-size: 11px;
+    }
+    .username-div{
+        width: 100%;
+    }
+    .fname-lname-div{
+        display: block;
+    }
+    .fname-div, .lname-div{
+        width: 100%;
+    }
+    .label{
+        width: 24%;
+        font-size: 12px;
+    }
+    .edit-profile input[type="text"],
+    .edit-profile input[type="email"]{
+        width: 65%;
+        height: 28px;
+        margin-bottom: 8px;
+        font-size: 12px;
+    }
+    .gender-container{
+        width: 100%;
+        margin-bottom: 6px;
+    }
+    .gender-label{
+        width: 24%;
+    }
+    .edit-gender-radio{
+        width: 70%;
+    }
+    .edit-gender-radio label {
+        font-size: 11px;
+        height: 28px;
+    }
+    .bio-btns-div{
+        display: inline-block;
+    }
+    .bio-div{
+        width: 100%;
+    }
+    .edit-profile textarea[type="text"]{
+        padding: 2px 4px;
+        width: 100%;
+        height: 85px;
+        font-size: 12px;
+    }
+    .bio-emoji-icon{
+        display: none;
+    }
+    .bio-character-count{
+        font-size: 10px;
+        right: 6px;
+        bottom: 4px;
+        padding: 2px 6px;
+    }
+    .btns-div{
+        margin-top: 0.5rem;
+        margin-left: 0;
+        width: 100%;
+        justify-content: center;
+    }
+    .reset-btn{
+        font-size: 11px;
+        margin-right: 1.5rem;
+    }
+    .cancell-btn{
+        margin-right: 1.5rem;
+    }
+
+    .edit-profile-error-msg{
+        font-size: 9px;
+        margin: -8px 0px 8px 90px;
+    }
+    .username-exist-error-msg{
+        font-size: 9px;
+        margin: -8px 0px 8px 90px;
+    }
+    .no-of-lines-error-msg{
+        font-size: 9px;
+        top: 103px;
+        left: 20%;
+    }
+    @keyframes shake {
+        0% { transform: translate(10px) ; }
+        20% { transform: translate(-10px); }
+        40% { transform: translate(6px) ; }
+        60% { transform: translate(-6px) ; }
+        80% { transform: translate(3px) ; }
+        100% { transform: translate(0px) ; }
+    }
+    
+    .password-change-container{
+        width: 320px;
+        padding: 8px;
+        border-radius: 6px;
+    }
+    .successful-message{
+        font-size: 10px;
+    }
+    .tick-mark{
+        height: 24px;
+        width: 24px;
+    }
+    .password-div{
+        height: calc(100% - 40px);
+        padding: 0.5rem 0.675rem;
+        border-radius: 4px;
+    }
+    .password-label{
+        width: 34%;
+        font-size: 10px;
+    }
+    .change-password-form input[type="password"]{
+        width: 58%;
+        height: 28px;
+        margin-bottom: 1rem;
+        font-size: 12px;
+    }
+    .password-error{
+        margin: -16px 0px 15px 102px;
+    }
+    .loader{
+        height: 28px;
+        width: 28px;
+    }
+    .tick{
+        right: 10px;
+        top: 6px;
     }
     
 
