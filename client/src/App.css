@@ -359,7 +359,7 @@ input:invalid[focused="true"] ~ .error-msg{
     display: flex;
     align-items: center;
     position: sticky;
-    z-index: 5463546546;
+    z-index: 5497844;
     background-color: white;
     top: 0;
     box-shadow: 0px 2px 5px var(--shadow-color);
@@ -1746,26 +1746,15 @@ hr{
     width: calc(100vw - 4rem);
     height: calc(100vh - 50px);
     display: flex;
-    z-index: 9999;
+    z-index: 99;
     justify-content: center;
     align-items: center;
 }
 .blurr-div-notification-click{
-    background-color: rgba(21, 21, 21, 0.95);
-    position: absolute;
-    top: 50px;
-    left: -32px;
-    width: calc(100vw - 4rem);
-    height: calc(100vh - 50px);
-    margin-left: 2rem;
-    display: flex;
-    z-index: 999999999;
-    justify-content: center;
-    align-items: center;
+    left: 0;
 }
 .particular-post-wrapper{
     box-sizing: border-box;
-    min-height: 550px;
     height: calc(100vh - 100px);
     width: 480px;
     padding: 0.625rem;
@@ -3318,7 +3307,7 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 2px 8px 2px 4px;
     }
     .post-media-preview-container{
-        height: 240px;
+        height: 220px;
     }
     .preview-clicked-post{
         width: 100%;
@@ -3376,8 +3365,13 @@ input:valid[focused="true"] ~ .tickkk{
     }
 
     /* ------------------------- timeline post area -------------------- */
+    .feed-container{
+        padding-bottom: 0.5rem;
+    }
     .timeline-post-area{
         margin: 1rem 0.5rem 0 0.5rem;
+        min-height: 650px;
+        height: calc(100vh - 84px);
     }
     .timeline-post-wrapper{
         padding: 0.5rem;
@@ -3565,9 +3559,11 @@ input:valid[focused="true"] ~ .tickkk{
         width: 100vw;
         height: calc(100vh - 84px);
     }
+    .blurr-div-notification-click{
+        left: 0;
+    }
     .particular-post-wrapper{
-        min-height: 500px;
-        height: calc(100vh - 220px);
+        height: calc(100vh - 200px);
         width: 90vw;
         padding: 0.5rem;
         border-radius: 6px;

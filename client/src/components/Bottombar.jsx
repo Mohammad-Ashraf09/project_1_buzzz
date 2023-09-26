@@ -13,7 +13,7 @@ const Bottombar = ({user}) => {
                 <div className="bottombar-icon">
                     <i className="fa-solid fa-magnifying-glass"></i>
                 </div>
-                <Link to={`/edit/user/${user?._id}`} style={{textDecoration: 'none'}}>
+                <Link to={`/user/${user?._id}`} style={{textDecoration: 'none'}}>
                     <img src={dp} alt="" className="topbar-img" />
                 </Link>
             </div>

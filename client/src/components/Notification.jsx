@@ -25,7 +25,6 @@ const Notification = ({_id, type, time, postId, senderId, currentUser, backgroun
     useEffect(()=>{
         const fetchNotificationSenderData = async() =>{
           const res = await axios.get(`/users/${senderId}`);
-          console.log(res?.data)
           setSenderDpAndName({dp: res?.data?.profilePicture, name: res?.data?.fname + ' ' + res?.data?.lname});
         }
         fetchNotificationSenderData();
@@ -102,10 +101,11 @@ const Notification = ({_id, type, time, postId, senderId, currentUser, backgroun
                 {post?.img?.length ? <img src={post.img[0]} alt="" className="notification-post-img" onClick={blurrScreenHandler} /> : null}
             </div>
 
-            {showParticularPost && <div className='blurr-div-notification-click'>
+            {showParticularPost && <div className='blurr-div blurr-div-notification-click'>
                 <ClickedPost
                     user={currentUser}
-                    currentUser={currentUser}
+                    currentUserId={currentUser._id}
+                    currentUserDp={currentUser?.profilePicture}
                     DP={DP}
                     name={profileName}
                     _id={postId}
