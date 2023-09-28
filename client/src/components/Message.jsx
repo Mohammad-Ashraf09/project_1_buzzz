@@ -139,7 +139,7 @@ const Message = ({
                 (media?.length<4 ?
                   (media?.length===1 ?
                     ((media[0]?.isVideo) ?
-                      <div className='video-player-wrapper' onClick={()=>imageClickedHandler(0)}>
+                      <div className='video-player-wrapper single' onClick={()=>imageClickedHandler(0)}>
                         <ReactPlayer
                           url={media[0]?.url}
                           // light={true}
@@ -150,7 +150,7 @@ const Message = ({
                           // controls
                           height='auto'
                           width="100%"
-                          className='video'
+                          className='single-video'
                         />
                         <div className='control-container'><img className='play-icon' src={playIcon} alt="" /></div>
                       </div>
@@ -159,14 +159,14 @@ const Message = ({
                     )
                     :
                     ((media[0]?.isVideo) ?
-                      <div className='video-player-wrapper' onClick={()=>imageClickedHandler(0)}>
+                      <div className='video-player-wrapper double-tripple' onClick={()=>imageClickedHandler(0)}>
                         <ReactPlayer
                           url={media[0]?.url}
                           muted={true}
                           playing={false}
                           height='auto'
                           width="100%"
-                          className='video'
+                          className='double-tripple-video'
                         />
                         <div className='control-container'>+ {media?.length-1}</div>
                       </div>
@@ -191,14 +191,14 @@ const Message = ({
                     <div className='message-image-four'>
                       <div className='message-image-four-half'>
                         {(media[0]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(0)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(0)}>
                             <ReactPlayer
                               url={media[0]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'><img className='play-icon play-icon-small' src={playIcon} alt="" /></div>
                           </div>
@@ -206,14 +206,14 @@ const Message = ({
                           <img className='message-image image-two-in-line' src={media[0]?.url} alt="" onClick={()=>imageClickedHandler(0)} />
                         }
                         {(media[1]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(1)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(1)}>
                             <ReactPlayer
                               url={media[1]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'><img className='play-icon play-icon-small' src={playIcon} alt="" /></div>
                           </div>
@@ -223,14 +223,14 @@ const Message = ({
                       </div>
                       <div className='message-image-four-half'>
                         {(media?.[2]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(2)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(2)}>
                             <ReactPlayer
                               url={media[2]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'><img className='play-icon play-icon-small' src={playIcon} alt="" /></div>
                           </div>
@@ -238,14 +238,14 @@ const Message = ({
                           <img className='message-image image-two-in-line' src={media[2]?.url} alt="" onClick={()=>imageClickedHandler(2)} />
                         }
                         {(media[3]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(3)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(3)}>
                             <ReactPlayer
                               url={media[3]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'><img className='play-icon play-icon-small' src={playIcon} alt="" /></div>
                           </div>
@@ -258,14 +258,14 @@ const Message = ({
                     <div className='message-image-four'>
                       <div className='message-image-four-half'>
                         {(media[0]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(0)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(0)}>
                             <ReactPlayer
                               url={media[0]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'><img className='play-icon play-icon-small' src={playIcon} alt="" /></div>
                           </div>
@@ -273,14 +273,14 @@ const Message = ({
                           <img className='message-image image-two-in-line' src={media[0]?.url} alt="" onClick={()=>imageClickedHandler(0)} />
                         }
                         {(media[1]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(1)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(1)}>
                             <ReactPlayer
                               url={media[1]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'><img className='play-icon play-icon-small' src={playIcon} alt="" /></div>
                           </div>
@@ -290,14 +290,14 @@ const Message = ({
                       </div>
                       <div className='message-image-four-half'>
                         {(media[2]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(2)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(2)}>
                             <ReactPlayer
                               url={media[2]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'><img className='play-icon play-icon-small' src={playIcon} alt="" /></div>
                           </div>
@@ -305,14 +305,14 @@ const Message = ({
                           <img className='message-image image-two-in-line' src={media[2]?.url} alt="" onClick={()=>imageClickedHandler(2)} />
                         }
                         {((media[3]?.isVideo) ?
-                          <div className='video-player-wrapper' onClick={()=>imageClickedHandler(3)}>
+                          <div className='video-player-wrapper four' onClick={()=>imageClickedHandler(3)}>
                             <ReactPlayer
                               url={media[3]?.url}
                               muted={true}
                               playing={false}
                               height='138px'
                               width="138px"
-                              className='video'
+                              className='four-video'
                             />
                             <div className='control-container'>+ {media?.length-4}</div>
                           </div>

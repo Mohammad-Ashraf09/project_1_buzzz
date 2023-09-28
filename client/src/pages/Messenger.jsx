@@ -1,4 +1,5 @@
 import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
+import { useParams } from "react-router";
 import Conversation from '../components/Conversation';
 import Message from '../components/Message';
 import OnlineFriends from '../components/OnlineFriends';
@@ -12,6 +13,7 @@ import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
 import { storage } from "../../src/firebase";
 import Compressor from 'compressorjs';
 import ReactPlayer from 'react-player';
+import Bottombar from '../components/Bottombar';
 
 const Messenger = () => {
   const {user} = useContext(AuthContext);
@@ -43,6 +45,7 @@ const Messenger = () => {
   const [sendingFileInProgress, setSendingFileInProgress] = useState(false);
   const [lastPreviewMediaUrl, setLastPreviewMediaUrl] = useState('');
   // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
+  const chatId = useParams().id;
 
   const oldMessages = messages.slice(0, messages?.length-noOfNewmessages);
   const newMessages = messages.slice(messages?.length-noOfNewmessages, messages?.length);
@@ -80,6 +83,14 @@ const Messenger = () => {
       setMessageNotifications((prev)=>[...prev, data]);
     });
   },[socket]);
+
+  useEffect(()=>{
+    if(chatId && conversations?.length){
+      conversations.map((item)=>{
+        if(item._id === chatId) setCurrentChat(item)
+      })
+    }
+  },[chatId, conversations]);
 
   useEffect(()=>{
     if(messageNotifications.length===0){
@@ -465,7 +476,9 @@ const Messenger = () => {
               <>
                 <div
                   className="chat-view-area"
-                  style={{
+                  style={window.innerWidth<768 ? {
+                    height: (isReply || preview?.length>0) ? (isReply ? 'calc(89% - 47px)' : 'calc(91% - 12px)') : '91%'
+                  } : {
                     height: (isReply || preview?.length>0) ? (isReply ? 'calc(81% - 80px)' : 'calc(81% - 20px)') : '81%'
                   }}
                 >
@@ -616,6 +629,7 @@ const Messenger = () => {
         </div>
 
       </div>
+      <Bottombar user={user}/>
 
       {showEmojis &&
         <EmojiContainer

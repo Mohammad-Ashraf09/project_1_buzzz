@@ -330,14 +330,14 @@ const UserProfile = () => {
                   <div
                     className="user-about-icon"
                     style={isGrid ? {color: '#000', borderBottom: '1px solid #000'} : null}
-                    onClick={()=>{setIsGrid(!isGrid); setIsSingle(false)}}
+                    onClick={()=>{setIsGrid(true); setIsSingle(false)}}
                   >
                     <i class="fa-solid fa-table-cells"></i>
                   </div>
                   <div
                     className="user-about-icon"
                     style={isSingle ? {color: '#000', borderBottom: '1px solid #000'} : null}
-                    onClick={()=>{setIsGrid(false); setIsSingle(!isSingle)}}
+                    onClick={()=>{setIsGrid(false); setIsSingle(true)}}
                   >
                     <i class="fa-solid fa-bars"></i>
                   </div>

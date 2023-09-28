@@ -49,9 +49,9 @@ const OnlineFriends = ({onlineUsers, follow, user, conversations, setCurrentChat
 
   return (
     <div className='online-friend' onClick={clickHandler}>
-        <img className='online-friend-dp' src={DP} alt="" />
-        {onlineUsers.some(data=>data.userId === follow.id) && <span className="online-friend-icon-badge"></span>}
-        <span className='online-friend-name'>{follow.name}</span>
+      <img className='online-friend-dp' src={DP} alt="" />
+      {onlineUsers?.some(data=>data.userId === follow.id) && <span className="online-friend-icon-badge"></span>}
+      <p className='online-friend-name'>{follow.name}</p>
     </div>
   )
 }

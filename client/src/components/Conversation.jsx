@@ -19,11 +19,11 @@ const Conversation = ({
   const [noOfNotifications, setNoOfNotifications] = useState(0);
 
   useEffect(()=>{
-    if(!messageNotifications.includes(currentChat?.members[0].id)){
-      setNoOfNotifications((messageNotifications.filter((id)=>id===conversation?.members[0].id)).length)
+    if(!messageNotifications?.includes(currentChat?.members[0].id)){
+      setNoOfNotifications((messageNotifications?.filter((id)=>id===conversation?.members[0].id))?.length)
     }
     else{
-      setMessageNotifications(messageNotifications.filter((id)=>id!==currentChat?.members[0].id))
+      setMessageNotifications(messageNotifications?.filter((id)=>id!==currentChat?.members[0].id))
     }
   },[messageNotifications]);
 
@@ -40,7 +40,7 @@ const Conversation = ({
     setCurrentChat(conversation);
     setIsReply(false);
     setReplyFor({});
-    setMessageNotifications(messageNotifications.filter((id)=>id!==conversation?.members[0].id));
+    setMessageNotifications(messageNotifications?.filter((id)=>id!==conversation?.members[0].id));
     setNoOfNewmessages(noOfNotifications);
 
     notifications?.map((item)=>{
@@ -83,7 +83,7 @@ const Conversation = ({
           <img className='conversation-dp' src={DP} alt="" />
           {noOfNotifications ? <span className="topbar-icon-badge message-badge">{noOfNotifications}</span> : null}
         </div>
-        <span className='conversation-name'>{name}</span>
+        <p className='conversation-name'>{name}</p>
       </div>
 
       <div className="three-dot-icon" onClick={()=>{setShow3Dots(!show3Dots)}}>
@@ -91,15 +91,10 @@ const Conversation = ({
       </div>
       {show3Dots &&
         <div className="three-dot-functionality">
-          <div className="three-dot-functionality-wrapper">
-            <div className="three-dots-fun" id="delete-post" onClick={deleteHandler}>Delete</div>
-            <hr className='three-dots-hr'/>
-            <div className="three-dots-fun" id="update-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Report</div>
-            <hr className='three-dots-hr' />
-            <div className="three-dots-fun" id="cancel-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Block</div>
-            <hr className='three-dots-hr' />
-            <div className="three-dots-fun" id="cancel-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Cancel</div>
-          </div>
+          <div className="three-dots-fun" id="delete-post" onClick={deleteHandler}>Delete</div>
+          <div className="three-dots-fun" id="update-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Report</div>
+          <div className="three-dots-fun" id="cancel-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Block</div>
+          <div className="three-dots-fun" id="cancel-post" onClick={()=>{setShow3Dots(!show3Dots)}}>Cancel</div>
         </div>
       }
     </div>
