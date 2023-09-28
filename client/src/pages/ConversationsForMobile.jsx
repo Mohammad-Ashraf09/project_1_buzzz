@@ -8,9 +8,10 @@ import OnlineFriends from '../components/OnlineFriends';
 import { useNavigate } from 'react-router-dom';
 
 const ConversationsForMobile = () => {
+  const {user:currentUser} = useContext(AuthContext);
+  const [user, setUser] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [following, setFollowing] = useState([]);
-  const [user, setUser] = useState(null);
   const [isChats, setIsChats] = useState(true);
   const [isContacts, setIsContacts] = useState(false);
   const [query1, setQuery1] = useState("");
@@ -20,8 +21,6 @@ const ConversationsForMobile = () => {
   // const [messageNotifications, setMessageNotifications] = useState([]);
   // const [noOfNewmessages, setNoOfNewmessages] = useState(0);
   // const [notifications, setNotifications] = useState([]);
-
-  const {user:currentUser} = useContext(AuthContext);
   const navigate = useNavigate();
 
   useEffect(()=>{
@@ -78,7 +77,7 @@ const ConversationsForMobile = () => {
 
   useEffect(()=>{
     if(currentChat){
-      navigate(`/conversations/${currentChat._id}`);
+      navigate(`/messenger/${currentChat._id}`);
     }
   },[currentChat]);
 

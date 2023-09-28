@@ -27,8 +27,8 @@ const Message = ({
   const {_id, sender, text, media, replyForText, replyForImage, isSameDp, createdAt} = message;
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const DP1 = PF+dp1;
-  const DP2 = PF+dp2;
+  const DP1 = dp1;
+  const DP2 = dp2;
   let repliedDp;
   if(isSameDp){
     if(sender===userId)

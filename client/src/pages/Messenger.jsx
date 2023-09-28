@@ -16,7 +16,8 @@ import ReactPlayer from 'react-player';
 import Bottombar from '../components/Bottombar';
 
 const Messenger = () => {
-  const {user} = useContext(AuthContext);
+  const {user:currentUser} = useContext(AuthContext);
+  const [user, setUser] = useState(null);
   const [conversations, setConversations] = useState([]);
   const [currentChat, setCurrentChat] = useState(null);
   const [messages, setMessages] = useState([]);
@@ -52,11 +53,17 @@ const Messenger = () => {
 
   useEffect(()=>{
     setSocket(io("ws://localhost:8100"));
+
+    const fetchUser = async() =>{
+      const res = await axios.get(`/users/${currentUser._id}`);
+      setUser(res.data);
+    }
+    fetchUser();
   },[]);
 
   useEffect(()=>{
-    socket?.emit("addUser2", user._id);
-  },[socket, user._id]);
+    socket?.emit("addUser2", currentUser._id);
+  },[socket, currentUser._id]);
 
   useEffect(()=>{
     socket?.on("getUsers2", (data)=>{
@@ -109,9 +116,9 @@ const Messenger = () => {
   useEffect(()=>{
     const getConversations = async()=>{
       try{
-        const res = await axios.get("/conversations/"+user._id);  // logged in user ke jitne bhi conversations hai sab return karega
+        const res = await axios.get("/conversations/"+currentUser._id);  // logged in user ke jitne bhi conversations hai sab return karega
         const data = res.data.map((item)=>{
-          if(item.members[0].id===user._id){
+          if(item.members[0].id===currentUser._id){
             item.members.splice(0,1);
             return item;
           }
@@ -130,7 +137,7 @@ const Messenger = () => {
 
     const getNotifications = async()=>{
       try{
-        const res = await axios.get("/messages/noOfNotifications/"+user._id);
+        const res = await axios.get("/messages/noOfNotifications/"+currentUser._id);
         setNotifications(res.data.receiverId)
       }
       catch(err){
@@ -138,7 +145,7 @@ const Messenger = () => {
       }
     }
     getNotifications();
-  },[user._id]);
+  },[currentUser._id]);
 
   useEffect(()=>{
     const getMessages = async() =>{
@@ -161,12 +168,12 @@ const Messenger = () => {
 
   useEffect(()=>{
     const fetchFollowings = async() =>{
-      const res = await axios.get("users/"+user._id);
+      const res = await axios.get("users/"+currentUser._id);
       const arr = res.data.followings                    // array of objects de raha hai ye
       setFollowing(arr);
     }
     fetchFollowings();
-  },[user._id]);
+  },[currentUser._id]);
 
   useEffect(()=>{              // this useEffect is for preview the file before uploading it
     if(file?.length && xyz){
@@ -181,7 +188,7 @@ const Messenger = () => {
 
   const removeNotificationFromDatabase = async(id) => {
     try{
-      await axios.put("/messages/noOfNotifications/"+user._id, {friendId: id});
+      await axios.put("/messages/noOfNotifications/"+currentUser._id, {friendId: id});
     }
     catch(err){
       console.log(err);
@@ -195,8 +202,8 @@ const Messenger = () => {
 
     if(isOnlinePresent.length && page==='messenger'){
       socket.emit("sendMessageNotification", {
-        senderId: user._id,
-        receiverId: currentChat.members[0].id!==user._id
+        senderId: currentUser._id,
+        receiverId: currentChat.members[0].id!==currentUser._id
           ? currentChat.members[0].id
           : currentChat.members[1].id
       });     // if user is online then directly show them notification without changing in database
@@ -204,7 +211,7 @@ const Messenger = () => {
     else{
       const increaseCountInDatabase = async()=>{
         try{
-          await axios.put("messages/noOfNotifications/", {user1: user._id, user2: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id});  // else increase array length of noOfNotifications by 1
+          await axios.put("messages/noOfNotifications/", {user1: currentUser._id, user2: currentChat.members[0].id!==currentUser._id ? currentChat.members[0].id : currentChat.members[1].id});  // else increase array length of noOfNotifications by 1
         }
         catch(err){}
       }
@@ -217,7 +224,7 @@ const Messenger = () => {
 
     if(file?.length){
       const message={
-        sender: user._id,
+        sender: currentUser._id,
         text: "",
         media: preview,
         conversationId: currentChat._id,
@@ -313,7 +320,7 @@ const Messenger = () => {
     if((imgURL?.length === file?.length) && imgURL?.length){
       const saveMediaLinkToDatabaseWithEmptyText = async() => {
         const message={
-          sender: user._id,
+          sender: currentUser._id,
           text: "",
           media: imgURL,
           conversationId: currentChat._id,
@@ -332,14 +339,13 @@ const Messenger = () => {
           console.log(err);
         }
 
-        const arr = window.location.href.split("/");
-        const page = arr[arr.length-1];
+        const isMessengerPage = window.location.href.split("/").includes('messenger');
         const isOnlinePresent = onlineUsers.filter((user)=>
           user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
-        if(isOnlinePresent?.length && page==='messenger'){
+        if(isOnlinePresent?.length && isMessengerPage){
           socket?.emit("sendMessage",{
             ...message,
-            receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
+            receiver: currentChat.members[0].id!==currentUser._id ? currentChat.members[0].id : currentChat.members[1].id,
           })
         }
   
@@ -361,7 +367,7 @@ const Messenger = () => {
     if(sendMessageOnlyWithText){
       const saveTextMsgToDatabase = async() => {
         const message={
-          sender: user._id,
+          sender: currentUser._id,
           text: newMessage,
           media: imgURL,
           conversationId: currentChat._id,
@@ -383,14 +389,13 @@ const Messenger = () => {
           console.log(err);
         }
 
-        const arr = window.location.href.split("/");
-        const page = arr[arr.length-1];
+        const isMessengerPage = window.location.href.split("/").includes('messenger');
         const isOnlinePresent = onlineUsers.filter((user)=>
           user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
-        if(isOnlinePresent?.length && page==='messenger'){
+        if(isOnlinePresent?.length && isMessengerPage){
           socket?.emit("sendMessage",{
             ...message,
-            receiver: currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id,
+            receiver: currentChat.members[0].id!==currentUser._id ? currentChat.members[0].id : currentChat.members[1].id,
           })
         }
   
@@ -431,7 +436,7 @@ const Messenger = () => {
   }
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const DP = replyFor?.isSameDp? PF+user?.profilePicture : PF+dp2;
+  const DP = replyFor?.isSameDp? user?.profilePicture : PF+dp2;
   const text = replyFor?.text;
 
   return (
@@ -485,10 +490,10 @@ const Messenger = () => {
                   {oldMessages.map((msg)=>(
                     <div  key={msg._id} ref={scrollRef}>
                       <Message
-                        userId={user?._id}
+                        userId={currentUser?._id}
                         message={msg}
                         setMessages={setMessages}
-                        my={msg?.sender === user?._id}
+                        my={msg?.sender === currentUser?._id}
                         dp1={user?.profilePicture}
                         dp2={dp2}
                         setIsReply={setIsReply}
@@ -514,10 +519,10 @@ const Messenger = () => {
                   {newMessages.map((msg)=>(
                     <div  key={msg._id} ref={scrollRef}>
                       <Message
-                        userId={user?._id}
+                        userId={currentUser?._id}
                         message={msg}
                         setMessages={setMessages}
-                        my={msg?.sender === user?._id}
+                        my={msg?.sender === currentUser?._id}
                         dp1={user?.profilePicture}
                         dp2={dp2}
                         setIsReply={setIsReply}

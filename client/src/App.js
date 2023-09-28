@@ -24,7 +24,7 @@ const App = () => {
         <Route path='/user/:id' element={<UserProfile/>}/>
         <Route path='/edit/user/:id' element={<EditUserProfile/>}/>
         <Route path='/conversations' element={<ConversationsForMobile/>}/>
-        <Route path='/conversations/:id' element={<Messenger/>}/>
+        <Route path='/messenger/:id' element={<Messenger/>}/>
       </Routes>
     </BrowserRouter>
   )

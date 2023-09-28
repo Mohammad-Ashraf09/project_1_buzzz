@@ -2366,23 +2366,29 @@ input:valid[focused="true"] ~ .tickkk{
 
 /*########################################### Messenger page #############################################*/
 .messenger{
-    height: 671px;
+    height: calc(100vh - 50px);
+    min-height: 650px;
     display: flex;
     background-color: #03bfbc;
 }
 .messenger-left{
-    flex: 3.2;
+    width: 26%;
 }
 .messenger-center{
-    flex: 5.6;
+    width: 48%;
 }
 .messenger-right{
-    flex: 3.2;
+    width: 26%;
 }
 .messenger-left-wrapper, .messenger-right-wrapper{
     padding: 20px 10px;
     height: 100%;
     box-sizing: border-box;
+}
+.messenger-right-wrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: end;
 }
 .messenger-center-wrapper{
     padding: 0 10px;
@@ -2393,7 +2399,7 @@ input:valid[focused="true"] ~ .tickkk{
 
 /*--------------------- messenger leftside --------------------------*/
 .messenger-search{
-    width: 80%;
+    width: 85%;
     height: 4%;
     padding: 4px 10px;
     border: none;
@@ -2412,7 +2418,7 @@ input:valid[focused="true"] ~ .tickkk{
 }
 .conversation-div{
     padding: 10px 0;
-    width: 84%;
+    width: 90%;
     height: 94%;
     overflow: auto;
     border-radius: 8px;
@@ -2470,27 +2476,10 @@ input:valid[focused="true"] ~ .tickkk{
     border-radius: 50px;
     object-fit: cover;
 }
-/* .name-lastMsg-time{           // apply it mobile view
-    width: 80%;
-}
-.name-time{
-    display: flex;
-    justify-content: space-between;
-} */
 .conversation-name{
     font-weight: 500;
     margin: 0;
 }
-/* .lastMsgTime{           // apply it mobile view
-    font-size: 11px;
-    color: #4e4c4c;
-    margin-right: 4px;
-}
-.lastMsgText{
-    font-size: 13px;
-    color: #4e4c4c;
-    margin-top: 4px;
-} */
 .three-dot-icon{
     display: none;
     position: absolute;
@@ -2905,8 +2894,6 @@ input:valid[focused="true"] ~ .tickkk{
     border-radius: 50%;
 }
 
-
-
 .input-chat-area{
     display: flex;
     align-items: center;
@@ -3036,22 +3023,18 @@ input:valid[focused="true"] ~ .tickkk{
 }
 
 /*--------------------- messenger rightside online friends--------------------------*/
-.search-online-friend{
-    margin-left: 45px;
-}
 .online-friend-heading{
-    margin: 0 0 0 45px;
+    margin: 0;
     padding: 15px 0 10px 20px;
-    width: 84%;
+    width: 90%;
     border-top-left-radius: 8px;
     border-top-right-radius: 8px;
     background-color: #0c9a97;
     box-sizing: border-box;
 }
 .online-friend-div{
-    margin-left: 45px;
     padding: 10px 0;
-    width: 84%;
+    width: 90%;
     height: 86.5%;
     overflow: auto;
     border-bottom-left-radius: 8px;

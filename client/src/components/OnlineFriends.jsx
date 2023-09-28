@@ -3,7 +3,7 @@ import axios from "axios";
 
 const OnlineFriends = ({onlineUsers, follow, user, conversations, setCurrentChat, setIsReply, setReplyFor}) => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const DP = follow.dp ? PF+follow.dp : PF+'default-dp.png';
+  const DP = follow.dp ? follow.dp : PF+'default-dp.png';
   
   const clickHandler = async() =>{
     const collection = document.querySelectorAll('.conversation');     // this comes from Conversation.jsx
