@@ -1,5 +1,4 @@
 import React, { createRef, useContext, useEffect, useRef, useState } from 'react'
-import { useParams } from "react-router";
 import Conversation from '../components/Conversation';
 import Message from '../components/Message';
 import OnlineFriends from '../components/OnlineFriends';
@@ -26,7 +25,7 @@ const Messenger = () => {
   const scrollRef = useRef();
   const [following, setFollowing] = useState([]);
   const [onlineUsers, setOnlineUsers] = useState([]);
-  const [query, setQuery] = useState("");
+  const [query1, setQuery1] = useState("");
   const [query2, setQuery2] = useState("");
   const [dp2, setDp2] = useState("");
   const [isReply, setIsReply] = useState(false);
@@ -46,8 +45,11 @@ const Messenger = () => {
   const [sendMessageOnlyWithText, setSendMessageOnlyWithText] = useState(false);
   const [sendingFileInProgress, setSendingFileInProgress] = useState(false);
   const [lastPreviewMediaUrl, setLastPreviewMediaUrl] = useState('');
+
+  const [isChats, setIsChats] = useState(true);
+  const [isContacts, setIsContacts] = useState(false);
+  
   // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
-  const chatId = useParams().id;
 
   const oldMessages = messages.slice(0, messages?.length-noOfNewmessages);
   const newMessages = messages.slice(messages?.length-noOfNewmessages, messages?.length);
@@ -95,14 +97,6 @@ const Messenger = () => {
       setIsChatInOpenState(data?.isChatInOpenState);
     });
   },[socket]);
-
-  useEffect(()=>{
-    if(chatId && conversations?.length){
-      conversations.map((item)=>{
-        if(item._id === chatId) setCurrentChat(item)
-      })
-    }
-  },[chatId, conversations]);
 
   useEffect(()=>{
     if(processedNotificationsOfCurrentUser.length===0){
@@ -193,14 +187,14 @@ const Messenger = () => {
 
   useEffect(()=>{
     const isOnlinePresent = onlineUsers.filter((user)=>
-      user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
+      user.userId === (currentChat?.members[0].id!==user._id ? currentChat?.members[0].id : currentChat?.members[1].id));
     if(isOnlinePresent.length){
       socket?.emit("sendChatInOpenState", {
         senderId: currentUser._id,
-        isChatInOpenState: currentChat?.members[0].id!==user._id ? currentChat.members[0].id : '',
-        receiverId: currentChat.members[0].id!==currentUser._id
-          ? currentChat.members[0].id
-          : currentChat.members[1].id
+        isChatInOpenState: currentChat?.members[0]?.id!==user?._id ? currentChat?.members[0]?.id : '',
+        receiverId: currentChat?.members[0]?.id!==currentUser?._id
+          ? currentChat?.members[0].id
+          : currentChat?.members[1].id
       }); // if a user open his chat area then send other user by socket that i have opened my chat area and please dont increase notification count in database
     }
   },[messages, currentChat]);
@@ -229,7 +223,7 @@ const Messenger = () => {
     if(isChatInOpenState !== currentUser._id){
       const increaseCountInDatabase = async()=>{
         try{
-          await axios.put("messages/noOfNotifications/", {
+          await axios.put("/messages/noOfNotifications/", {
               user1: currentUser._id,
               user2: currentChat.members[0].id!==currentUser._id
                 ? currentChat.members[0].id
@@ -438,7 +432,7 @@ const Messenger = () => {
   },[sendMessageOnlyWithText, imgURL?.length]);
 
   const clearChatHandler = async() => {
-    const confirm = window.confirm('Are You Sure, want to clear chat');
+    const confirm = (currentChat && messages?.length) ? window.confirm('Are You Sure, want to clear chat') : null;
     if(confirm){
       try{
         await axios.delete("/messages/delete/"+currentChat._id);       // form clearing whole chat
@@ -464,198 +458,414 @@ const Messenger = () => {
   return (
     <>
       <Topbar user={user}/>
-      <div className='messenger'>
-        <div className="messenger-left">
-          <div className="messenger-left-wrapper">
-            <input className='messenger-search' type="text" placeholder='Search for chat' onChange={(e)=>setQuery2(e.target.value)}/>
-            <div className="conversation-div">
-              {conversations.filter((x)=>x.members[0].name?.toLowerCase().includes(query2)).map((c, index)=>(
-                <Conversation
-                  key={c._id}
-                  index={index}
-                  conversation={c}
-                  setConversations={setConversations}
-                  setCurrentChat={setCurrentChat}
-                  currentChat={currentChat}
-                  setIsReply={setIsReply}
-                  setReplyFor={setReplyFor}
-                  setProcessedNotificationsOfCurrentUser={setProcessedNotificationsOfCurrentUser}
-                  processedNotificationsOfCurrentUser={processedNotificationsOfCurrentUser}
-                  setNoOfNewmessages={setNoOfNewmessages}
-                  rawNotificationsOfCurrentUser={rawNotificationsOfCurrentUser}
-                  removeNotificationFromDatabase={removeNotificationFromDatabase}
-                />
-              ))}
+      {window.innerWidth<=420 ?
+        <>
+          {currentChat ?
+            <div className='messenger'>
+              <div></div>
+              <div className="messenger-center">
+                <div className="messenger-center-wrapper">
+                  <div className='clear-chat'>
+                    <div className='move-back-icon' onClick={()=>setCurrentChat(null)}> <i class="fa-solid fa-arrow-left"></i> </div>
+                    <div className='clear-chat-icon' onClick={clearChatHandler}> <i className="fa-solid fa-trash "></i> </div>
+                    <div className='clear-chat-text'>clear chat</div>
+                  </div>
+
+                  {currentChat ? (
+                    <>
+                      <div
+                        className="chat-view-area"
+                        style={{
+                          height: (isReply || preview?.length>0) ? (isReply ? 'calc(85% - 47px)' : 'calc(87% - 12px)') : '87%'
+                        }}
+                      >
+                        {oldMessages.map((msg)=>(
+                          <div  key={msg._id} ref={scrollRef}>
+                            <Message
+                              userId={currentUser?._id}
+                              message={msg}
+                              setMessages={setMessages}
+                              my={msg?.sender === currentUser?._id}
+                              dp1={user?.profilePicture}
+                              dp2={dp2}
+                              setIsReply={setIsReply}
+                              setReplyFor={setReplyFor}
+                              isHideReplyIcon={file?.length}
+                              lastPreviewMediaUrl={lastPreviewMediaUrl}
+                              sendingFileInProgress={sendingFileInProgress}
+                            />
+                          </div>
+                        ))}
+
+                        {noOfNewmessages ? (
+                          <div className='new-msg-separator'>
+                            <div className='new-msg-separator-line'></div>
+                            <div className='new-msg-indicator-wrapper'>
+                              <div className='new-msg-indicator'>
+                                {noOfNewmessages} Unread {noOfNewmessages>1 ? 'Messages' : 'Message'}
+                              </div>
+                            </div>
+                          </div>
+                        ) : null}
+
+                        {newMessages.map((msg)=>(
+                          <div  key={msg._id} ref={scrollRef}>
+                            <Message
+                              userId={currentUser?._id}
+                              message={msg}
+                              setMessages={setMessages}
+                              my={msg?.sender === currentUser?._id}
+                              dp1={user?.profilePicture}
+                              dp2={dp2}
+                              setIsReply={setIsReply}
+                              setReplyFor={setReplyFor}
+                            />
+                          </div>
+                        ))}
+                      </div>
+                      <div className="input-chat-area">
+                        <div className='input-chat'>
+                          {isReply ? (
+                            <div className='reply-message-div'>
+                              <div className='reply-message'>
+                                <img className='reply-message-img' src={DP} alt="" />
+                                <span className='reply-message-text'>{text}</span>
+                                {replyFor?.media ? (
+                                  (replyFor?.media?.isVideo) ?
+                                    <div className='reply-message-img-right'>
+                                      <ReactPlayer
+                                        url={replyFor?.media?.url}
+                                        muted={true}
+                                        playing={false}
+                                        height='100%'
+                                        width="66px"
+                                        className='video'
+                                      />
+                                    </div> 
+                                    :
+                                    <img className='reply-message-img-right' src={replyFor?.media?.url} alt="" />
+                                ) : null}
+                                <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
+                              </div>
+                            </div>
+                          ) : null}
+
+                          {preview?.length>0 ? (
+                            <div className='media-div'>
+                              <div className='reply-message'>
+                                {preview.map((media, index)=>(
+                                  <PreviewMedia
+                                    key={index}
+                                    index={index}
+                                    media={media}
+                                    setPreview={setPreview}
+                                    file={file}
+                                    setFile={setFile}
+                                    setXYZ={setXYZ}
+                                  />
+                                ))}
+                              </div>
+                            </div>
+                          ) : null}
+
+                          {!file?.length || !preview.length ? (
+                            <textarea
+                              className='type-message'
+                              onChange={(e) => setNewMessage(e.target.value)}
+                              value={newMessage}
+                              placeholder='Type your message here...'
+                              ref={inputRef}
+                              style={{borderRadius: isReply ? '' : '8px'}}
+                            ></textarea>
+                          ) : null}
+
+                          <div className="emoji-media-div" style={{right: `${file?.length ? '16px' : '12px'}`}}>
+                            {(isReply || newMessage) ? null : (
+                              <label htmlFor="file">
+                                <i className="fa-solid fa-photo-film icon"></i>
+                                <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file?.length!==9 && fileHandler}/>
+                              </label>
+                            )}
+                            {!file?.length || !preview.length ? (
+                              <div className="emoji-div">
+                                <i className="fa-regular fa-face-laugh icon" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
+                              </div>
+                            ): null}
+                          </div>
+                        </div>
+
+                        <div className="message-send-icon">
+                          <i className="fa-solid fa-paper-plane" onClick={submitHandler} ></i>
+                        </div>
+                      </div>
+                    </>) :
+                    <span className='no-conversation-text'>Open a conversation to start a chat.</span>
+                  }
+                </div>
+              </div>
+            </div>
+            :
+            <div className='conversation-mobile'>
+              <div className="conversation-mobile-wrapper">
+                <div className='conversation-search'>
+                  <div className="conversation-search-box">
+                    <input
+                      type="text"
+                      className="conversation-search-box-input"
+                      name=""
+                      placeholder={isChats ? 'Search Chat' : 'Search Contact'}
+                      onChange={(e)=>isChats ? setQuery1(e.target.value) : setQuery2(e.target.value)}
+                    />
+                    <div className='conversation-search-icon'> <i className="fa-solid fa-magnifying-glass"></i> </div>
+                  </div>
+
+                  <div className='conversation-tabs'>
+                    <div 
+                      className='conversation-tabs-label'
+                      style={isChats ? {color: '#000', borderBottom: '3px solid #0c9a97'} : null}
+                      onClick={()=>{setIsChats(true); setIsContacts(false)}}
+                    > Chats </div>
+                    <div
+                      className='conversation-tabs-label'
+                      style={isContacts ? {color: '#000', borderBottom: '3px solid #0c9a97'} : null}
+                      onClick={()=>{setIsChats(false); setIsContacts(true)}}
+                    > Contacts </div>
+                  </div>
+                </div>
+
+                {isChats ?
+                  <div className='conversation-list-container'>
+                    {conversations.filter((x)=>x.members[0].name?.toLowerCase().includes(query1)).map((c, index)=>(
+                      <Conversation
+                        key={c._id}
+                        index={index}
+                        conversation={c}
+                        setConversations={setConversations}
+                        setCurrentChat={setCurrentChat}
+                        currentChat={currentChat}
+                        setIsReply={setIsReply}
+                        setReplyFor={setReplyFor}
+                        rawNotificationsOfCurrentUser={rawNotificationsOfCurrentUser}
+                        processedNotificationsOfCurrentUser={processedNotificationsOfCurrentUser}
+                        setProcessedNotificationsOfCurrentUser={setProcessedNotificationsOfCurrentUser}
+                        setNoOfNewmessages={setNoOfNewmessages}
+                        removeNotificationFromDatabase={removeNotificationFromDatabase}
+                      />
+                    ))}
+                  </div>
+                  :
+                  <div className='conversation-list-container'>
+                    {following.filter((x)=>x.name.toLowerCase().includes(query2)).map((data)=>(
+                      <OnlineFriends
+                        key={data.id}
+                        follow={data}
+                        // onlineUsers={onlineUsers}
+                        // user={user}
+                        // conversations={conversations}
+                        // setCurrentChat={setCurrentChat}
+                        // setIsReply={setIsReply}
+                        // setReplyFor={setReplyFor}
+                      />
+                    ))}
+                  </div>
+                }
+
+              </div>
+            </div>
+          }
+        </>
+        :
+        <div className='messenger'>
+          <div className="messenger-left">
+            <div className="messenger-left-wrapper">
+              <input className='messenger-search' type="text" placeholder='Search for chat' onChange={(e)=>setQuery1(e.target.value)}/>
+              <div className="conversation-div">
+                {conversations.filter((x)=>x.members[0].name?.toLowerCase().includes(query1)).map((c, index)=>(
+                  <Conversation
+                    key={c._id}
+                    index={index}
+                    conversation={c}
+                    setConversations={setConversations}
+                    setCurrentChat={setCurrentChat}
+                    currentChat={currentChat}
+                    setIsReply={setIsReply}
+                    setReplyFor={setReplyFor}
+                    rawNotificationsOfCurrentUser={rawNotificationsOfCurrentUser}
+                    processedNotificationsOfCurrentUser={processedNotificationsOfCurrentUser}
+                    setProcessedNotificationsOfCurrentUser={setProcessedNotificationsOfCurrentUser}
+                    setNoOfNewmessages={setNoOfNewmessages}
+                    removeNotificationFromDatabase={removeNotificationFromDatabase}
+                  />
+                ))}
+              </div>
             </div>
           </div>
-        </div>
 
-        <div className="messenger-center">
-          <div className="messenger-center-wrapper">
-            {(currentChat && messages?.length) ? (
+          <div className="messenger-center">
+            <div className="messenger-center-wrapper">
               <div className='clear-chat'>
                 <i className="fa-solid fa-trash clear-chat-icon" onClick={clearChatHandler}></i>
                 <div className='clear-chat-text'>clear chat</div>
               </div>
-            ) : null}
 
-            {currentChat ? (
-              <>
-                <div
-                  className="chat-view-area"
-                  style={window.innerWidth<768 ? {
-                    height: (isReply || preview?.length>0) ? (isReply ? 'calc(89% - 47px)' : 'calc(91% - 12px)') : '91%'
-                  } : {
-                    height: (isReply || preview?.length>0) ? (isReply ? 'calc(81% - 80px)' : 'calc(81% - 20px)') : '81%'
-                  }}
-                >
-                  {oldMessages.map((msg)=>(
-                    <div  key={msg._id} ref={scrollRef}>
-                      <Message
-                        userId={currentUser?._id}
-                        message={msg}
-                        setMessages={setMessages}
-                        my={msg?.sender === currentUser?._id}
-                        dp1={user?.profilePicture}
-                        dp2={dp2}
-                        setIsReply={setIsReply}
-                        setReplyFor={setReplyFor}
-                        isHideReplyIcon={file?.length}
-                        lastPreviewMediaUrl={lastPreviewMediaUrl}
-                        sendingFileInProgress={sendingFileInProgress}
-                      />
-                    </div>
-                  ))}
-
-                  {noOfNewmessages ? (
-                    <div className='new-msg-separator'>
-                      <div className='new-msg-separator-line'></div>
-                      <div className='new-msg-indicator-wrapper'>
-                        <div className='new-msg-indicator'>
-                          {noOfNewmessages} Unread {noOfNewmessages>1 ? 'Messages' : 'Message'}
-                        </div>
+              {currentChat ? (
+                <>
+                  <div
+                    className="chat-view-area"
+                    style={window.innerWidth<768 ? {
+                      height: (isReply || preview?.length>0) ? (isReply ? 'calc(89% - 47px)' : 'calc(91% - 12px)') : '91%'
+                    } : {
+                      height: (isReply || preview?.length>0) ? (isReply ? 'calc(81% - 80px)' : 'calc(81% - 20px)') : '81%'
+                    }}
+                  >
+                    {oldMessages.map((msg)=>(
+                      <div  key={msg._id} ref={scrollRef}>
+                        <Message
+                          userId={currentUser?._id}
+                          message={msg}
+                          setMessages={setMessages}
+                          my={msg?.sender === currentUser?._id}
+                          dp1={user?.profilePicture}
+                          dp2={dp2}
+                          setIsReply={setIsReply}
+                          setReplyFor={setReplyFor}
+                          isHideReplyIcon={file?.length}
+                          lastPreviewMediaUrl={lastPreviewMediaUrl}
+                          sendingFileInProgress={sendingFileInProgress}
+                        />
                       </div>
-                    </div>
-                  ) : null}
+                    ))}
 
-                  {newMessages.map((msg)=>(
-                    <div  key={msg._id} ref={scrollRef}>
-                      <Message
-                        userId={currentUser?._id}
-                        message={msg}
-                        setMessages={setMessages}
-                        my={msg?.sender === currentUser?._id}
-                        dp1={user?.profilePicture}
-                        dp2={dp2}
-                        setIsReply={setIsReply}
-                        setReplyFor={setReplyFor}
-                      />
-                    </div>
-                  ))}
-                </div>
-                <div className="input-chat-area">
-                  <div className='input-chat'>
-                    {isReply ? (
-                      <div className='reply-message-div'>
-                        <div className='reply-message'>
-                          <img className='reply-message-img' src={DP} alt="" />
-                          <span className='reply-message-text'>{text}</span>
-                          {replyFor?.media ? (
-                            (replyFor?.media?.isVideo) ?
-                              <div className='reply-message-img-right'>
-                                <ReactPlayer
-                                  url={replyFor?.media?.url}
-                                  muted={true}
-                                  playing={false}
-                                  height='100%'
-                                  width="66px"
-                                  className='video'
-                                />
-                              </div> 
-                              :
-                              <img className='reply-message-img-right' src={replyFor?.media?.url} alt="" />
-                          ) : null}
-                          <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
+                    {noOfNewmessages ? (
+                      <div className='new-msg-separator'>
+                        <div className='new-msg-separator-line'></div>
+                        <div className='new-msg-indicator-wrapper'>
+                          <div className='new-msg-indicator'>
+                            {noOfNewmessages} Unread {noOfNewmessages>1 ? 'Messages' : 'Message'}
+                          </div>
                         </div>
                       </div>
                     ) : null}
 
-                    {preview?.length>0 ? (
-                      <div className='media-div'>
-                        <div className='reply-message'>
-                          {preview.map((media, index)=>(
-                            <PreviewMedia
-                              key={index}
-                              index={index}
-                              media={media}
-                              setPreview={setPreview}
-                              file={file}
-                              setFile={setFile}
-                              setXYZ={setXYZ}
-                            />
-                          ))}
-                        </div>
+                    {newMessages.map((msg)=>(
+                      <div  key={msg._id} ref={scrollRef}>
+                        <Message
+                          userId={currentUser?._id}
+                          message={msg}
+                          setMessages={setMessages}
+                          my={msg?.sender === currentUser?._id}
+                          dp1={user?.profilePicture}
+                          dp2={dp2}
+                          setIsReply={setIsReply}
+                          setReplyFor={setReplyFor}
+                        />
                       </div>
-                    ) : null}
+                    ))}
+                  </div>
+                  <div className="input-chat-area">
+                    <div className='input-chat'>
+                      {isReply ? (
+                        <div className='reply-message-div'>
+                          <div className='reply-message'>
+                            <img className='reply-message-img' src={DP} alt="" />
+                            <span className='reply-message-text'>{text}</span>
+                            {replyFor?.media ? (
+                              (replyFor?.media?.isVideo) ?
+                                <div className='reply-message-img-right'>
+                                  <ReactPlayer
+                                    url={replyFor?.media?.url}
+                                    muted={true}
+                                    playing={false}
+                                    height='100%'
+                                    width="66px"
+                                    className='video'
+                                  />
+                                </div> 
+                                :
+                                <img className='reply-message-img-right' src={replyFor?.media?.url} alt="" />
+                            ) : null}
+                            <i class="fa-solid fa-xmark reply-message-cancel" onClick={()=>{setIsReply(false); setReplyFor({})}}></i>
+                          </div>
+                        </div>
+                      ) : null}
 
-                    {!file?.length || !preview.length ? (
-                      <textarea
-                        className='type-message'
-                        onChange={(e) => setNewMessage(e.target.value)}
-                        value={newMessage}
-                        placeholder='Type your message here...'
-                        ref={inputRef}
-                        style={{borderRadius: isReply ? '' : '8px'}}
-                      ></textarea>
-                    ) : null}
+                      {preview?.length>0 ? (
+                        <div className='media-div'>
+                          <div className='reply-message'>
+                            {preview.map((media, index)=>(
+                              <PreviewMedia
+                                key={index}
+                                index={index}
+                                media={media}
+                                setPreview={setPreview}
+                                file={file}
+                                setFile={setFile}
+                                setXYZ={setXYZ}
+                              />
+                            ))}
+                          </div>
+                        </div>
+                      ) : null}
 
-                    <div className="emoji-media-div" style={{right: `${file?.length ? '16px' : '12px'}`}}>
-                      {(isReply || newMessage) ? null : (
-                        <label htmlFor="file">
-                          <i className="fa-solid fa-photo-film icon"></i>
-                          <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file?.length!==9 && fileHandler}/>
-                        </label>
-                      )}
                       {!file?.length || !preview.length ? (
-                        <div className="emoji-div">
-                          <i className="fa-regular fa-face-laugh icon" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
-                        </div>
-                      ): null}
+                        <textarea
+                          className='type-message'
+                          onChange={(e) => setNewMessage(e.target.value)}
+                          value={newMessage}
+                          placeholder='Type your message here...'
+                          ref={inputRef}
+                          style={{borderRadius: isReply ? '' : '8px'}}
+                        ></textarea>
+                      ) : null}
+
+                      <div className="emoji-media-div" style={{right: `${file?.length ? '16px' : '12px'}`}}>
+                        {(isReply || newMessage) ? null : (
+                          <label htmlFor="file">
+                            <i className="fa-solid fa-photo-film icon"></i>
+                            <input style={{display:"none"}} type="file" id="file" name="file" accept='.jpg, .png, .jpeg, .mp4, .MOV' onChange={file?.length!==9 && fileHandler}/>
+                          </label>
+                        )}
+                        {!file?.length || !preview.length ? (
+                          <div className="emoji-div">
+                            <i className="fa-regular fa-face-laugh icon" onClick={()=>{setShowEmojis(!showEmojis)}}></i>
+                          </div>
+                        ): null}
+                      </div>
+                    </div>
+
+                    <div className="message-send-icon">
+                      <i className="fa-solid fa-paper-plane" onClick={submitHandler} ></i>
                     </div>
                   </div>
-
-                  <div className="message-send-icon">
-                    <i className="fa-solid fa-paper-plane" onClick={submitHandler} ></i>
-                  </div>
-                </div>
-              </>) :
-              <span className='no-conversation-text'>Open a conversation to start a chat.</span>
-            }
-          </div>
-        </div>
-
-        <div className="messenger-right">
-          <div className="messenger-right-wrapper">
-            <input className='messenger-search search-online-friend' type="text" placeholder='Search for friend' onChange={(e)=>setQuery(e.target.value)} />
-            <h3 className='online-friend-heading'>Online Friends</h3>
-            <div className="online-friend-div">
-              {following.filter((x)=>x.name.toLowerCase().includes(query)).map((data)=>(
-                <OnlineFriends
-                  key={data.id}
-                  follow={data}
-                  onlineUsers={onlineUsers}
-                  user={user}
-                  conversations={conversations}
-                  setCurrentChat={setCurrentChat}
-                  setIsReply={setIsReply}
-                  setReplyFor={setReplyFor}
-                />
-              ))}
+                </>) :
+                <span className='no-conversation-text'>Open a conversation to start a chat.</span>
+              }
             </div>
           </div>
-        </div>
 
-      </div>
+          <div className="messenger-right">
+            <div className="messenger-right-wrapper">
+              <input className='messenger-search search-online-friend' type="text" placeholder='Search for friend' onChange={(e)=>setQuery2(e.target.value)} />
+              <h3 className='online-friend-heading'>Online Friends</h3>
+              <div className="online-friend-div">
+                {following.filter((x)=>x.name.toLowerCase().includes(query2)).map((data)=>(
+                  <OnlineFriends
+                    key={data.id}
+                    follow={data}
+                    onlineUsers={onlineUsers}
+                    user={user}
+                    conversations={conversations}
+                    setCurrentChat={setCurrentChat}
+                    setIsReply={setIsReply}
+                    setReplyFor={setReplyFor}
+                  />
+                ))}
+              </div>
+            </div>
+          </div>
+
+        </div>
+      }
       <Bottombar user={user}/>
 
       {showEmojis &&

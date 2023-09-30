@@ -2519,6 +2519,12 @@ input:valid[focused="true"] ~ .tickkk{
     padding-bottom: 5px;
     position: relative;
     box-sizing: border-box;
+    display: flex;
+    justify-content: end;
+    margin: 0 0.5rem;
+}
+.move-back-icon{
+    display: none;
 }
 .clear-chat-icon{
     cursor: pointer;
@@ -4000,6 +4006,9 @@ input:valid[focused="true"] ~ .tickkk{
     .dp-badge{
         width: 14%;
     }
+    .message-badge{
+        right: 6px;
+    }
     .conversation-name{
         font-size: 13px;
     }
@@ -4075,6 +4084,17 @@ input:valid[focused="true"] ~ .tickkk{
         box-sizing: border-box;
     }
     .clear-chat{
+        height: 4%;
+        padding-top: 0px;
+        padding-bottom: 0px;
+        align-items: center;
+        font-size: 14px;
+        justify-content: space-between;
+    }
+    .move-back-icon{
+        display: block;
+    }
+    .clear-chat-icon:hover + .clear-chat-text{
         display: none;
     }
     .chat-view-area{

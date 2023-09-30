@@ -78,12 +78,6 @@ const Topbar = ({user, socket, setShowPopup}) => {
         }
     }
 
-    let x;
-    if(window.innerWidth<768)
-        x='/conversations';
-    else
-        x='/messenger';
-
   return (
     <div className='topbar-container'>
         <div className="topbar-left">
@@ -101,7 +95,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
             </div>
 
             <div className="topbar-icons">
-                <Link to={x} style={{textDecoration: 'none', color: 'black'}}>
+                <Link to={'/messenger'} style={{textDecoration: 'none', color: 'black'}}>
                     <div className="topbar-icon">
                         <i className="fa-brands fa-facebook-messenger"></i>
                         <span className="topbar-icon-badge">1</span>
