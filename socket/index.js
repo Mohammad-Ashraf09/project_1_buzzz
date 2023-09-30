@@ -81,6 +81,12 @@ io.on("connection", (socket)=>{
         io.to(user?.socketId).emit("getMessageNotification", senderId);
     });
 
+    // isChatInOpenState
+    socket.on("sendChatInOpenState", ({senderId, isChatInOpenState, receiverId})=>{
+        const user = getUser2(receiverId);
+        io.to(user?.socketId).emit("getChatInOpenState", {senderId, isChatInOpenState});
+    });
+
     socket.on("disconnect", ()=>{
         removeUser2(socket.id);
         console.log("disconnected from messenger...", socket.id);

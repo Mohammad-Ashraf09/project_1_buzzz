@@ -38,9 +38,10 @@ const Messenger = () => {
   const [xyz, setXYZ] = useState(false);
   const [preview, setPreview] = useState([]);
   const [socket, setSocket] = useState(null);
-  const [messageNotifications, setMessageNotifications] = useState([]);
+  const [rawNotificationsOfCurrentUser, setRawNotificationsOfCurrentUser] = useState([]);
+  const [processedNotificationsOfCurrentUser, setProcessedNotificationsOfCurrentUser] = useState([]);
   const [noOfNewmessages, setNoOfNewmessages] = useState(0);
-  const [notifications, setNotifications] = useState([]);
+  const [isChatInOpenState, setIsChatInOpenState] = useState('');
   const [imgURL, setImgURL] = useState([]);
   const [sendMessageOnlyWithText, setSendMessageOnlyWithText] = useState(false);
   const [sendingFileInProgress, setSendingFileInProgress] = useState(false);
@@ -87,7 +88,11 @@ const Messenger = () => {
     });
 
     socket?.on("getMessageNotification", (data)=>{
-      setMessageNotifications((prev)=>[...prev, data]);
+      setProcessedNotificationsOfCurrentUser((prev)=>[...prev, data]);
+    });
+
+    socket?.on("getChatInOpenState", (data)=>{
+      setIsChatInOpenState(data?.isChatInOpenState);
     });
   },[socket]);
 
@@ -100,14 +105,14 @@ const Messenger = () => {
   },[chatId, conversations]);
 
   useEffect(()=>{
-    if(messageNotifications.length===0){
-      notifications?.map((item)=>{
+    if(processedNotificationsOfCurrentUser.length===0){
+      rawNotificationsOfCurrentUser?.map((item)=>{
         item.notifications.map((id)=>{
-          setMessageNotifications((prev)=>[...prev, item.id]);
+          setProcessedNotificationsOfCurrentUser((prev)=>[...prev, item.id]);
         })
       })
     }
-  },[notifications]);
+  },[rawNotificationsOfCurrentUser]);
 
   useEffect(()=>{
     arrivalMessage && currentChat?.IDs.includes(arrivalMessage.sender) && setMessages((prev)=> [...prev, arrivalMessage]);
@@ -138,7 +143,7 @@ const Messenger = () => {
     const getNotifications = async()=>{
       try{
         const res = await axios.get("/messages/noOfNotifications/"+currentUser._id);
-        setNotifications(res.data.receiverId)
+        setRawNotificationsOfCurrentUser(res.data.receiverId)
       }
       catch(err){
         console.log(err);
@@ -186,6 +191,20 @@ const Messenger = () => {
     }
   },[file?.length]);
 
+  useEffect(()=>{
+    const isOnlinePresent = onlineUsers.filter((user)=>
+      user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
+    if(isOnlinePresent.length){
+      socket?.emit("sendChatInOpenState", {
+        senderId: currentUser._id,
+        isChatInOpenState: currentChat?.members[0].id!==user._id ? currentChat.members[0].id : '',
+        receiverId: currentChat.members[0].id!==currentUser._id
+          ? currentChat.members[0].id
+          : currentChat.members[1].id
+      }); // if a user open his chat area then send other user by socket that i have opened my chat area and please dont increase notification count in database
+    }
+  },[messages, currentChat]);
+
   const removeNotificationFromDatabase = async(id) => {
     try{
       await axios.put("/messages/noOfNotifications/"+currentUser._id, {friendId: id});
@@ -196,11 +215,9 @@ const Messenger = () => {
   }
 
   const notificationHandler = async() => {
-    const arr = window.location.href.split("/")
-    const page = arr[arr.length-1]
-    const isOnlinePresent = onlineUsers.filter((user)=> user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
-
-    if(isOnlinePresent.length && page==='messenger'){
+    const isOnlinePresent = onlineUsers.filter((user)=>
+      user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
+    if(isOnlinePresent.length){
       socket.emit("sendMessageNotification", {
         senderId: currentUser._id,
         receiverId: currentChat.members[0].id!==currentUser._id
@@ -208,15 +225,22 @@ const Messenger = () => {
           : currentChat.members[1].id
       });     // if user is online then directly show them notification without changing in database
     }
-    else{
+
+    if(isChatInOpenState !== currentUser._id){
       const increaseCountInDatabase = async()=>{
         try{
-          await axios.put("messages/noOfNotifications/", {user1: currentUser._id, user2: currentChat.members[0].id!==currentUser._id ? currentChat.members[0].id : currentChat.members[1].id});  // else increase array length of noOfNotifications by 1
+          await axios.put("messages/noOfNotifications/", {
+              user1: currentUser._id,
+              user2: currentChat.members[0].id!==currentUser._id
+                ? currentChat.members[0].id
+                : currentChat.members[1].id
+          });  // if user is online but his chat area is not in open state then increase count in database
         }
         catch(err){}
       }
       increaseCountInDatabase();
     }
+    setIsChatInOpenState('');
   }
 
   const submitHandler = async(e)=>{
@@ -316,7 +340,7 @@ const Messenger = () => {
     }
   };
 
-  useEffect(()=>{
+  useEffect(()=>{   // this useEffect is real submitHandler (sending to database)
     if((imgURL?.length === file?.length) && imgURL?.length){
       const saveMediaLinkToDatabaseWithEmptyText = async() => {
         const message={
@@ -339,10 +363,9 @@ const Messenger = () => {
           console.log(err);
         }
 
-        const isMessengerPage = window.location.href.split("/").includes('messenger');
         const isOnlinePresent = onlineUsers.filter((user)=>
           user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
-        if(isOnlinePresent?.length && isMessengerPage){
+        if(isOnlinePresent?.length){
           socket?.emit("sendMessage",{
             ...message,
             receiver: currentChat.members[0].id!==currentUser._id ? currentChat.members[0].id : currentChat.members[1].id,
@@ -389,10 +412,9 @@ const Messenger = () => {
           console.log(err);
         }
 
-        const isMessengerPage = window.location.href.split("/").includes('messenger');
         const isOnlinePresent = onlineUsers.filter((user)=>
           user.userId === (currentChat.members[0].id!==user._id ? currentChat.members[0].id : currentChat.members[1].id));
-        if(isOnlinePresent?.length && isMessengerPage){
+        if(isOnlinePresent?.length){
           socket?.emit("sendMessage",{
             ...message,
             receiver: currentChat.members[0].id!==currentUser._id ? currentChat.members[0].id : currentChat.members[1].id,
@@ -457,10 +479,10 @@ const Messenger = () => {
                   currentChat={currentChat}
                   setIsReply={setIsReply}
                   setReplyFor={setReplyFor}
-                  setMessageNotifications={setMessageNotifications}
-                  messageNotifications={messageNotifications}
+                  setProcessedNotificationsOfCurrentUser={setProcessedNotificationsOfCurrentUser}
+                  processedNotificationsOfCurrentUser={processedNotificationsOfCurrentUser}
                   setNoOfNewmessages={setNoOfNewmessages}
-                  notifications={notifications}
+                  rawNotificationsOfCurrentUser={rawNotificationsOfCurrentUser}
                   removeNotificationFromDatabase={removeNotificationFromDatabase}
                 />
               ))}

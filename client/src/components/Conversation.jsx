@@ -9,23 +9,23 @@ const Conversation = ({
   currentChat,
   setIsReply,
   setReplyFor,
-  setMessageNotifications,
-  messageNotifications,
+  setProcessedNotificationsOfCurrentUser,
+  processedNotificationsOfCurrentUser,
   setNoOfNewmessages,
-  notifications,
+  rawNotificationsOfCurrentUser,
   removeNotificationFromDatabase
 }) => {
   const [show3Dots, setShow3Dots] = useState(false);
   const [noOfNotifications, setNoOfNotifications] = useState(0);
 
   useEffect(()=>{
-    if(!messageNotifications?.includes(currentChat?.members[0].id)){
-      setNoOfNotifications((messageNotifications?.filter((id)=>id===conversation?.members[0].id))?.length)
+    if(!processedNotificationsOfCurrentUser?.includes(currentChat?.members[0].id)){  // if no chat in open state then set their notifications
+      setNoOfNotifications((processedNotificationsOfCurrentUser?.filter((id)=>id===conversation?.members[0].id))?.length)
     }
-    else{
-      setMessageNotifications(messageNotifications?.filter((id)=>id!==currentChat?.members[0].id))
+    else{                                   // if a chat in open state then remove notifications of that coversation
+      setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==currentChat?.members[0].id))
     }
-  },[messageNotifications]);
+  },[processedNotificationsOfCurrentUser]);
 
   const conversationClickHandler = () => {
     const collection = document.querySelectorAll('.conversation');
@@ -40,10 +40,10 @@ const Conversation = ({
     setCurrentChat(conversation);
     setIsReply(false);
     setReplyFor({});
-    setMessageNotifications(messageNotifications?.filter((id)=>id!==conversation?.members[0].id));
+    setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==conversation?.members[0].id));
     setNoOfNewmessages(noOfNotifications);
 
-    notifications?.map((item)=>{
+    rawNotificationsOfCurrentUser?.map((item)=>{
       if(item.id===conversation?.members[0].id){
         removeNotificationFromDatabase(item.id);
       }
