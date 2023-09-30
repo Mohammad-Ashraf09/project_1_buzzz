@@ -13,6 +13,7 @@ import { storage } from "../../src/firebase";
 import Compressor from 'compressorjs';
 import ReactPlayer from 'react-player';
 import Bottombar from '../components/Bottombar';
+import { Link } from 'react-router-dom';
 
 const Messenger = () => {
   const {user:currentUser} = useContext(AuthContext);
@@ -144,7 +145,7 @@ const Messenger = () => {
       }
     }
     getNotifications();
-  },[currentUser._id]);
+  },[currentUser._id, currentChat]);
 
   useEffect(()=>{
     const getMessages = async() =>{
@@ -452,7 +453,7 @@ const Messenger = () => {
   }
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const DP = replyFor?.isSameDp? user?.profilePicture : PF+dp2;
+  const DP = replyFor?.isSameDp? user?.profilePicture : dp2;
   const text = replyFor?.text;
 
   return (
@@ -465,8 +466,16 @@ const Messenger = () => {
               <div></div>
               <div className="messenger-center">
                 <div className="messenger-center-wrapper">
-                  <div className='clear-chat'>
-                    <div className='move-back-icon' onClick={()=>setCurrentChat(null)}> <i class="fa-solid fa-arrow-left"></i> </div>
+                  <div className='chat-area-topbar'>
+                    <div className='chat-area-topbar-left'>
+                      <div className='move-back-icon' onClick={()=>setCurrentChat(null)}> <i class="fa-solid fa-arrow-left"></i> </div>
+                      <Link to={``} style={{textDecoration: 'none', color:'black'}}>
+                        <div className='chat-area-topbar-name-and-dp'>
+                          <img className='chat-area-topbar-dp' src={dp2} alt="" />
+                          <span className='chat-area-topbar-name'> Test</span>
+                        </div>
+                      </Link>
+                    </div>
                     <div className='clear-chat-icon' onClick={clearChatHandler}> <i className="fa-solid fa-trash "></i> </div>
                     <div className='clear-chat-text'>clear chat</div>
                   </div>
@@ -476,7 +485,7 @@ const Messenger = () => {
                       <div
                         className="chat-view-area"
                         style={{
-                          height: (isReply || preview?.length>0) ? (isReply ? 'calc(85% - 47px)' : 'calc(87% - 12px)') : '87%'
+                          height: (isReply || preview?.length>0) ? (isReply ? 'calc(84% - 47px)' : 'calc(86% - 12px)') : '86%'
                         }}
                       >
                         {oldMessages.map((msg)=>(
@@ -659,12 +668,12 @@ const Messenger = () => {
                       <OnlineFriends
                         key={data.id}
                         follow={data}
-                        // onlineUsers={onlineUsers}
-                        // user={user}
-                        // conversations={conversations}
-                        // setCurrentChat={setCurrentChat}
-                        // setIsReply={setIsReply}
-                        // setReplyFor={setReplyFor}
+                        onlineUsers={onlineUsers}
+                        user={user}
+                        conversations={conversations}
+                        setCurrentChat={setCurrentChat}
+                        setIsReply={setIsReply}
+                        setReplyFor={setReplyFor}
                       />
                     ))}
                   </div>
@@ -703,11 +712,20 @@ const Messenger = () => {
 
           <div className="messenger-center">
             <div className="messenger-center-wrapper">
-              <div className='clear-chat'>
-                <i className="fa-solid fa-trash clear-chat-icon" onClick={clearChatHandler}></i>
-                <div className='clear-chat-text'>clear chat</div>
+              <div className='chat-area-topbar'>
+                {currentChat ?
+                  <>
+                    <Link to={``} style={{textDecoration: 'none', color:'black'}}>
+                      <div className='chat-area-topbar-left'>
+                        <img className='chat-area-topbar-dp' src={dp2} alt="" />
+                        <span className='chat-area-topbar-name'> Test</span>
+                      </div>
+                    </Link>
+                    <div className='clear-chat-icon' onClick={clearChatHandler}> <i className="fa-solid fa-trash "></i> </div>
+                    <div className='clear-chat-text'>clear chat</div>
+                  </>
+                : null}
               </div>
-
               {currentChat ? (
                 <>
                   <div

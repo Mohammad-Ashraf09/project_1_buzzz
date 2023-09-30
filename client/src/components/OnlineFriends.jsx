@@ -30,13 +30,14 @@ const OnlineFriends = ({onlineUsers, follow, user, conversations, setCurrentChat
         const addToConversation = window.confirm("Do you want to start Conversation with this user?");
         if(addToConversation){
           try{
-            await axios.post("/conversations/", {
+            const res = await axios.post("/conversations/", {
               senderId: user._id,
               receiverId: follow.id,
               senderData: {id: user._id, dp: user.profilePicture, name: user.fname+" "+user.lname},
               receiverData: {id: follow.id, dp: follow.dp, name: follow.name}
             });
-            window.location.reload();
+            setCurrentChat(res?.data);
+            // window.location.reload();
           }
           catch(err){
             console.log(err);
