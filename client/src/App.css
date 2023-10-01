@@ -2526,16 +2526,15 @@ input:valid[focused="true"] ~ .tickkk{
     align-items: center;
     cursor: pointer;
 }
-.chat-area-topbar-dp{
-    height: 28px;
-    width: 28px;
-    border-radius: 50px;
-    object-fit: cover;
-    margin-right: 6px;
-}
 .chat-area-topbar-name{
     font-size: 14px;
     font-weight: 600;
+    margin: 0;
+}
+.chat-area-topbar-username{
+    font-size: 11px;
+    color: var(--grey-dark);
+    margin: 0;
 }
 .clear-chat-icon{
     cursor: pointer;
@@ -2572,8 +2571,8 @@ input:valid[focused="true"] ~ .tickkk{
     display: flex;
 }
 .message-img{
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 6px;
@@ -4105,11 +4104,6 @@ input:valid[focused="true"] ~ .tickkk{
         display: flex;
         align-items: center;
     }
-    .chat-area-topbar-dp{
-        height: 24px;
-        width: 24px;
-        margin-right: 4px;
-    }
     .chat-area-topbar-name{
         font-size: 12px;
     }
@@ -4123,8 +4117,8 @@ input:valid[focused="true"] ~ .tickkk{
         margin: 6px 0;
     }
     .message-img{
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
         margin-right: 4px;
     }
     .my-img{

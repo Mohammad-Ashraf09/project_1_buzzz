@@ -19,11 +19,11 @@ const Conversation = ({
   const [noOfNotifications, setNoOfNotifications] = useState(0);
 
   useEffect(()=>{
-    if(!processedNotificationsOfCurrentUser?.includes(currentChat?.members[0].id)){  // if no chat in open state then set their notifications
-      setNoOfNotifications((processedNotificationsOfCurrentUser?.filter((id)=>id===conversation?.members[0].id))?.length)
+    if(!processedNotificationsOfCurrentUser?.includes(currentChat?.otherMemberData?.id)){  // if no chat in open state then set their notifications
+      setNoOfNotifications((processedNotificationsOfCurrentUser?.filter((id)=>id===conversation?.otherMemberData?.id))?.length)
     }
     else{                                   // if a chat in open state then remove notifications of that coversation
-      setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==currentChat?.members[0].id))
+      setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==currentChat?.otherMemberData?.id))
     }
   },[processedNotificationsOfCurrentUser]);
 
@@ -40,11 +40,11 @@ const Conversation = ({
     setCurrentChat(conversation);
     setIsReply(false);
     setReplyFor({});
-    setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==conversation?.members[0].id));
+    setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==conversation?.otherMemberData.id));
     setNoOfNewmessages(noOfNotifications);
 
     rawNotificationsOfCurrentUser?.map((item)=>{
-      if(item.id===conversation?.members[0].id){
+      if(item.id===conversation?.otherMemberData.id){
         removeNotificationFromDatabase(item.id);
       }
     })
@@ -73,8 +73,8 @@ const Conversation = ({
   }
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const name = conversation ? conversation.members[0].name : "";
-  const DP = conversation ? PF+conversation.members[0].dp : PF+"default-dp.png";
+  const name = conversation ? conversation.otherMemberData.name : "";
+  const DP = conversation ? conversation.otherMemberData.dp : PF+"default-dp.png";
 
   return (
     <div id={index} className='conversation'>
