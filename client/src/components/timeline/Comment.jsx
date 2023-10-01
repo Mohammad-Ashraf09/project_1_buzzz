@@ -100,7 +100,7 @@ const Comment = ({
     }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = commentUser?.profilePicture ? commentUser?.profilePicture : PF+"default-dp.png";
+    const DP = commentUser?.profilePicture?.includes('https://') ? commentUser?.profilePicture : PF+commentUser?.profilePicture;
     const name = commentUser?.fname + " " + commentUser?.lname;
 
     return (

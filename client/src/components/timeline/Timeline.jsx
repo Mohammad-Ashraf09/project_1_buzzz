@@ -201,8 +201,6 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
     if(commentedText){
       const newComment = {
         commentId: Math.random().toString(),
-        // dp: user?.profilePicture,
-        // name: user?.fname + " " + user?.lname,
         id: user?._id,
         comment: commentedText,
         commentLikes: [],
@@ -253,8 +251,6 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
 
       const newNestedComment = {
         nestedCommentId: Math.random().toString(),
-        // nestedDp: user?.profilePicture,
-        // nestedName: user?.fname + " " + user?.lname,
         nestedId: user?._id,
         nestedComment: text,
         nestedCommentLikes: [],
@@ -394,7 +390,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const name = postUser?.fname + ' ' + postUser?.lname;
-  const DP = postUser?.profilePicture ? postUser.profilePicture : PF+"default-dp.png";
+  const DP = postUser?.profilePicture?.includes('https://') ? postUser?.profilePicture : PF+postUser?.profilePicture;
   return (
     <div className='timeline-post'>
       <div className="timeline-post-wrapper">
@@ -598,7 +594,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
         
         <form className="comment-section">
           <div className='comment-profile-img-container'>
-            <img className='comment-profile-img' src={user?.profilePicture} alt="" />
+            <img className='comment-profile-img' src={user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture} alt="" />
           </div>
           <div className='comment-input-container'>
             <textarea
@@ -692,7 +688,7 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
         <ClickedPost
           user={postUser}
           currentUserId={currentUser._id}
-          currentUserDp={user?.profilePicture}
+          currentUserDp={user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture}
           DP={DP}
           name={name}
           _id={_id}

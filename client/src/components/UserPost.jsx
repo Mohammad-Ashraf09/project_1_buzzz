@@ -37,6 +37,8 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
     const [replyToName, setReplyToName] = useState("");
     const [replyToId, setReplyToId] = useState("");
 
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+
     useEffect(()=>{
         setTotalComment(comments);
         setNumberOfComments(comments.length)
@@ -116,9 +118,9 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
         if(commentedText){
             const newComment = {
                 commentId: Math.random().toString(),
-                dp: currentUser.profilePicture,
-                name: currentUser.fname + " " + currentUser.lname,
-                id: currentUser._id,
+                dp: user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture,
+                name: user.fname + " " + user.lname,
+                id: user._id,
                 comment: commentedText,
                 commentLikes: [],
                 nestedComments: [],
@@ -160,9 +162,9 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
     
           const newNestedComment = {
             nestedCommentId: Math.random().toString(),
-            nestedDp: currentUser.profilePicture,
-            nestedName: currentUser.fname + " " + currentUser.lname,
-            nestedId: currentUser._id,
+            nestedDp: user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture,
+            nestedName: user.fname + " " + user.lname,
+            nestedId: user._id,
             nestedComment: text,
             nestedCommentLikes: [],
             date: new Date()
@@ -346,7 +348,7 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
                 
                 <form className="comment-section">
                     <div className='comment-profile-img-container'>
-                        <img className='comment-profile-img' src={user?.profilePicture} alt="" />
+                        <img className='comment-profile-img' src={user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture} alt="" />
                     </div>
                     <div className='comment-input-container'>
                         <textarea

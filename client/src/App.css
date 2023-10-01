@@ -124,17 +124,21 @@ body{
     margin-top: 24px;
 }
 .register-btn {
-  padding: 15px 35px;
-  background-color: var(--theme-color);
-  border: none;
-  border-radius: 25px;
-  color: #FFF;
-  font-family: 'Roboto', sans-serif;
-  font-weight: 500;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow: 4px 4px 10px var(--theme-shadow);
-  opacity: 0.8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 120px;
+    height: 45px;
+    background-color: var(--theme-color);
+    border: none;
+    border-radius: 25px;
+    color: #FFF;
+    font-family: 'Roboto', sans-serif;
+    font-weight: 500;
+    text-transform: uppercase;
+    cursor: pointer;
+    box-shadow: 4px 4px 10px var(--theme-shadow);
+    opacity: 0.8;
 }
 .register-btn:hover {
   opacity: 1;
@@ -145,6 +149,9 @@ body{
     box-shadow: none;
     cursor:not-allowed;
     opacity: 1;
+}
+.loader-button{
+    background-color: rgb(156, 56, 233);
 }
 .existing-member{
     color: var(--theme-color);
@@ -3166,7 +3173,8 @@ input:valid[focused="true"] ~ .tickkk{
         font-size: 12px;
     }
     .register-btn {
-    padding: 12px 28px;
+        width: 110px;
+        height: 40px;
     }
     .existing-member{
         font-size: 12px;
