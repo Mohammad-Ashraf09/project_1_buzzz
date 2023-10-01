@@ -3124,7 +3124,7 @@ input:valid[focused="true"] ~ .tickkk{
     /*--------------------- SignUp page --------------------------*/
     .signup-container{
         height: calc(100vh - 42px);
-        min-height: 870px;
+        min-height: 880px;
         align-items: flex-start;
     }
     .signup{
@@ -3134,12 +3134,12 @@ input:valid[focused="true"] ~ .tickkk{
         display: block;
     }
     .signup-mobile-container{
-        width: 90vw;
+        width: 96vw;
         background-color: rgb(244, 240, 240);
         border-radius: 8px;
         padding: 1rem;
         box-sizing: border-box;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
     }
     .signup-above-mobile h1{
         margin-top: 0;
@@ -3147,14 +3147,16 @@ input:valid[focused="true"] ~ .tickkk{
     }
     .profile-picture-div{
         display: flex;
+        justify-content: center;
+        align-items: center;
     }
     .profile-picture-container{
         margin-bottom: 0;
-        margin-right: 1rem;
+        margin-right: 0.5rem;
     }
     .profile-picture{
-        width: 120px;
-        height: 120px;
+        width: 130px;
+        height: 130px;
     }
     .dummy-profile{
         margin-top: 0.25rem;
@@ -3183,18 +3185,12 @@ input:valid[focused="true"] ~ .tickkk{
     /* -------------------------Sign in page -------------------- */
     .login-container{
         height: calc(100vh - 42px);
-        min-height: 800px;
+        min-height: 600px;
         flex-direction: column;
     }
     .login{
         width: 90vw;
-        height: 36%;
-    }
-    .signup-section{
-        margin-top: 5rem;
-    }
-    .signin-section{
-        margin-bottom: 5rem;
+        height: auto;
     }
     .login form{
         padding: 1rem;
