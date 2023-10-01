@@ -14,7 +14,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const logo = PF+"images/logo144.png";
-    const dp = user?.profilePicture ? user?.profilePicture : PF+"default-dp.png";
+    const dp = user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture;
     const name = user?.fname +" "+ user?.lname;
 
     const reverseOrderNotification = [...notification].reverse();

@@ -14,10 +14,18 @@ const SuggestionPerson = ({users, onlineUsers}) => {
   const followHandler = async () =>{
     try{
       if(followed){
-        await axios.put("/users/"+ users._id + "/unfollow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
+        await axios.put("/users/"+ users._id + "/unfollow", {
+          userId: currentUser._id,
+          name: users.fname+" "+users.lname,
+          dp: users.profilePicture?.includes('https://') ? users.profilePicture : PF+users.profilePicture,
+        })
       }
       else{
-        await axios.put("/users/"+ users._id + "/follow", {userId: currentUser._id, name: users.fname+" "+users.lname, dp:users.profilePicture})
+        await axios.put("/users/"+ users._id + "/follow", {
+          userId: currentUser._id,
+          name: users.fname+" "+users.lname,
+          dp: users.profilePicture?.includes('https://') ? users.profilePicture : PF+users.profilePicture,
+        })
       }
     }
     catch(err){
@@ -28,7 +36,7 @@ const SuggestionPerson = ({users, onlineUsers}) => {
 
   const {fname, lname, profilePicture, _id} = users;
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const dp = profilePicture ? profilePicture : PF+'default-dp.png';
+  const dp = profilePicture?.includes('https://') ? profilePicture : PF+profilePicture;
   const name = fname +' '+ lname;
 
   return (

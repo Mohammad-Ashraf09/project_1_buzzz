@@ -215,16 +215,24 @@ const UserProfile = () => {
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const name = fname+' '+lname;
-  const DP = profilePicture ? profilePicture : PF+"default-dp.png";
+  const DP = profilePicture?.includes('https://') ? profilePicture : PF+profilePicture;
   const cover = coverPicture ? coverPicture : PF+"default-cover.jpg";
 
   const followHandler = async () =>{
     try{
       if(followed){
-        await axios.put("/users/"+ user._id + "/unfollow", {userId: currentUser._id, name: user.fname+" "+user.lname, dp:user.profilePicture})
+        await axios.put("/users/"+ user._id + "/unfollow", {
+          userId: currentUser._id,
+          name: user.fname+" "+user.lname,
+          dp: user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture,
+        })
       }
       else{
-        await axios.put("/users/"+ user._id + "/follow", {userId: currentUser._id, name: user.fname+" "+user.lname, dp:user.profilePicture})
+        await axios.put("/users/"+ user._id + "/follow", {
+          userId: currentUser._id,
+          name: user.fname+" "+user.lname,
+          dp: user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture,
+        })
       }
     }catch(err){
 

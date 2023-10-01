@@ -1,12 +1,15 @@
 import axios from 'axios';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import FormInput from '../components/FormInput';
 import TopbarForLogin from '../components/TopbarForLogin';
+import { ref, uploadBytesResumable, getDownloadURL } from "firebase/storage";
+import { storage } from "../../src/firebase";
+import Compressor from 'compressorjs';
 
 const Signup = () => {
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const banner = PF+"default-dp.png";
+    const defaultDP = PF+"default-dp.png";
     const dummy01 = PF+"dummy-dp-01.png";
     const dummy02 = PF+"dummy-dp-02.png";
     const dummy03 = PF+"dummy-dp-03.png";
@@ -19,10 +22,13 @@ const Signup = () => {
     const dummy10 = PF+"dummy-dp-10.png";
     const dummy11 = PF+"dummy-dp-11.png";
     const dummy12 = PF+"dummy-dp-12.png";
+    const loader = PF+"images/gif-loader.gif";
 
     const [disable, setDisable] = useState(true);
-    const [currentDP, setCurrentDP] = useState(banner);
-    const [dpPreview, setDpPreview] = useState();
+    const [currentDP, setCurrentDP] = useState(defaultDP);
+    const [dpPreview, setDpPreview] = useState(null);
+    const [isLoader, setIsLoader] = useState(false);
+    const [hideSaveBtn, setHideSaveBtn] = useState(false);
     const navigate = useNavigate();
     const [values, setValues] = useState({
         fname:"",
@@ -34,7 +40,6 @@ const Signup = () => {
         confirmPassword:"",
         profilePicture:"",
     });
-
 
     const inputs = [
         {
@@ -122,32 +127,67 @@ const Signup = () => {
 
     const saveHandler = async(e) =>{
         e.preventDefault();
+        setIsLoader(true);
+        setHideSaveBtn(true)
 
         if(typeof(currentDP)==='string'){
             const arr = currentDP.split("/")
-            values.profilePicture = arr[arr.length-1]
+            setValues({...values, profilePicture: arr[arr.length-1]});
         }
         else{
-            const data = new FormData();
-            const fileName = Date.now() + currentDP.name;
-            data.append("name", fileName);
-            data.append("file", currentDP)
-            values.profilePicture = fileName;
-
-            try{
-                await axios.post("/upload", data)        // to upload photo into local storage
-              }catch(err){
-                console.log(err)
-            }
-        }
-        
-        try{
-            await axios.post("/auth/register", values);
-            navigate("/login");
-        }catch(err){
-            console.log(err);
+            new Compressor(currentDP, {
+                quality: 0.4,  // 0.6 can also be used, but its not recommended to go below.
+                success: (compressedResult) => {
+                    const imgName = compressedResult?.name?.toLowerCase()?.split(' ').join('-');
+                    const uniqueImageName = new Date().getTime() + '-' + imgName;
+            
+                    const storageRef = ref(storage, uniqueImageName);
+                    const uploadTask = uploadBytesResumable(storageRef, compressedResult);
+            
+                    uploadTask.on('state_changed',
+                        (snapshot) => {
+                            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+                            console.log('Upload is ' + progress + '% done');
+                            switch (snapshot.state) {
+                                case 'paused':
+                                    console.log('Upload is paused');
+                                    break;
+                                case 'running':
+                                    console.log('Upload is running');
+                                    break;
+                                default:
+                                    break;
+                            }
+                        },
+                        (error) => {
+                            console.log(error)
+                        },
+                        () => {
+                            getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+                                setValues({...values, profilePicture: downloadURL});
+                            });
+                        }
+                    );
+                },
+            });        
         }
     }
+
+    useEffect(()=>{     // this useEffect is real submit handler
+        if(values?.profilePicture){
+            const saveDetailsToDB = async() => {
+                try{
+                    await axios.post("/auth/register", values);
+                    setIsLoader(false);
+                    setHideSaveBtn(false);
+                    navigate("/login");
+                }catch(err){
+                    console.log(err);
+                }
+            }
+            saveDetailsToDB();
+        }
+    },[values?.profilePicture]);
 
     return (
         <>
@@ -169,7 +209,12 @@ const Signup = () => {
                         </div>
 
                         <div className='navigations'>
-                            <button type='submit' className="register-btn" disabled={disable}>Register</button>
+                            {!hideSaveBtn ? <button type='submit' className="register-btn" disabled={disable}>Register</button> : null}
+                            {isLoader ?
+                                <div className="loader-button register-btn">
+                                    <img className='loader' src={loader} alt="" />
+                                </div>
+                            : null}
                             <Link to="/login" className='existing-member'>Already a Member?</Link>
                         </div>
                     </form>
@@ -208,7 +253,7 @@ const Signup = () => {
                                     <input style={{display:"none"}} type="file" id="dp" name="file" accept='.jpg, .png, .jpeg' onChange={dpFromGalleryHandler}/>
                                 </label>
                                 
-                                <div className='choose-from-gallery' onClick={()=>{setCurrentDP(banner); setDpPreview(null)}}>Remove DP</div>
+                                <div className='choose-from-gallery' onClick={()=>{setCurrentDP(defaultDP); setDpPreview(null)}}>Remove DP</div>
                             </div>
                         </div>
                     </div>
@@ -252,7 +297,7 @@ const Signup = () => {
                                 <input style={{display:"none"}} type="file" id="dp" name="file" accept='.jpg, .png, .jpeg' onChange={dpFromGalleryHandler}/>
                             </label>
                             <p className='-or'>OR</p>
-                            <div className='choose-from-gallery' onClick={()=>{setCurrentDP(banner); setDpPreview(null)}}>Remove DP</div>
+                            <div className='choose-from-gallery' onClick={()=>{setCurrentDP(defaultDP); setDpPreview(null)}}>Remove DP</div>
                         </div>
                     </div>
 
@@ -271,7 +316,12 @@ const Signup = () => {
                         </div>
 
                         <div className='navigations'>
-                            <button type='submit' className="register-btn" disabled={disable}>Register</button>
+                            {!hideSaveBtn ? <button type='submit' className="register-btn" disabled={disable}>Register</button> : null}
+                            {isLoader ?
+                                <div className="loader-button register-btn">
+                                    <img className='loader' src={loader} alt="" />
+                                </div>
+                            : null}
                             <Link to="/login" className='existing-member'>Already a Member?</Link>
                         </div>
                     </form>

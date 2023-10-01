@@ -106,7 +106,7 @@ const NestedComment = ({
     }
 
     const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = nestedCommentUser?.profilePicture ? nestedCommentUser.profilePicture : PF+"default-dp.png";
+    const DP = nestedCommentUser?.profilePicture?.includes('https://') ? nestedCommentUser?.profilePicture : PF+nestedCommentUser?.profilePicture;
     const name = nestedCommentUser?.fname + " " + nestedCommentUser?.lname;
 
     return (
