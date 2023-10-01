@@ -5,7 +5,6 @@ const Conversation = require("../model/Conversation");
 router.post("/", async(req, res)=>{
     const newConversation = new Conversation({
         IDs: [req.body.senderId, req.body.receiverId],
-        members: [req.body.senderData, req.body.receiverData],
         // lastMsgText: "",                             // apply it mobile view
         // lastMsgSenderId: "",
     });

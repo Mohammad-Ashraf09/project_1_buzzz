@@ -5,9 +5,6 @@ const ConversationSchema = new mongoose.Schema(
     IDs:{
         type: Array,
     },
-    members:{
-        type: Array,
-    },
     // lastMsgText:{                                 // apply it mobile view
     //     type: String,
     // },

@@ -2512,13 +2512,29 @@ input:valid[focused="true"] ~ .tickkk{
 }
 
 /*--------------------- messenger chat area --------------------------*/
-.clear-chat{
+.chat-area-topbar{
     height: 6%;
-    text-align: end;
-    padding-top: 12px;
-    padding-bottom: 5px;
     position: relative;
     box-sizing: border-box;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0 0.25rem;
+}
+.chat-area-topbar-left{
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+}
+.chat-area-topbar-name{
+    font-size: 14px;
+    font-weight: 600;
+    margin: 0;
+}
+.chat-area-topbar-username{
+    font-size: 11px;
+    color: var(--grey-dark);
+    margin: 0;
 }
 .clear-chat-icon{
     cursor: pointer;
@@ -2555,8 +2571,8 @@ input:valid[focused="true"] ~ .tickkk{
     display: flex;
 }
 .message-img{
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
     border-radius: 50%;
     object-fit: cover;
     margin-right: 6px;
@@ -4000,6 +4016,9 @@ input:valid[focused="true"] ~ .tickkk{
     .dp-badge{
         width: 14%;
     }
+    .message-badge{
+        right: 6px;
+    }
     .conversation-name{
         font-size: 13px;
     }
@@ -4074,7 +4093,21 @@ input:valid[focused="true"] ~ .tickkk{
         padding: 0 6px;
         box-sizing: border-box;
     }
-    .clear-chat{
+    .chat-area-topbar{
+        height: 5%;
+        font-size: 14px;
+    }
+    .move-back-icon{
+        margin-right: 1rem;
+    }
+    .chat-area-topbar-name-and-dp{
+        display: flex;
+        align-items: center;
+    }
+    .chat-area-topbar-name{
+        font-size: 12px;
+    }
+    .clear-chat-icon:hover + .clear-chat-text{
         display: none;
     }
     .chat-view-area{
@@ -4084,8 +4117,8 @@ input:valid[focused="true"] ~ .tickkk{
         margin: 6px 0;
     }
     .message-img{
-        width: 28px;
-        height: 28px;
+        width: 24px;
+        height: 24px;
         margin-right: 4px;
     }
     .my-img{

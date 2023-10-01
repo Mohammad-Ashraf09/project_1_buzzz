@@ -9,23 +9,23 @@ const Conversation = ({
   currentChat,
   setIsReply,
   setReplyFor,
-  setMessageNotifications,
-  messageNotifications,
+  setProcessedNotificationsOfCurrentUser,
+  processedNotificationsOfCurrentUser,
   setNoOfNewmessages,
-  notifications,
+  rawNotificationsOfCurrentUser,
   removeNotificationFromDatabase
 }) => {
   const [show3Dots, setShow3Dots] = useState(false);
   const [noOfNotifications, setNoOfNotifications] = useState(0);
 
   useEffect(()=>{
-    if(!messageNotifications?.includes(currentChat?.members[0].id)){
-      setNoOfNotifications((messageNotifications?.filter((id)=>id===conversation?.members[0].id))?.length)
+    if(!processedNotificationsOfCurrentUser?.includes(currentChat?.otherMemberData?.id)){  // if no chat in open state then set their notifications
+      setNoOfNotifications((processedNotificationsOfCurrentUser?.filter((id)=>id===conversation?.otherMemberData?.id))?.length)
     }
-    else{
-      setMessageNotifications(messageNotifications?.filter((id)=>id!==currentChat?.members[0].id))
+    else{                                   // if a chat in open state then remove notifications of that coversation
+      setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==currentChat?.otherMemberData?.id))
     }
-  },[messageNotifications]);
+  },[processedNotificationsOfCurrentUser]);
 
   const conversationClickHandler = () => {
     const collection = document.querySelectorAll('.conversation');
@@ -40,11 +40,11 @@ const Conversation = ({
     setCurrentChat(conversation);
     setIsReply(false);
     setReplyFor({});
-    setMessageNotifications(messageNotifications?.filter((id)=>id!==conversation?.members[0].id));
+    setProcessedNotificationsOfCurrentUser(processedNotificationsOfCurrentUser?.filter((id)=>id!==conversation?.otherMemberData.id));
     setNoOfNewmessages(noOfNotifications);
 
-    notifications?.map((item)=>{
-      if(item.id===conversation?.members[0].id){
+    rawNotificationsOfCurrentUser?.map((item)=>{
+      if(item.id===conversation?.otherMemberData.id){
         removeNotificationFromDatabase(item.id);
       }
     })
@@ -73,8 +73,8 @@ const Conversation = ({
   }
 
   const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const name = conversation ? conversation.members[0].name : "";
-  const DP = conversation ? PF+conversation.members[0].dp : PF+"default-dp.png";
+  const name = conversation ? conversation.otherMemberData.name : "";
+  const DP = conversation ? conversation.otherMemberData.dp : PF+"default-dp.png";
 
   return (
     <div id={index} className='conversation'>
