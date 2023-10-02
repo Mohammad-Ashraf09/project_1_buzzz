@@ -2520,7 +2520,7 @@ input:valid[focused="true"] ~ .tickkk{
 
 /*--------------------- messenger chat area --------------------------*/
 .chat-area-topbar{
-    height: 6%;
+    height: 7%;
     position: relative;
     box-sizing: border-box;
     display: flex;
@@ -2533,10 +2533,18 @@ input:valid[focused="true"] ~ .tickkk{
     align-items: center;
     cursor: pointer;
 }
+.chat-area-topbar-dp{
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 6px;
+}
 .chat-area-topbar-name{
     font-size: 14px;
     font-weight: 600;
     margin: 0;
+    margin-bottom: 2px;
 }
 .chat-area-topbar-username{
     font-size: 11px;
@@ -3115,6 +3123,42 @@ input:valid[focused="true"] ~ .tickkk{
     left: 40px;
 }
 
+/*########################################### Search page #############################################*/
+.search{
+    box-sizing: border-box;
+    display: flex;
+    justify-content: center;
+    height: calc(100vh - 84px);
+    min-height: 650px;
+    background-color: #03bfbc;
+}
+.search-wrapper{
+    box-sizing: border-box;
+    height: 97.5%;
+    width: 96%;
+    margin-top: 0.5rem;
+    background-color: white;
+    border-radius: 8px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.search-result-container{
+    box-sizing: border-box;
+    width: 92%;
+    height: 100%;
+    margin-top: 10px;
+    /* margin: 0.5rem 1rem 0.5rem 1rem; */
+    overflow: auto;
+}
+.search-result{
+    padding: 0.35rem 0.5rem;
+    border-radius: 6px;
+}
+.search-result:hover{
+    background-color: var(--bg-color);
+}
+
 /*--------------------------------------------- meadia querry for opto 420px ----------------------*/
 @media only screen and (max-width: 420px){
     body{
@@ -3603,7 +3647,7 @@ input:valid[focused="true"] ~ .tickkk{
 
     /* -------------------------User page -------------------- */
     .user{
-        height: calc(100vh - 42px);
+        height: calc(100vh - 84px);
         min-height: 880px;
         width: 100vw;
     }
@@ -4098,11 +4142,15 @@ input:valid[focused="true"] ~ .tickkk{
         box-sizing: border-box;
     }
     .chat-area-topbar{
-        height: 5%;
+        height: 5.5%;
         font-size: 14px;
     }
     .move-back-icon{
         margin-right: 1rem;
+    }
+    .chat-area-topbar-dp{
+        width: 28px;
+        height: 28px;
     }
     .chat-area-topbar-name-and-dp{
         display: flex;
@@ -4110,6 +4158,7 @@ input:valid[focused="true"] ~ .tickkk{
     }
     .chat-area-topbar-name{
         font-size: 12px;
+        color: black;
     }
     .clear-chat-icon:hover + .clear-chat-text{
         display: none;

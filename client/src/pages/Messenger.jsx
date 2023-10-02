@@ -482,7 +482,7 @@ const Messenger = () => {
                       <div className='move-back-icon' onClick={()=>setCurrentChat(null)}> <i class="fa-solid fa-arrow-left"></i> </div>
                       <Link to={``} style={{textDecoration: 'none', color:'black'}}>
                         <div className='chat-area-topbar-name-and-dp'>
-                          <img className='message-img' src={currentChat?.otherMemberData?.dp} alt="" />
+                          <img className='chat-area-topbar-dp' src={currentChat?.otherMemberData?.dp} alt="" />
                           <div>
                             <p className='chat-area-topbar-name'>{currentChat?.otherMemberData?.name}</p>
                             <p className='chat-area-topbar-username'>{currentChat?.otherMemberData?.username}</p>
@@ -730,7 +730,7 @@ const Messenger = () => {
                   <>
                     <Link to={``} style={{textDecoration: 'none', color:'black'}}>
                       <div className='chat-area-topbar-left'>
-                        <img className='message-img' src={currentChat?.otherMemberData?.dp} alt="" />
+                        <img className='chat-area-topbar-dp' src={currentChat?.otherMemberData?.dp} alt="" />
                         <div>
                           <p className='chat-area-topbar-name'>{currentChat?.otherMemberData?.name}</p>
                           <p className='chat-area-topbar-username'>{currentChat?.otherMemberData?.username}</p>

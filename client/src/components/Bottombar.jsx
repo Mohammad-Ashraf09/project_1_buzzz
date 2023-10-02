@@ -7,12 +7,12 @@ const Bottombar = ({user}) => {
     return (
         <div className='bottombar-container'>
             <div className="bottombar-icons">
-                <div className="bottombar-icon">
-                    <i class="fa-solid fa-house"></i>
-                </div>
-                <div className="bottombar-icon">
-                    <i className="fa-solid fa-magnifying-glass"></i>
-                </div>
+                <Link to="/" style={{textDecoration: 'none', color: 'black'}}>
+                    <div className="bottombar-icon"> <i class="fa-solid fa-house"></i> </div>
+                </Link>
+                <Link to="/search" style={{textDecoration: 'none', color: 'black'}}>
+                    <div className="bottombar-icon"> <i className="fa-solid fa-magnifying-glass"></i> </div>
+                </Link>
                 <Link to={`/user/${user?._id}`} style={{textDecoration: 'none'}}>
                     <img src={dp} alt="" className="topbar-img" />
                 </Link>
