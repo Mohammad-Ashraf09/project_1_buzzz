@@ -513,9 +513,11 @@ const Timeline = ({post, setPosts, isLik, isDisLik, socket}) => {
           </div>
         }
 
-        {img.length && <div className='post-media-preview-container'>
-          <PostImage images={img} blurrScreenHandler={blurrScreenHandler}/>
-        </div>}
+        {img.length ?
+          <div className='post-media-preview-container'>
+            <PostImage images={img} blurrScreenHandler={blurrScreenHandler}/>
+          </div>
+        : null}
 
         <div className="post-reaction-count">
           <div className="like-dislike-count">

@@ -157,7 +157,7 @@ const CreateNewPost = () => {
       catch(err){}
   
       try{
-        await axios.put("users/"+currentUser._id, {userId: currentUser._id, totalPosts: user.totalPosts+1});    // to update the total post count by 1
+        await axios.put("/users/"+currentUser._id, {userId: currentUser._id, totalPosts: user?.totalPosts+1});    // to update the total post count by 1
       }
       catch(err){}
     }
