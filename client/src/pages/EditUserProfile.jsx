@@ -12,8 +12,6 @@ import Compressor from 'compressorjs';
 import Bottombar from '../components/Bottombar';
 
 const EditUserProfile = () => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
   const {user:currentUser} = useContext(AuthContext);
   const [user, setUser] = useState({});
   const[formdata, setFormdata] = useState({});
@@ -22,7 +20,7 @@ const EditUserProfile = () => {
   const [editCover, setEditCover] = useState(false);
   const [editDP, setEditDP] = useState(false);
 
-  const [dpFile, setDpFile] = useState(profilePicture?.includes('https://') ? profilePicture : PF+profilePicture);
+  const [dpFile, setDpFile] = useState(profilePicture?.includes('https://') ? profilePicture : `/assets/${profilePicture}`);
   const [dpPreview, setDpPreview] = useState();
   const [dpChanged, setDpChanged] = useState(false);
   const [coverFile, setCoverFile] = useState(coverPicture);
@@ -49,9 +47,9 @@ const EditUserProfile = () => {
   const [coverURL, setCoverURL] = useState('');
   const [percentage, setPercentage] = useState(null);
   
-  const camera = PF + "images/blue-cam.png";
-  const cover = coverPicture ? coverPicture : PF+"default-cover.jpg";
-  const DP = profilePicture?.includes('https://') ? profilePicture : PF+profilePicture;
+  const camera = "/assets/blue-cam.png";
+  const cover = coverPicture ? coverPicture : "/assets/default-cover.jpg";
+  const DP = profilePicture?.includes('https://') ? profilePicture : `/assets/${profilePicture}`;
 
   useEffect(()=>{
     const fetchAllUsers = async() =>{

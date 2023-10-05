@@ -34,8 +34,7 @@ const CreateNewPost = () => {
   const [imgURL, setImgURL] = useState([]);
   const [percentage, setPercentage] = useState(null);
 
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const profile = user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture;
+  const profile = user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user.profilePicture}`;
   const name = user?.fname;
 
   useEffect(()=>{

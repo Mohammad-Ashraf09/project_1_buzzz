@@ -2,8 +2,7 @@ import React from 'react';
 import axios from "axios";
 
 const OnlineFriends = ({onlineUsers, follow, user, conversations, setCurrentChat, setIsReply, setReplyFor}) => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const DP = follow.dp?.includes('https://') ? follow.dp : PF+follow.dp;
+  const DP = follow.dp?.includes('https://') ? follow.dp : `/assets/${follow.dp}`;
   
   const clickHandler = async() =>{
     const collection = document.querySelectorAll('.conversation');     // this comes from Conversation.jsx

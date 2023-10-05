@@ -17,14 +17,14 @@ const SuggestionPerson = ({users, onlineUsers}) => {
         await axios.put("/users/"+ users._id + "/unfollow", {
           userId: currentUser._id,
           name: users.fname+" "+users.lname,
-          dp: users.profilePicture?.includes('https://') ? users.profilePicture : PF+users.profilePicture,
+          dp: users.profilePicture?.includes('https://') ? users.profilePicture : `/assets/${users.profilePicture}`,
         })
       }
       else{
         await axios.put("/users/"+ users._id + "/follow", {
           userId: currentUser._id,
           name: users.fname+" "+users.lname,
-          dp: users.profilePicture?.includes('https://') ? users.profilePicture : PF+users.profilePicture,
+          dp: users.profilePicture?.includes('https://') ? users.profilePicture : `/assets/${users.profilePicture}`,
         })
       }
     }
@@ -35,8 +35,7 @@ const SuggestionPerson = ({users, onlineUsers}) => {
   }
 
   const {fname, lname, profilePicture, _id} = users;
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const dp = profilePicture?.includes('https://') ? profilePicture : PF+profilePicture;
+  const dp = profilePicture?.includes('https://') ? profilePicture : `/assets/${profilePicture}`;
   const name = fname +' '+ lname;
 
   return (

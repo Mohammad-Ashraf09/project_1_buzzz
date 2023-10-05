@@ -18,15 +18,14 @@ const Notification = ({_id, type, time, postId, senderId, currentUser, backgroun
     const [showParticularPost, setShowParticularPost] = useState(false);
     const [nestedCommentLength, setNestedCommentLength] = useState(0);
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = currentUser?.profilePicture.includes('https://') ? currentUser?.profilePicture : PF+currentUser?.profilePicture;
+    const DP = currentUser?.profilePicture.includes('https://') ? currentUser?.profilePicture : `/assets/${currentUser?.profilePicture}`;
     const profileName = currentUser?.fname + ' ' + currentUser?.lname;
 
     useEffect(()=>{
         const fetchNotificationSenderData = async() =>{
             const res = await axios.get(`/users/${senderId}`);
             setSenderDpAndName({
-                dp: res?.data?.profilePicture?.includes('https://') ? res?.data?.profilePicture : PF+res?.data?.profilePicture,
+                dp: res?.data?.profilePicture?.includes('https://') ? res?.data?.profilePicture : `/assets/${res?.data?.profilePicture}`,
                 name: res?.data?.fname + ' ' + res?.data?.lname
             });
         }
@@ -108,7 +107,7 @@ const Notification = ({_id, type, time, postId, senderId, currentUser, backgroun
                 <ClickedPost
                     user={currentUser}
                     currentUserId={currentUser._id}
-                    currentUserDp={currentUser?.profilePicture?.includes('https://') ? currentUser?.profilePicture : PF+currentUser?.profilePicture}
+                    currentUserDp={currentUser?.profilePicture?.includes('https://') ? currentUser?.profilePicture : `/assets/${currentUser?.profilePicture}`}
                     DP={DP}
                     name={profileName}
                     _id={postId}

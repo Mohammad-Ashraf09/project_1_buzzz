@@ -48,10 +48,7 @@ const Messenger = () => {
 
   const [isChats, setIsChats] = useState(true);
   const [isContacts, setIsContacts] = useState(false);
-  
   // const [isNewMsg, setIsNewMsg] = useState(false);                           // apply it mobile view
-
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   const oldMessages = messages.slice(0, messages?.length-noOfNewmessages);
   const newMessages = messages.slice(messages?.length-noOfNewmessages, messages?.length);
@@ -127,7 +124,7 @@ const Messenger = () => {
                 ...item,
                 otherMemberData: {
                   id: response?.data?._id,
-                  dp: response?.data?.profilePicture?.includes('https://') ? response?.data?.profilePicture : PF+response?.data?.profilePicture,
+                  dp: response?.data?.profilePicture?.includes('https://') ? response?.data?.profilePicture : `/assets/${response?.data?.profilePicture}`,
                   name: response?.data?.fname + ' ' + response?.data?.lname,
                   username: response?.data?.username,
                 },
@@ -463,7 +460,7 @@ const Messenger = () => {
     }
   }
 
-  const DP = replyFor?.isSameDp? (user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture) : currentChat?.otherMemberData?.dp;
+  const DP = replyFor?.isSameDp? (user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user.profilePicture}`) : currentChat?.otherMemberData?.dp;
   const text = replyFor?.text;
 
   return (
@@ -508,7 +505,7 @@ const Messenger = () => {
                           message={msg}
                           setMessages={setMessages}
                           my={msg?.sender === currentUser?._id}
-                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture}
+                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`}
                           dp2={currentChat?.otherMemberData?.dp}
                           setIsReply={setIsReply}
                           setReplyFor={setReplyFor}
@@ -537,7 +534,7 @@ const Messenger = () => {
                           message={msg}
                           setMessages={setMessages}
                           my={msg?.sender === currentUser?._id}
-                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture}
+                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`}
                           dp2={currentChat?.otherMemberData?.dp}
                           setIsReply={setIsReply}
                           setReplyFor={setReplyFor}
@@ -759,7 +756,7 @@ const Messenger = () => {
                           message={msg}
                           setMessages={setMessages}
                           my={msg?.sender === currentUser?._id}
-                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture}
+                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`}
                           dp2={currentChat?.otherMemberData?.dp}
                           setIsReply={setIsReply}
                           setReplyFor={setReplyFor}
@@ -788,7 +785,7 @@ const Messenger = () => {
                           message={msg}
                           setMessages={setMessages}
                           my={msg?.sender === currentUser?._id}
-                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture}
+                          dp1={user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`}
                           dp2={currentChat?.otherMemberData?.dp}
                           setIsReply={setIsReply}
                           setReplyFor={setReplyFor}

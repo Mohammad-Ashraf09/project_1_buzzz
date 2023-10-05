@@ -19,9 +19,8 @@ const PreviewImage = ({
     const [isVisibleRightArrow, setIsVisibleRightArrow] = useState(false);
     const [moveToPrevIndex, setMoveToPrevIndex] = useState(false);
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const leftArrow = PF+"images/left-arrow.png";
-    const rightArrow = PF+"images/right-arrow.png";
+    const leftArrow = "/assets/left-arrow.png";
+    const rightArrow = "/assets/right-arrow.png";
 
     useEffect(()=>{
         if(currentIndex===0)

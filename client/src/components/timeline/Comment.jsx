@@ -99,8 +99,7 @@ const Comment = ({
         navigate(`/user/${particularComment.id}`);
     }
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = commentUser?.profilePicture?.includes('https://') ? commentUser?.profilePicture : PF+commentUser?.profilePicture;
+    const DP = commentUser?.profilePicture?.includes('https://') ? commentUser?.profilePicture : `/assets/${commentUser.profilePicture}`;
     const name = commentUser?.fname + " " + commentUser?.lname;
 
     return (

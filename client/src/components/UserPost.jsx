@@ -37,8 +37,6 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
     const [replyToName, setReplyToName] = useState("");
     const [replyToId, setReplyToId] = useState("");
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
     useEffect(()=>{
         setTotalComment(comments);
         setNumberOfComments(comments.length)
@@ -118,7 +116,7 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
         if(commentedText){
             const newComment = {
                 commentId: Math.random().toString(),
-                dp: user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture,
+                dp: user.profilePicture?.includes('https://') ? user.profilePicture : `/assets/${user.profilePicture}`,
                 name: user.fname + " " + user.lname,
                 id: user._id,
                 comment: commentedText,
@@ -162,7 +160,7 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
     
           const newNestedComment = {
             nestedCommentId: Math.random().toString(),
-            nestedDp: user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture,
+            nestedDp: user.profilePicture?.includes('https://') ? user.profilePicture : `/assets/${user.profilePicture}`,
             nestedName: user.fname + " " + user.lname,
             nestedId: user._id,
             nestedComment: text,
@@ -348,7 +346,7 @@ const UserPost = ({user, name, DP, post, isLik, isDisLik}) => {
                 
                 <form className="comment-section">
                     <div className='comment-profile-img-container'>
-                        <img className='comment-profile-img' src={user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture} alt="" />
+                        <img className='comment-profile-img' src={user.profilePicture?.includes('https://') ? user.profilePicture : `/assets/${user.profilePicture}`} alt="" />
                     </div>
                     <div className='comment-input-container'>
                         <textarea

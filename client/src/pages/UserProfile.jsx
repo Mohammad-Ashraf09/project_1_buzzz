@@ -212,11 +212,9 @@ const UserProfile = () => {
   }, [userId, userPosts]);
 
   const {username, profilePicture, coverPicture, fname, lname, gender, bio, city, place, totalPosts, followers, followings} = user;
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-
   const name = fname+' '+lname;
-  const DP = profilePicture?.includes('https://') ? profilePicture : PF+profilePicture;
-  const cover = coverPicture ? coverPicture : PF+"default-cover.jpg";
+  const DP = profilePicture?.includes('https://') ? profilePicture : `/assets/${profilePicture}`;
+  const cover = coverPicture ? coverPicture : "/assets/default-cover.jpg";
 
   const followHandler = async () =>{
     try{
@@ -224,14 +222,14 @@ const UserProfile = () => {
         await axios.put("/users/"+ user._id + "/unfollow", {
           userId: currentUser._id,
           name: user.fname+" "+user.lname,
-          dp: user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture,
+          dp: user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`,
         })
       }
       else{
         await axios.put("/users/"+ user._id + "/follow", {
           userId: currentUser._id,
           name: user.fname+" "+user.lname,
-          dp: user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture,
+          dp: user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`,
         })
       }
     }catch(err){

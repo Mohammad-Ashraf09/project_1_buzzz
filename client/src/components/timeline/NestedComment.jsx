@@ -105,8 +105,7 @@ const NestedComment = ({
             navigate(`/user/${tagId}`);
     }
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = nestedCommentUser?.profilePicture?.includes('https://') ? nestedCommentUser?.profilePicture : PF+nestedCommentUser?.profilePicture;
+    const DP = nestedCommentUser?.profilePicture?.includes('https://') ? nestedCommentUser?.profilePicture : `/assets/${nestedCommentUser.profilePicture}`;
     const name = nestedCommentUser?.fname + " " + nestedCommentUser?.lname;
 
     return (

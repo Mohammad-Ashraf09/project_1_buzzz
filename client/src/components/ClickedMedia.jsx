@@ -4,9 +4,8 @@ import ReactPlayer from 'react-player';
 const ClickedMedia = ({setShowMediaPopup, media, imageIndex, replyMessageHandler}) => {
     const [currentIndex, setCurrentIndex] = useState(imageIndex);
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const leftArrow = PF+"images/left-arrow.png";
-    const rightArrow = PF+"images/right-arrow.png";
+    const leftArrow = "/assets/left-arrow.png";
+    const rightArrow = "/assets/right-arrow.png";
 
     const goToPrevious = () =>{
         if(currentIndex!==0)

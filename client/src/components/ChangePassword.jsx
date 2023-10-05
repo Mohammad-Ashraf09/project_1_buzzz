@@ -23,10 +23,9 @@ const ChangePassword = ({setShowParticularPost, password, id}) => {
         confirmPassword: "",
     });
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const check = PF+"images/check-mark-verified.gif";
-    const loader = PF+"images/gif-loader.gif";
-    const tick = PF+"images/tick.png";
+    const check = "/assets/check-mark-verified.gif";
+    const loader = "/assets/gif-loader.gif";
+    const tick = "/assets/tick.png";
 
     const handleChange = (e)=>{
         setValues({...values, [e.target.name]: e.target.value});

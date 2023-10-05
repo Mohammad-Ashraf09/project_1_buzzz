@@ -72,9 +72,8 @@ const Conversation = ({
     setShow3Dots(false);
   }
 
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const name = conversation ? conversation.otherMemberData.name : "";
-  const DP = conversation ? conversation.otherMemberData.dp : PF+"default-dp.png";
+  const DP = conversation ? conversation.otherMemberData.dp : "/assets/default-dp.png";
 
   return (
     <div id={index} className='conversation'>

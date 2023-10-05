@@ -7,8 +7,7 @@ const FriendList = ({friend, setTaggedFriends, setShowTaggedFriendsPostContainer
         setQuery("");
     }
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const DP = friend.dp ? friend.dp : PF+'default-dp.png';
+    const DP = friend.dp ? friend.dp : '/assets/default-dp.png';
 
   return (
     <>

@@ -1,9 +1,8 @@
 import {Link} from "react-router-dom";
 
 const SmallProfile = ({user}) => {
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const profile = user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture;
-    const cover = user?.coverPicture ? user.coverPicture : PF+"default-cover.jpg";
+    const profile = user.profilePicture?.includes('https://') ? user.profilePicture : `/assets/${user.profilePicture}`;
+    const cover = user?.coverPicture ? user.coverPicture : "/assets/default-cover.jpg";
     const name = user?.fname + " " + user?.lname;
 
     return (

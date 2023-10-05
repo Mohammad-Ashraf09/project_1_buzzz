@@ -13,9 +13,8 @@ const WhoLikedDisliked = ({userId}) => {
     fetchUser();
   },[userId]);
 
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const name = user.fname + ' ' + user.lname;
-  const DP = user.profilePicture?.includes('https://') ? user.profilePicture : PF+user.profilePicture;
+  const DP = user.profilePicture?.includes('https://') ? user.profilePicture : `/assets/${user.profilePicture}`;
 
   return (
     <li className="liked-disliked-item">

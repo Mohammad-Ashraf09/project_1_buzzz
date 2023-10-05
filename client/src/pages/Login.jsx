@@ -37,9 +37,6 @@ const Login = ()=> {
     }
     fetchAllUsers();
   },[])
-  
-
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
   return (
     <>
@@ -47,7 +44,7 @@ const Login = ()=> {
     <div className="login-container">
       <div className="login signup-section">
         <form>
-          <img className="ttn-logo" src={PF+"/images/ttn.jpg"} alt=""/>
+          <img className="ttn-logo" src="/assets/ttn.jpg" alt=""/>
           <h2 className="signup-text"> Enter your details and Start your journey with us </h2>
           <h4>Don't Stop until you're proud.</h4>
           <button className="google-btn"> Sign In with Google </button>

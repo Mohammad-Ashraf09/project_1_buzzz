@@ -26,7 +26,6 @@ const Message = ({
 
   const {_id, sender, text, media, replyForText, replyForImage, isSameDp, createdAt} = message;
 
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
   const DP1 = dp1;
   const DP2 = dp2;
   let repliedDp;
@@ -42,7 +41,7 @@ const Message = ({
     else
       repliedDp = DP1;
   }
-  const playIcon = PF+"images/play-icon.png";
+  const playIcon = "/assets/play-icon.png";
 
   useEffect(()=>{
     let count = 0;

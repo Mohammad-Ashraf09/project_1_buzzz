@@ -2,10 +2,9 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const UsersList = (data) => {
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
 
     const {_id, username, name, profilePicture} = data?.data;
-    const dp = profilePicture?.includes('https://') ? profilePicture : PF+profilePicture;
+    const dp = profilePicture?.includes('https://') ? profilePicture : `/assets/${profilePicture}`;
 
     return (
         <div className="search-result">

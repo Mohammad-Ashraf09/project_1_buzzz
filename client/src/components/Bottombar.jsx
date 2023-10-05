@@ -1,8 +1,7 @@
 import {Link} from "react-router-dom";
 
 const Bottombar = ({user}) => {
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const dp = user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture;
+    const dp = user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`;
 
     return (
         <div className='bottombar-container'>

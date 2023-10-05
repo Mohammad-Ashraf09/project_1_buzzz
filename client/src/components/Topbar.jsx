@@ -12,9 +12,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
     const [open, setOpen] = useState(false);
     const [renderNotification, setRenderNotification] = useState(false);  // on deletion of a notification state will change
 
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-    const logo = PF+"images/logo144.png";
-    const dp = user?.profilePicture?.includes('https://') ? user?.profilePicture : PF+user?.profilePicture;
+    const dp = user?.profilePicture?.includes('https://') ? user?.profilePicture : `/assets/${user?.profilePicture}`;
     const name = user?.fname +" "+ user?.lname;
 
     const reverseOrderNotification = [...notification].reverse();
@@ -81,7 +79,7 @@ const Topbar = ({user, socket, setShowPopup}) => {
   return (
     <div className='topbar-container'>
         <div className="topbar-left">
-            <Link to="/"> <img src={logo} alt="" className="logo-img"/> </Link>
+            <Link to="/"> <img src='/assets/logo144.png' alt="" className="logo-img"/> </Link>
             <Link to="/" style={{textDecoration: 'none'}}> <div className="logo-text">Buzzz</div> </Link>
         </div>
         <div className="topbar-right">

@@ -1,8 +1,7 @@
 import { Link } from 'react-router-dom';
 
 const ContactPerson = ({onlineUsers, friend}) => {
-  const PF = process.env.REACT_APP_PUBLIC_FOLDER;
-  const DP = friend.dp?.includes('https://') ? friend.dp : PF+friend.dp;
+  const DP = friend.dp?.includes('https://') ? friend.dp : `/assets/${friend.dp}`;
 
   return (
     <>
